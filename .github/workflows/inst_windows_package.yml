@@ -27,6 +27,7 @@ jobs:
       - name: Output Variables
         run: |
           echo "${Env:CURRENT_BRANCH}"
+          echo "${Env:GIT_BRANCH}"
       - name: Set up Python using embedded distribution and create Installer
         env:
           #GIT_BRANCH: ${{ github.ref }}
@@ -35,7 +36,7 @@ jobs:
         run: |
           cd C:\Users\runneradmin
           pwd
-          Write-Host $Env:GITHUB_BRANCH
+          Write-Host $Env:GIT_BRANCH
           curl  https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip --output python.zip
           where.exe unzip.exe
           unzip.exe python.zip -d python
@@ -53,11 +54,11 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
-          echo "${Env:CURRENT_BRANCH}"
-          git clone -q  -b ${Env:CURRENT_BRANCH} --depth=1 https://github.com/gem/oq-builders
+          echo "${Env:GIT_BRANCH}"
+          git clone -q  -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           mkdir .\oq-dist\engine
-          git clone -q -b ${Env:CURRENT_BRANCH} --depth=1 https://github.com/gem/oq-engine.git
+          git clone -q -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-engine.git
           cd oq-engine
           Copy-Item -Path ".\install.py" -Destination "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-dist\engine" -Recurse
           python -c "import sys; print(sys.version)"
@@ -66,7 +67,7 @@ jobs:
           echo "Downloading standalone apps"
           $app = ("oq-platform-standalone", "oq-platform-ipt", "oq-platform-taxonomy", "oq-platform-taxtweb")
           foreach ($element in $app) {
-          git clone -q -b -b ${Env:CURRENT_BRANCH} --depth=1 https://github.com/gem/$element.git
+          git clone -q -b -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/$element.git
               python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
               if ( $element -eq "oq-platform-taxtweb" ) 
               {
@@ -134,16 +135,7 @@ jobs:
   Test_Installer:
     needs: Build_Installer
     runs-on: windows-latest
-    env:
-      GIT_BRANCH: ${{ github.ref }}
-      GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
-      - name: Set Variables
-        run: |
-          echo "Working Path: ${Env:GITHUB_WORKSPACE}"
-          $branchName = $Env:GITHUB_REF -replace 'refs/heads/', ''
-          echo "Branch: ${branchName}"
-          echo "CURRENT_BRANCH=${branchName}" >> $Env:GITHUB_ENV
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v2
         with:
