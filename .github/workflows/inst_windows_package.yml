@@ -89,6 +89,7 @@ jobs:
           cd ~
           mkdir package
           cd package
+          pwd
           curl  https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip --output python.zip
           unzip.exe python.zip -d python
           echo "install pip and wheel"
@@ -109,14 +110,15 @@ jobs:
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ..
           python -m markdown "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\README.md" > .\README.html
-          Write-Host "Copy the wheel created for the standalone"
+          Write-Host "Copy the wheel created for the standalone and before list files"
+          ls "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-dist"
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-dist" -Destination ".\" -Recurse
-          cd oq-dist
-          cd ..
           $files = @(Get-ChildItem .\oq-dist\engine\*.whl)
           $files.Name > .\oq-dist\engine\index.txt
+          Write-Host .\oq-dist\engine\index.txt 
           $files = @(Get-ChildItem .\oq-dist\tools\*.whl)
           $files.Name > .\oq-dist\tools\index.txt
+          Write-Host .\oq-dist\tools\index.txt 
           curl.exe -LO https://ci.openquake.org/job/builders/job/pdf-builder/lastSuccessfulBuild/artifact/oq-engine/doc/manual/oq-manual.pdf
           Rename-Item .\oq-manual.pdf "Openquake manual.pdf"
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\installer.nsi" -Destination ".\" 
