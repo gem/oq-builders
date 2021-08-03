@@ -42,7 +42,7 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
-          git clone -q  -b master --depth=1 https://github.com/gem/oq-builders
+          git clone -q  -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           mkdir .\oq-dist\engine
           git clone -q -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-engine.git
