@@ -13,7 +13,7 @@ jobs:
   Build_Installer:
     runs-on: windows-latest
     env:
-      #GIT_BRANCH: ${{ github.ref }}
+      CURRENT_BRANCH: ${{ github.ref }}
       GIT_BRANCH: ${{ github.event.inputs.git-ref }}
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
@@ -30,13 +30,13 @@ jobs:
           echo "${Env:GIT_BRANCH}"
       - name: Set up Python using embedded distribution and create Installer
         env:
-          #GIT_BRANCH: ${{ github.ref }}
+          CURRENT_BRANCH: ${{ github.ref }}
           GIT_BRANCH: ${{ github.event.inputs.git-ref }}
           GIT_COMMIT_SHA: ${{ github.sha }}
         run: |
           cd C:\Users\runneradmin
-          pwd
-          Write-Host $Env:GIT_BRANCH
+          Write-Host "Branch for builders: "$Env:CURRENT_BRANCH
+          Write-Host "Git branch for engine and tools: "$Env:GIT_BRANCH
           curl  https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip --output python.zip
           where.exe unzip.exe
           unzip.exe python.zip -d python
@@ -54,8 +54,7 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
-          echo "${Env:GIT_BRANCH}"
-          git clone -q  -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-builders
+          git clone -q  -b ${Env:CURRENT_BRANCH} --depth=1 https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           mkdir .\oq-dist\engine
           git clone -q -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-engine.git
