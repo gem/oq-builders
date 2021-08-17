@@ -10,12 +10,20 @@ jobs:
       GIT_BRANCH: ${{ github.ref }}
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
+      - name: Set Variables
+        run: |
+          echo "Working Path: ${Env:GITHUB_WORKSPACE}"
+          $branchName = $Env:GITHUB_REF -replace 'refs/heads/', ''
+          echo "Branch: ${branchName}"
+          echo "CURRENT_BRANCH=${branchName}" >> $Env:GITHUB_ENV
       - name: Output Variables
         run: |
           echo "${Env:GIT_BRANCH}"
+          echo "${Env:CURRENT_BRANCH}"
       - name: Set up Python using embedded distribution and create Installer
         env:
           GIT_BRANCH: ${{ github.ref }}
+          GIT_COMMIT_SHA: ${{ github.sha }}
         run: |
           cd C:\Users\runneradmin
           Write-Host "Branch for builders: "$Env:CURRENT_BRANCH
@@ -37,6 +45,7 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
+          write-Host "git clone -q  -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-builders"
           git clone -q  -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           mkdir .\oq-dist\engine
