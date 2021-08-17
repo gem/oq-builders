@@ -118,7 +118,7 @@ jobs:
           makensis /V4 installer.nsi
           mkdir out
           $Install = Get-ChildItem -Filter *.exe 
-          Get-FileHash -InputStream $Install | Select-Object Hash
+          Get-FileHash $Install | Select-Object Hash
           $hash = Get-FileHash $Install -Algorithm SHA256
           $sha256 = $hash.Hash
           $Name = $Install.Name
