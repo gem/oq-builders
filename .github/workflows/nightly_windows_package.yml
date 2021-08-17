@@ -176,6 +176,5 @@ jobs:
           ls -lrt
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
-          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
-          ls OpenQuake_Engine*
-          #rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
+          eval $(ssh-agent -s) && ssh-add -T ./.deploy_rsa 
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
