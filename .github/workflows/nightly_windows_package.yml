@@ -161,11 +161,12 @@ jobs:
     needs: Build_Installer
     runs-on: ubuntu-latest
     steps: 
+      - uses: actions/checkout@v2
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v2
         with:
           name: Installer
-      - name: Make docs and rsync to ci.openquake.org
+      - name: rsync to downloads.openquake.org
         shell: bash
         env:
           DOCS_SSH: ${{ secrets.DOCS_ARTIFACTS }}
@@ -175,4 +176,5 @@ jobs:
           #gpg --quiet --batch --yes --decrypt --passphrase="$DOCS_SSH" --output ./.deploy_rsa ./.deploy_docs.enc
           #chmod 600 ./.deploy_rsa
           #eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
-          #rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' -ax /sphinx/build/html/ docs@ci.openquake.org:/var/www/docs.openquake.org/oq-engine/master/
+          #rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax /sphinx/build/html/ ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
+          #rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax /sphinx/build/html/ ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
