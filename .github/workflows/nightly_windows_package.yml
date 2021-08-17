@@ -117,7 +117,15 @@ jobs:
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\LICENSE.txt" -Destination ".\" 
           makensis /V4 installer.nsi
           mkdir out
+          $Install = Get-ChildItem -Filter *.exe 
+          Get-FileHash -InputStream $Install | Select-Object Hash
+          $hash = Get-FileHash $Install -Algorithm SHA256
+          $sha256 = $hash.Hash
+          $Name = $Install.Name
+          $Outfile = $Install.Name + ".sha256" 
+          Write-Output $hash.Hash  $Install.Name > $Outfile
           Copy-Item *.exe .\out
+          Copy-Item $Outfile .\out
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -148,3 +156,4 @@ jobs:
           oq --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
         shell: cmd
+
