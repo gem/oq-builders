@@ -7,14 +7,15 @@ jobs:
   Build_Installer:
     runs-on: windows-latest
     env:
-      GIT_BRANCH: ${{ github.event.inputs.git-ref }}
+      GIT_BRANCH: ${{ github.ref }}
+      GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
       - name: Output Variables
         run: |
           echo "${Env:GIT_BRANCH}"
       - name: Set up Python using embedded distribution and create Installer
         env:
-          GIT_BRANCH: ${{ github.event.inputs.git-ref }}
+          GIT_BRANCH: ${{ github.ref }}
         run: |
           cd C:\Users\runneradmin
           Write-Host "Branch for builders: "$Env:CURRENT_BRANCH
