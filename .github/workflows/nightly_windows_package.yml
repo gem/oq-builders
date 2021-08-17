@@ -159,6 +159,7 @@ jobs:
 
   Upload_Installer:
     needs: Build_Installer
+    needs: Test_Installer
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v2
