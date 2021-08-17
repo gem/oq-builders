@@ -27,7 +27,7 @@ jobs:
         run: |
           cd C:\Users\runneradmin
           Write-Host "Branch for builders: "$Env:CURRENT_BRANCH
-          Write-Host "Git branch for engine and tools: "$Env:GIT_BRANCH
+          Write-Host "Git branch for engine and tools: "$Env:CURRENT_BRANCH
           curl  https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip --output python.zip
           where.exe unzip.exe
           unzip.exe python.zip -d python
@@ -45,11 +45,12 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
-          write-Host "git clone -q  -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-builders"
-          git clone -q  -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-builders
+          write-Host "git clone -q  -b ${$Env:CURRENT_BRANCH} --depth=1 https://github.com/gem/oq-builders"
+          git clone -q  -b ${Env:CURRENT_BRANCH} --depth=1 https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           mkdir .\oq-dist\engine
-          git clone -q -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-engine.git
+          Write-Host "git clone -q -b ${Env:CURRENT_BRANCH} --depth=1 https://github.com/gem/oq-engine.git"
+          git clone -q -b ${Env:CURRENT_BRANCH} --depth=1 https://github.com/gem/oq-engine.git
           cd oq-engine
           Copy-Item -Path ".\install.py" -Destination "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-dist\engine" -Recurse
           python -c "import sys; print(sys.version)"
