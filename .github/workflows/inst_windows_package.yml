@@ -143,3 +143,22 @@ jobs:
           oq --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
         shell: cmd
+
+  Upload_Installer:
+    needs: Test_Installer
+    runs-on: ubuntu-latest
+    steps:     
+      - uses: actions/checkout@v2
+      - name: Download Windows Installer from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: Installer
+      - name: rsync to downloads.openquake.org
+        shell: bash
+        env:
+          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
+          chmod 600 ./.deploy_rsa
+          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/

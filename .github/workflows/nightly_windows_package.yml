@@ -1,6 +1,6 @@
 name: Nightly Installer python on Windows for oq-engine
 on:
-  push:
+  #push:
   schedule:
   - cron: "0 21 * * *"
 jobs:
@@ -172,8 +172,6 @@ jobs:
         env:
           DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
         run: |
-          pwd
-          ls -lrt
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa 
