@@ -19,11 +19,13 @@ jobs:
       - name: Output Variables
         run: |
           echo "${Env:CURRENT_BRANCH}"
+          echo "Branch: ${branchName}"
       - name: Set up Python using embedded distribution and create Installer
         env:
           GIT_BRANCH: ${{ github.ref }}
           GIT_COMMIT_SHA: ${{ github.sha }}
         run: |
+          echo "Branch: ${branchName}"
           cd C:\Users\runneradmin
           pwd
           Write-Host $Env:GITHUB_REF
@@ -45,9 +47,12 @@ jobs:
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
           echo "${Env:CURRENT_BRANCH}"
-          git clone -q  --depth=1 -b ${Env:CURRENT_BRANCH} https://github.com/gem/oq-builders
+          echo "Branch: ${branchName}"
+          git clone -q  --depth=1 -b ${branchName} https://github.com/gem/oq-builders
+          #git clone -q  --depth=1 -b ${Env:CURRENT_BRANCH} https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
-          git clone --depth=1 -b ${Env:CURRENT_BRANCH} https://github.com/gem/oq-engine.git
+          git clone --depth=1 -b ${branchName} https://github.com/gem/oq-engine.git
+          #git clone --depth=1 -b ${Env:CURRENT_BRANCH} https://github.com/gem/oq-engine.git
           cd oq-engine
           python -c "import sys; print(sys.version)"
           python -m pip install install -r requirements-py38-win64.txt
@@ -57,8 +62,9 @@ jobs:
           $app = ("oq-platform-standalone", "oq-platform-ipt", "oq-platform-taxonomy", "oq-platform-taxtweb")
           foreach ($element in $app) {
               echo "${Env:CURRENT_BRANCH}"
-              echo "git clone -q --depth=1 -b "{Env:CURRENT_BRANCH}" https://github.com/gem/$element.git "
-              git clone -q --depth=1 -b "{Env:CURRENT_BRANCH}" https://github.com/gem/$element.git
+              echo "Branch: ${branchName}"
+              git clone --depth=1 -b ${branchName} https://github.com/gem/$element.git
+              #git clone -q --depth=1 -b "{Env:CURRENT_BRANCH}" https://github.com/gem/$element.git
               python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
               if ( $element -eq "oq-platform-taxtweb" ) 
               {
