@@ -136,8 +136,7 @@ jobs:
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
         shell: cmd
   Upload_Installer:
-    #needs: Build_Installer
-    #needs: Test_Installer
+    needs: Test_Installer
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v2
