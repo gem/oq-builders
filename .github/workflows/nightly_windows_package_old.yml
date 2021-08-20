@@ -41,9 +41,6 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
-          cd .\oq-builders\installers\windows\nsis\
-          mkdir demos
-          cd ~
           echo "${Env:CURRENT_BRANCH}"
           echo "Branch: ${branchName}"
           git clone -q  --depth=1 -b ${branchName} https://github.com/gem/oq-builders
