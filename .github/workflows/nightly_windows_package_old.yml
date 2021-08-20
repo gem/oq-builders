@@ -10,22 +10,17 @@ jobs:
       GIT_BRANCH: ${{ github.ref }}
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
-      - name: Set Variables
-        run: |
-          echo "Working Path: ${Env:GITHUB_WORKSPACE}"
-          $branchName = $Env:GITHUB_REF -replace 'refs/heads/', ''
-          echo "Branch: ${branchName}"
-          echo "CURRENT_BRANCH=${branchName}" >> $Env:GITHUB_ENV
-      - name: Output Variables
-        run: |
-          echo "${Env:CURRENT_BRANCH}"
-          echo "Branch: ${branchName}"
       - name: Set up Python using embedded distribution and create Installer
         env:
           GIT_BRANCH: ${{ github.ref }}
           GIT_COMMIT_SHA: ${{ github.sha }}
         run: |
+          echo "Working Path: ${Env:GITHUB_WORKSPACE}"
+          $branchName = $Env:GITHUB_REF -replace 'refs/heads/', ''
           echo "Branch: ${branchName}"
+          echo "CURRENT_BRANCH=${branchName}" >> $Env:GITHUB_ENV
+          echo "Branch: ${branchName}"
+          #
           cd C:\Users\runneradmin
           pwd
           Write-Host $Env:GITHUB_REF
