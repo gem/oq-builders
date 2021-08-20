@@ -46,20 +46,6 @@ jobs:
           git clone -q  --depth=1 -b ${branchName} https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           git clone --depth=1 -b ${branchName} https://github.com/gem/oq-engine.git
-          #cd oq-engine
-          #first zip all demos and after created wheel
-          cd oq-engine\demos
-          $demos = ("hazard", "risk")
-          foreach ($element in $demos) {
-            $source = Get-ChildItem -Path .\$element -Directory                  
-            Foreach ($s in $source) {
-            Add-Type -assembly "system.io.compression.filesystem"
-            $destination = Join-path -path .\$element -ChildPath "$($s.name).zip"
-            [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination) 
-            }
-            dir  *.zip 
-          }
-          cd ..
           python -c "import sys; print(sys.version)"
           python -m pip install install -r requirements-py38-win64.txt
           cd ..
@@ -89,14 +75,18 @@ jobs:
           curl.exe -LO https://ci.openquake.org/job/builders/job/pdf-builder/lastSuccessfulBuild/artifact/oq-engine/doc/manual/oq-manual.pdf
           Rename-Item .\oq-manual.pdf "Openquake manual.pdf"
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\doc" -Destination "C:\Users\runneradmin\oq-builders\installers\windows\nsis\" -Recurse
-          $path = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\demos"
-          $source = Get-ChildItem -Path C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos -Directory
-          Add-Type -assembly "system.io.compression.filesystem"
-          Foreach ($s in $source)
-          {
-            $destination = Join-path -path $path -ChildPath "$($s.name).zip"
-            If(Test-path $destination) {Remove-item $destination}
-            [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination)
+          $zipfolder = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\demos"
+          $demos = ("hazard", "risk")
+          foreach ($element in $demos) {
+            $folder = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos" + $element
+            Write-Host $folder
+            $source = Get-ChildItem -Path $folder -Directory                  
+            Foreach ($s in $source) {
+            Add-Type -assembly "system.io.compression.filesystem"
+            $destination = Join-path -path .\$zipfolder -ChildPath "$($s.name).zip"
+            [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination) 
+            }
+            dir  *.zip 
           }
           echo "Generating NSIS installer with oq version and time of git"
           $version = Select-String -Path .\oq-engine\openquake\baselib\__init__.py -Pattern '__version__ ='
