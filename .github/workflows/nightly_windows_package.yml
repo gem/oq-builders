@@ -1,8 +1,9 @@
 name: Nightly Installer python on Windows for oq-engine
 on:
-  #push:
-  schedule:
-  - cron: "0 21 * * *"
+  push:
+    devs
+  #schedule:
+  #- cron: "0 21 * * *"
 jobs:
   Build_Installer:
     runs-on: windows-latest
