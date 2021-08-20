@@ -1,6 +1,6 @@
 @echo off
 setlocal
-set mypath=C:\Program Files\OpenQuake
+set mypath="C:\Program Files\OpenQuake Engine"
 set PATH=%mypath%\python;%mypath%\python\Scripts;%PATH%
 set OQ_HOST=localhost
 set OQ_PORT=8800
