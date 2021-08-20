@@ -41,14 +41,28 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
+          cd .\oq-builders\installers\windows\nsis\
+          mkdir demos
+          cd ~
           echo "${Env:CURRENT_BRANCH}"
           echo "Branch: ${branchName}"
           git clone -q  --depth=1 -b ${branchName} https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           git clone --depth=1 -b ${branchName} https://github.com/gem/oq-engine.git
-          cd oq-engine
+          #cd oq-engine
           #first zip all demos and after created wheel
-
+          cd oq-engine\demos
+          $demos = ("hazard", "risk")
+          foreach ($element in $demos) {
+            $source = Get-ChildItem -Path .\$element -Directory                  
+            Foreach ($s in $source) {
+            Add-Type -assembly "system.io.compression.filesystem"
+            $destination = Join-path -path .\$element -ChildPath "$($s.name).zip"
+            [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination) 
+            }
+            dir  *.zip 
+          }
+          cd ..
           python -c "import sys; print(sys.version)"
           python -m pip install install -r requirements-py38-win64.txt
           cd ..
