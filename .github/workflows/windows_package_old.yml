@@ -9,27 +9,21 @@ jobs:
       GIT_BRANCH: ${{ github.ref }}
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
-      - name: Set Variables
-        run: |
-          echo "Working Path: ${Env:GITHUB_WORKSPACE}"
-          $branchName = $Env:GITHUB_REF -replace 'refs/heads/', ''
-          echo "Branch: ${branchName}"
-          echo "CURRENT_BRANCH=${branchName}" >> $Env:GITHUB_ENV
-      - name: Output Variables
-        run: |
-          echo "${Env:CURRENT_BRANCH}"
       - name: Set up Python using embedded distribution and create Installer
         env:
           GIT_BRANCH: ${{ github.ref }}
           GIT_COMMIT_SHA: ${{ github.sha }}
         run: |
+          Write-Host "Working Path: ${Env:GITHUB_WORKSPACE}"
+          $branchName = $Env:GITHUB_REF -replace 'refs/heads/', ''
+          Write-Host "Branch: ${branchName}"
+          Write-Host "CURRENT_BRANCH=${branchName}" >> $Env:GITHUB_ENV
+          Write-Host "${Env:CURRENT_BRANCH}"
+          #
           cd C:\Users\runneradmin
-          pwd
-          Write-Host $Env:GITHUB_REF
           curl  https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip --output python.zip
-          where.exe unzip.exe
           unzip.exe python.zip -d python
-          echo "install pip and wheel and setuptools and markdown"
+          Write-Host "install pip and wheel and setuptools and markdown"
           cd python
           curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py
           .\python.exe .\get-pip.py
@@ -43,30 +37,19 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
-          echo "${Env:CURRENT_BRANCH}"
+          Write-Host "Branch: ${branchName}"
           git clone -q  --depth=1 -b ${Env:CURRENT_BRANCH} https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
-          pwd
           git clone --depth=1 -b ${Env:CURRENT_BRANCH} https://github.com/gem/oq-engine.git
-          cd oq-engine\demos
-          $demos = ("hazard", "risk")
-          foreach ($element in $demos) {
-            $source = Get-ChildItem -Path .\$element -Directory                  
-            Foreach ($s in $source) {
-            Add-Type -assembly "system.io.compression.filesystem"
-            $destination = Join-path -path .\$element -ChildPath "$($s.name).zip"
-            [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination) 
-            }
-          }
-          cd ..
           python -c "import sys; print(sys.version)"
           python -m pip install install -r requirements-py38-win64.txt
           cd ..
           python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/engine ./oq-engine
-          echo "Downloading standalone apps"
+          Write-Host "Downloading standalone apps"
           $app = ("oq-platform-standalone", "oq-platform-ipt", "oq-platform-taxonomy", "oq-platform-taxtweb")
           foreach ($element in $app) {
-              git clone -q --depth=1 -b {Env:CURRENT_BRANCH} https://github.com/gem/$element.git
+              Write-Host "Branch: ${branchName}"
+              git clone --depth=1 -b ${branchName} https://github.com/gem/$element.git
               python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
               if ( $element -eq "oq-platform-taxtweb" ) 
               {
@@ -94,12 +77,12 @@ jobs:
             If(Test-path $destination) {Remove-item $destination}
             [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination)
           }
-          echo "Generating NSIS installer with oq version and time of git"
+          Write-Host "Generating NSIS installer with oq version and time of git"
           $version = Select-String -Path .\oq-engine\openquake\baselib\__init__.py -Pattern '__version__ ='
           $pattern = "(?<=\').+?(?=\')"
           $inst_version = [regex]::Matches($version, $pattern).Value
           $time_of_git = git -C .\oq-engine log -n1 --pretty='format:%cd' --date=format:'%y%m%d%H%M'
-          echo "version: ${inst_version} and time: ${time_of_git}"
+          Write-Host "version: ${inst_version} and time: ${time_of_git}"
           (Get-Content -Path .\installer.nsi.win -Raw) -replace 'CHANGETIME', $time_of_git -replace 'CHANGEHERERELEASE', $inst_version | Set-Content -Path .\installer.nsi
           makensis /V4 installer.nsi
           mkdir out
