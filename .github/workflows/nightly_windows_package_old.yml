@@ -65,12 +65,11 @@ jobs:
             Get-ChildItem -Path $path -Include *.zip -Recurse | Copy-Item -Destination $zipfolder
             Get-ChildItem $zipfolder | Format-List
           }
-          cd ~
-          cd .\oq-builders\installers\windows\nsis\demos
-          dir *.*
+          pwd
           cd ..
+          Write-Host "Creating wheel for engine"
+          pwd
           python -m pip install install -r requirements-py38-win64.txt
-          cd ..
           python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/engine ./oq-engine
           Write-Host "Downloading standalone apps"
           $app = ("oq-platform-standalone", "oq-platform-ipt", "oq-platform-taxonomy", "oq-platform-taxtweb")
