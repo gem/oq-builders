@@ -44,7 +44,6 @@ jobs:
           git clone --depth=1 -b ${branchName} https://github.com/gem/oq-engine.git
           Write-Host "Generating zip of demos"
           $copyto = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\demos\"
-          md $copyto
           Get-ChildItem $copyto | Format-List
           cd oq-engine\demos\
           $demos = ("hazard", "risk")
