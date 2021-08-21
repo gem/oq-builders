@@ -73,7 +73,7 @@ jobs:
           $zipfolder = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\demos"
           $demos = ("hazard", "risk")
           foreach ($element in $demos) {
-            $folder = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos" + $element
+            $folder = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos\" + $element
             Write-Host $folder
             $source = Get-ChildItem -Path $folder -Directory                  
             Foreach ($s in $source) {
