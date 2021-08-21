@@ -46,7 +46,7 @@ jobs:
           cd oq-engine\demos\
           $demos = ("hazard", "risk")
           foreach ($element in $demos) {
-            $path = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos\" + $demos
+            $path = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos\" + $element
             Get-Location
             Get-ChildItem | Format-List
             $source = Get-ChildItem -Path .\$element -Directory
