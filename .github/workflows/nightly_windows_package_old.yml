@@ -62,6 +62,9 @@ jobs:
             Copy-Item *.zip -Destination $zipfolder
             Get-ChildItem $zipfolder | Format-List
           }
+          cd ~
+          cd .\oq-builders\installers\windows\nsis\demos
+          Get-ChildItem | Format-List
           cd ..
           python -m pip install install -r requirements-py38-win64.txt
           cd ..
@@ -80,7 +83,6 @@ jobs:
           }
           cd ~
           cd .\oq-builders\installers\windows\nsis\
-          Get-ChildItem
           python -m markdown .\oq-engine\README.md > .\README.html
           Copy-Item -Path "C:\Users\runneradmin\python\" -Destination "C:\Users\runneradmin\oq-builders\installers\windows\nsis\" -Recurse
           $files = @(Get-ChildItem .\oq-dist\engine\*.whl)
@@ -96,7 +98,7 @@ jobs:
           $inst_version = [regex]::Matches($version, $pattern).Value
           $time_of_git = git -C .\oq-engine log -n1 --pretty='format:%cd' --date=format:'%y%m%d%H%M'
           Write-Host "version: ${inst_version} and time: ${time_of_git}"
-          (Get-Content -Path .\installer.nsi.win -Raw) -replace 'CHANGETIME', $time_of_git -replace 'CHANGEHERERELEASE', $inst_version | Set-Content -Path .\installer.nsi
+          (Get-Content -Path .\installer.nsi.win.nightly -Raw) -replace 'CHANGETIME', $time_of_git -replace 'CHANGEHERERELEASE', $inst_version | Set-Content -Path .\installer.nsi
           makensis /V4 installer.nsi
           mkdir out
           Copy-Item *.exe .\out
