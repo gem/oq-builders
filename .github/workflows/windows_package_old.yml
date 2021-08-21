@@ -41,7 +41,7 @@ jobs:
           git clone -q  --depth=1 -b ${Env:CURRENT_BRANCH} https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           git clone --depth=1 -b ${Env:CURRENT_BRANCH} https://github.com/gem/oq-engine.git
-          python -c "import sys; print(sys.version)"
+          cd oq-engine
           python -m pip install install -r requirements-py38-win64.txt
           cd ..
           python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/engine ./oq-engine

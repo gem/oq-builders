@@ -42,12 +42,10 @@ jobs:
           git clone -q  --depth=1 -b ${branchName} https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           git clone --depth=1 -b ${branchName} https://github.com/gem/oq-engine.git
-          python -c "import sys; print(sys.version)"
+          cd oq-engine
           python -m pip install install -r requirements-py38-win64.txt
           cd ..
-          Get-Location
           python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/engine ./oq-engine
-          Get-ChildItem
           Write-Host "Downloading standalone apps"
           $app = ("oq-platform-standalone", "oq-platform-ipt", "oq-platform-taxonomy", "oq-platform-taxtweb")
           foreach ($element in $app) {
@@ -83,7 +81,7 @@ jobs:
             $destination = Join-path -path .\$zipfolder -ChildPath "$($s.name).zip"
             [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination) 
             }
-            dir  *.zip 
+            Get-ChildItem *.zip | Format-List
           }
           Write-Host "Generating NSIS installer with oq version and time of git"
           $version = Select-String -Path .\oq-engine\openquake\baselib\__init__.py -Pattern '__version__ ='
