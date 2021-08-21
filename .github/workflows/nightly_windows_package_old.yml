@@ -60,6 +60,7 @@ jobs:
             md $zipfolder
             Write-Host "Copy-Item *.zip -Destination $zipfolder"
             Copy-Item *.zip -Destination $zipfolder
+            Get-ChildItem $zipfolder | Format-List
           }
           cd ..
           python -m pip install install -r requirements-py38-win64.txt
