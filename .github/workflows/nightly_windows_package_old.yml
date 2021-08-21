@@ -43,16 +43,18 @@ jobs:
           cd .\oq-builders\installers\windows\nsis\
           git clone --depth=1 -b ${branchName} https://github.com/gem/oq-engine.git
           Write-Host "Generating zip of demos"
-          $zipfolder = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\demos"
           cd oq-engine\demos\
           $demos = ("hazard", "risk")
           foreach ($element in $demos) {
+            $path = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos\" + $demos
             Get-Location
             Get-ChildItem | Format-List
             $source = Get-ChildItem -Path .\$element -Directory
+            Write-Host $source.name
+            Write-Host $path
             Foreach ($s in $source) {
             Add-Type -assembly "system.io.compression.filesystem"
-            $destination = Join-path -path .\$element -ChildPath "$($s.name).zip"
+            $destination = Join-path -path $path -ChildPath "$($s.name).zip"
             [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination)
             }
             Get-ChildItem *.zip | Format-List
