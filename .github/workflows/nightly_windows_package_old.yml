@@ -60,8 +60,9 @@ jobs:
             Get-ChildItem *.zip | Format-List
             $zipfolder = $copyto + $element
             md $zipfolder
-            Write-Host "Copy-Item *.zip -Destination $zipfolder"
-            Copy-Item *.zip -Destination $zipfolder
+            Write-Host "Copy-Item $path\*.zip -Destination $zipfolder"
+            Get-ChildItem -Path $path -Include *.zip -Recurse
+            Get-ChildItem -Path $path -Include *.zip -Recurse | Copy-Item -Destination $zipfolder
             Get-ChildItem $zipfolder | Format-List
           }
           cd ~
