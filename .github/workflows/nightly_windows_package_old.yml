@@ -50,9 +50,11 @@ jobs:
           foreach ($element in $demos) {
             $path = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos\" + $element
             $source = Get-ChildItem -Path .\$element -Directory
+            write-host "Source is " $source
             Foreach ($s in $source) {
             Add-Type -assembly "system.io.compression.filesystem"
             $destination = Join-path -path $path -ChildPath "$($s.name).zip"
+            write-host "Destination is" $destination
             [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination)
             }
             Get-ChildItem *.zip | Format-List
@@ -64,7 +66,7 @@ jobs:
           }
           cd ~
           cd .\oq-builders\installers\windows\nsis\demos
-          Get-ChildItem | Format-List
+          dir *.*
           cd ..
           python -m pip install install -r requirements-py38-win64.txt
           cd ..
