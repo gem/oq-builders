@@ -138,12 +138,6 @@ jobs:
           oq --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
         shell: cmd
-      - name: Run oq webui console and curl for the standalone
-        run: |
-          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
-          Get-Job
-          ping.exe 192.0.2.2 -n 1 -w %1000 > null
-          curl.exe -X HEAD -I http://localhost:8800/ipt/
   Test_Webui:
     needs: Test_OQ
     runs-on: windows-latest
