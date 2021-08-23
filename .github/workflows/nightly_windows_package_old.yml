@@ -138,22 +138,22 @@ jobs:
           oq --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
         shell: cmd
-  Test_Webui:
-    needs: Test_OQ
-    runs-on: windows-latest
-    steps:
-      - name: Download Windows Installer from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: Installer
-      - name: Execute the Installer
-        run: |
-          $Install = Get-ChildItem -Filter *.exe
-          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
-          cd "C:\Program Files\OpenQuake Engine\"
-          $env:PATH="C:\Program Files\OpenQuake Engine\python\Scripts"
-          Write-Host ${env:PATH}
-      - name: Run oq webui console and curl for the standalone
+          #Test_Webui:
+          #needs: Test_OQ
+          #runs-on: windows-latest
+          #steps:
+          #- name: Download Windows Installer from build job
+          #uses: actions/download-artifact@v2
+          #with:
+          #name: Installer
+          #- name: Execute the Installer
+          #run: |
+          #$Install = Get-ChildItem -Filter *.exe
+          #Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
+          #cd "C:\Program Files\OpenQuake Engine\"
+          #$env:PATH="C:\Program Files\OpenQuake Engine\python\Scripts"
+          #Write-Host ${env:PATH}
+      - name: Run oq webui console and curl for the standalone tools
         run: |
           Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
           ping 127.0.0.1 -n 6 > null
@@ -161,9 +161,13 @@ jobs:
           netstat -o -n -a | findstr 8800
           ping 127.0.0.1 -n 6 > null
           curl.exe -X HEAD -I http://127.0.0.1:8800/ipt/
+          ping 127.0.0.1 -n 6 > null
+          curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
+          ping 127.0.0.1 -n 6 > null
+          curl.exe -X HEAD -I http://127.0.0.1:8800/taxtweb/
   Upload_Installer:
     #needs: Test_Installer
-    needs: Test_Webui
+    needs: Test_OQ
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v2
