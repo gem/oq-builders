@@ -156,8 +156,10 @@ jobs:
       - name: Run oq webui console and curl for the standalone
         run: |
           Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
+          ping 127.0.0.1 -n 6 > null
           Get-Job
-          ping.exe 192.0.2.2 -n 1 -w %1000 > null
+          netstat -o -n -a | findstr 8800
+          ping 127.0.0.1 -n 6 > null
           curl.exe -X HEAD -I http://127.0.0.1:8800/ipt/
   Upload_Installer:
     #needs: Test_Installer
