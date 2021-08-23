@@ -1,4 +1,4 @@
-name: OLD Nightly Windows Installer for oq-engine
+name: Unstable Nightly Windows Installer for oq-engine
 on:
   push:
   schedule:
@@ -138,6 +138,15 @@ jobs:
           Write-Host %PATH%
           oq --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
+      - name: Run oq wen ui console and curl for the standalone
+        run: |
+          set mypath="C:\Program Files\OpenQuake Engine"
+          set PATH=%mypath%\python;%mypath%\python\Scripts;%PATH%
+          Write-Host %PATH%
+          oq --version
+          oq.exe webui start localhost:8800
+          pinge.exe 192.0.2.2 -n 1 -w %1000 > null
+          curl.exe http://localhost:8800/ipt/
         shell: cmd
   Upload_Installer:
     needs: Test_Installer
