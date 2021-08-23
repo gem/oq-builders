@@ -167,7 +167,7 @@ jobs:
           curl.exe -X HEAD -I http://127.0.0.1:8800/ipt/
   Upload_Installer:
     #needs: Test_Installer
-    needs: Build_Installer
+    needs: Test_Webui
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v2
