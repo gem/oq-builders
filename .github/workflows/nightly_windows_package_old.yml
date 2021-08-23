@@ -138,6 +138,7 @@ jobs:
           Write-Host %PATH%
           oq --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
+        shell: cmd
       - name: Run oq wen ui console and curl for the standalone
         run: |
           set mypath="C:\Program Files\OpenQuake Engine"
