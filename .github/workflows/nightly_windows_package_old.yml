@@ -115,7 +115,7 @@ jobs:
           name: Installer
           path: C:\Users\runneradmin\oq-builders\installers\windows\nsis\out
           #
-  Test_Installer:
+  Test_OQ:
     needs: Build_Installer
     runs-on: windows-latest
     steps:
@@ -144,6 +144,27 @@ jobs:
           Get-Job
           ping.exe 192.0.2.2 -n 1 -w %1000 > null
           curl.exe -X HEAD -I http://localhost:8800/ipt/
+  Test_Webui:
+    needs: Test_OQ
+    runs-on: windows-latest
+    steps:
+      - name: Download Windows Installer from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: Installer
+      - name: Execute the Installer
+        run: |
+          $Install = Get-ChildItem -Filter *.exe
+          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
+          cd "C:\Program Files\OpenQuake Engine\"
+          $env:PATH="C:\Program Files\OpenQuake Engine\python\Scripts"
+          Write-Host ${env:PATH}
+      - name: Run oq webui console and curl for the standalone
+        run: |
+          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
+          Get-Job
+          ping.exe 192.0.2.2 -n 1 -w %1000 > null
+          curl.exe -X HEAD -I http://127.0.0.1:8800/ipt/
   Upload_Installer:
     #needs: Test_Installer
     needs: Build_Installer
