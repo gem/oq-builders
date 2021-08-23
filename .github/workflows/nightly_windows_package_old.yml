@@ -140,13 +140,9 @@ jobs:
         shell: cmd
       - name: Run oq webui console and curl for the standalone
         run: |
-          set mypath="C:\Program Files\OpenQuake Engine"
-          set PATH=%mypath%\python;%mypath%\python\Scripts;%PATH%
-          oq --version
-          START.exe "oq.exe webui start localhost:8800 -s" /B
-          ping.exe 192.0.2.2 -n 1 -w %1000 > null
+          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python\Scripts\oq.exe' webui start 127.0.0.1:8800}
+          ping.exe 192.0.2.2 -n 1 -w %500 > null
           curl.exe -X HEAD -I http://localhost:8800/ipt/
-        shell: cmd
   Upload_Installer:
     needs: Test_Installer
     runs-on: ubuntu-latest
