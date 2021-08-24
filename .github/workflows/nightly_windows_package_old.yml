@@ -152,8 +152,9 @@ jobs:
           ping 127.0.0.1 -n 6 > null
           curl.exe -X HEAD -I http://127.0.0.1:8800/taxtweb/
   Upload_Installer:
+    needs: Build_Installer
     #needs: Test_Installer
-    needs: Test_OQ
+    #needs: Test_OQ
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v2
