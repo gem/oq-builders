@@ -39,12 +39,12 @@ jobs:
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
           Write-Host "Branch: ${branchName}"
-          write-Host "git clone -q  -b ${$branchName} --depth=1 https://github.com/gem/oq-builders"
-          git clone -q  -b ${$branchName} --depth=1 https://github.com/gem/oq-builders
+          write-Host "git clone -q -b ${branchName} --depth=1 https://github.com/gem/oq-builders"
+          git clone -q  -b ${branchName} --depth=1 https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           mkdir .\oq-dist\engine
-          Write-Host "git clone -q -b ${$branchName} --depth=1 https://github.com/gem/oq-engine.git"
-          git clone -q -b ${$branchName} --depth=1 https://github.com/gem/oq-engine.git
+          Write-Host "git clone -q -b ${branchName} --depth=1 https://github.com/gem/oq-engine.git"
+          git clone -q -b ${branchName} --depth=1 https://github.com/gem/oq-engine.git
           Write-Host "Generating zip of demos"
           $copyto = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\demos\"
           Get-ChildItem $copyto | Format-List
@@ -60,7 +60,7 @@ jobs:
             write-host "Destination is" $destination
             [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination)
             }
-            Get-ChildItem *.zip | Format-List
+            #Get-ChildItem *.zip | Format-List
             $zipfolder = $copyto + $element
             md $zipfolder
             Get-ChildItem -Path $path -Include *.zip -Recurse | Copy-Item -Destination $zipfolder
@@ -73,7 +73,7 @@ jobs:
           echo "Downloading standalone apps"
           $app = ("oq-platform-standalone", "oq-platform-ipt", "oq-platform-taxonomy", "oq-platform-taxtweb")
           foreach ($element in $app) {
-          git clone -q -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/$element.git
+              git clone -q -b ${branchName} --depth=1 https://github.com/gem/$element.git
               python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
               if ( $element -eq "oq-platform-taxtweb" ) 
               {
