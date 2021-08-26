@@ -1,4 +1,4 @@
-name: Nightly Installer python on Windows for oq-engine
+name: Nightly Universal Installer on Windows
 on:
   push:
   #schedule:
