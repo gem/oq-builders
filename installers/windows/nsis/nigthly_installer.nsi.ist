@@ -123,7 +123,7 @@ Section "OpenQuake Tools" SecTools
 SectionEnd
 
 # remove because installer create demos folder
-Section "OpenQuake Engine demos and documentation" SecDocDemo
+#Section "OpenQuake Engine demos and documentation" SecDocDemo
   # Install manual and demos in 'Public\MyDocuments'
   # keep disabled for now. It may be dangerous.
   # SetOutPath "$DOCUMENTS\OpenQuake"
@@ -132,11 +132,11 @@ Section "OpenQuake Engine demos and documentation" SecDocDemo
   # File /r /x ".gitignore" "demos\*.*"
 
   # Keep a copy also in the installation folder
-  SetOutPath "$INSTDIR"
-  File "OpenQuake manual.pdf"
-  SetOutPath "$INSTDIR\demos"
-  File /r /x ".gitignore" "demos\*.*"
-SectionEnd
+#  SetOutPath "$INSTDIR"
+#  File "OpenQuake manual.pdf"
+#  SetOutPath "$INSTDIR\demos"
+#  File /r /x ".gitignore" "demos\*.*"
+#SectionEnd
 
 Section "OpenQuake Engine menu icons" SecMenu
   SetOutPath "$INSTDIR"
