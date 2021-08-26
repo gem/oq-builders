@@ -1,8 +1,8 @@
 name: Unstable Nightly Windows Installer for oq-engine
 on:
-  push:
-  schedule:
-    - cron: "0 5 * * 5"
+  # push:
+  #schedule:
+  #  - cron: "0 5 * * 5"
 jobs:
   Build_Installer:
     runs-on: windows-latest
