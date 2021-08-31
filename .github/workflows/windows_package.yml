@@ -1,25 +1,31 @@
-name: Unstable Nightly Windows Installer for oq-engine
+name: Create Windows Installer for oq-engine
 on:
-  # push:
+  workflow_dispatch:                                                           
+    inputs:                                                                    
+      git-ref:                                                                 
+        description: Git Ref                                                   
+        default: master                                                        
+        required: true
+  push:
   #schedule:
-  #  - cron: "0 5 * * 5"
+    #- cron: "0 5 10 * 5"
 jobs:
   Build_Installer:
     runs-on: windows-latest
     env:
-      GIT_BRANCH: ${{ github.ref }}
-      GIT_COMMIT_SHA: ${{ github.sha }}
+      GIT_BRANCH: ${{ github.event.inputs.git-ref }}
     steps:
       - name: Set up Python using embedded distribution and create Installer
         env:
-          GIT_BRANCH: ${{ github.ref }}
+          GIT_BRANCH: ${{ github.event.inputs.git-ref }}
           GIT_COMMIT_SHA: ${{ github.sha }}
         run: |
-          Write-Host "Working Path: ${Env:GITHUB_WORKSPACE}"
-          $branchName = $Env:GITHUB_REF -replace 'refs/heads/', ''
+          $branchName = $Env:GIT_BRANCH
           Write-Host "Branch: ${branchName}"
-          Write-Host "CURRENT_BRANCH=${branchName}" >> $Env:GITHUB_ENV
-          Write-Host "Branch: ${branchName}"
+          Write-Host "CURRENT_BRANCH=${branchName}" 
+          Write-Host "${Env:CURRENT_BRANCH}"
+          Write-Host "Git branch for engine and tools: "$Env:GIT_BRANCH
+          Write-Host "branchName, Git branch for engine and tools: " ${branchName}
           #
           cd C:\Users\runneradmin
           curl  https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip --output python.zip
@@ -42,28 +48,28 @@ jobs:
           git clone -q  --depth=1 -b ${branchName} https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           git clone --depth=1 -b ${branchName} https://github.com/gem/oq-engine.git
-          Write-Host "Generating zip of demos"
+          Write-Host "Generating zip of demos"                                  
           $copyto = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\demos\"
-          Get-ChildItem $copyto | Format-List
-          cd oq-engine\demos\
-          $demos = ("hazard", "risk")
-          foreach ($element in $demos) {
+          Get-ChildItem $copyto | Format-List                                   
+          cd oq-engine\demos\                                                   
+          $demos = ("hazard", "risk")                                           
+          foreach ($element in $demos) {                                        
             $path = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos\" + $element
-            $source = Get-ChildItem -Path .\$element -Directory
-            write-host "Source is " $source
-            Foreach ($s in $source) {
-            Add-Type -assembly "system.io.compression.filesystem"
-            $destination = Join-path -path $path -ChildPath "$($s.name).zip"
-            write-host "Destination is" $destination
+            $source = Get-ChildItem -Path .\$element -Directory                 
+            write-host "Source is " $source                                     
+            Foreach ($s in $source) {                                           
+            Add-Type -assembly "system.io.compression.filesystem"               
+            $destination = Join-path -path $path -ChildPath "$($s.name).zip"    
+            write-host "Destination is" $destination                            
             [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination)
-            }
-            Get-ChildItem *.zip | Format-List
-            $zipfolder = $copyto + $element
-            md $zipfolder
+            }                                                                   
+            Get-ChildItem *.zip | Format-List                                   
+            $zipfolder = $copyto + $element                                     
+            md $zipfolder                                                       
             Get-ChildItem -Path $path -Include *.zip -Recurse | Copy-Item -Destination $zipfolder
-          }
-          cd ..
-          Write-Host "Creating wheel for engine"
+          }                                                                     
+          cd ..                                                                 
+          Write-Host "Creating wheel for engine"                                
           python -m pip install install -r requirements-py38-win64.txt
           cd ..
           python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/engine ./oq-engine
@@ -96,25 +102,24 @@ jobs:
           $inst_version = [regex]::Matches($version, $pattern).Value
           $time_of_git = git -C .\oq-engine log -n1 --pretty='format:%cd' --date=format:'%y%m%d%H%M'
           Write-Host "version: ${inst_version} and time: ${time_of_git}"
-          (Get-Content -Path .\installer.nsi.win.nightly -Raw) -replace 'CHANGETIME', $time_of_git -replace 'CHANGEHERERELEASE', $inst_version | Set-Content -Path .\installer.nsi
+          (Get-Content -Path .\installer.nsi.win -Raw) -replace 'CHANGETIME', $time_of_git -replace 'CHANGEHERERELEASE', $inst_version | Set-Content -Path .\installer.nsi
           makensis /V4 installer.nsi
           mkdir out
           Copy-Item *.exe .\out
-          $Install = Get-ChildItem -Filter *.exe 
-          Get-FileHash $Install | Select-Object Hash
-          $hash = Get-FileHash $Install -Algorithm SHA256
-          $sha256 = $hash.Hash
-          $Name = $Install.Name
-          $Outfile = $Install.Name + ".sha256" 
-          Write-Output $hash.Hash  $Install.Name > $Outfile
-          Copy-Item $Outfile .\out
-          #
+          $Install = Get-ChildItem -Filter *.exe                                
+          Get-FileHash $Install | Select-Object Hash                            
+          $hash = Get-FileHash $Install -Algorithm SHA256                       
+          $sha256 = $hash.Hash                                                  
+          $Name = $Install.Name                                                 
+          $Outfile = $Install.Name + ".sha256"                                  
+          Write-Output $hash.Hash  $Install.Name > $Outfile                     
+          Copy-Item $Outfile .\out                                              
+          #                                
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Installer
           path: C:\Users\runneradmin\oq-builders\installers\windows\nsis\out
-          #
   Test_OQ:
     needs: Build_Installer
     runs-on: windows-latest
@@ -170,4 +175,6 @@ jobs:
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa 
-          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/
+
+
