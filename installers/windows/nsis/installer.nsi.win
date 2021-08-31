@@ -222,7 +222,7 @@ Section "Uninstall"
     Delete "$INSTDIR\openquake.ico"
     Delete "$INSTDIR\oq-server.bat"
     Delete "$INSTDIR\oq-console.bat"
-	Delete "$INSTDIR\install.log
+	Delete "$INSTDIR\install.log"
   ; Uninstall directories
     RMDir /r "$INSTDIR\demos"
     RMDir /r "$INSTDIR\doc"
