@@ -342,15 +342,6 @@ Function PageLeaveReinstall
 
 FunctionEnd
 
-!define /IfNDef LVM_GETITEMCOUNT 0x1004
-!define /IfNDef LVM_GETITEMTEXTA 0x102D
-!define /IfNDef LVM_GETITEMTEXTW 0x1073
-!if "${NSIS_CHAR_SIZE}" > 1
-!define /IfNDef LVM_GETITEMTEXT ${LVM_GETITEMTEXTW}
-!else
-!define /IfNDef LVM_GETITEMTEXT ${LVM_GETITEMTEXTA}
-!endif
- 
 Function DumpLog
   Exch $5
   Push $0
