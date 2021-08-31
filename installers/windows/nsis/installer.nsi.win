@@ -77,9 +77,14 @@ Function .onInit
       MessageBox MB_OK "A 64bit OS is required"
       Quit
   ${EndIf}
+  ${IfNot} ${AtLeastWin8.1}
+    IfSilent +2
+    MessageBox MB_OK "Your Windows version is not supported. Please use Windows 10"
+	Quit
+  ${EndIf}
   ${IfNot} ${AtLeastWin10}
     IfSilent +2
-    MessageBox MB_OK "Your Windows version is not supported. Use at your own risk."
+    MessageBox MB_OK "Your Windows version is not recommended. Use at your own risk."
   ${EndIf}
 FunctionEnd
 
