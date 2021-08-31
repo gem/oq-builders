@@ -1,11 +1,11 @@
 name: Installer python on Windows for oq-engine
 on:
-  workflow_dispatch:
-    inputs:
-      git-ref:
-        description: Git Ref 
-        default: master
-        required: true
+  #workflow_dispatch:
+  #  inputs:
+  #    git-ref:
+  #      description: Git Ref 
+  #      default: master
+  #      required: true
   #push:
   #schedule:
   #- cron: "0 21 * * *"
