@@ -1,5 +1,6 @@
 name: Installer python on Windows for oq-engine
-on:
+  # No more used for installer, switch to wheel creation
+  #on:
   #workflow_dispatch:
   #  inputs:
   #    git-ref:

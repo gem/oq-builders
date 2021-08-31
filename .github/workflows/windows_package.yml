@@ -6,7 +6,7 @@ on:
         description: Git Ref                                                   
         default: master                                                        
         required: true
-  push:
+  #push:
   #schedule:
     #- cron: "0 5 10 * 5"
 jobs:
