@@ -132,7 +132,6 @@ jobs:
         run: |
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
-          cd "C:\Program Files\OpenQuake Engine\"
           $env:PATH="C:\Program Files\OpenQuake Engine\python\Scripts"
           Write-Host ${env:PATH}
           pwd
@@ -140,7 +139,6 @@ jobs:
         run: |
           set mypath="C:\Program Files\OpenQuake Engine"
           set PATH=%mypath%\python;%mypath%\python\Scripts;%PATH%
-          type "C:\Program Files\Openquake Engine\install.log"
           oq --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
         shell: cmd
