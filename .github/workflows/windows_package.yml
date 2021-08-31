@@ -1,5 +1,8 @@
 name: Create Windows Installer for oq-engine
 on:
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:                                                           
     inputs:                                                                    
       git-ref:                                                                 
