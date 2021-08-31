@@ -1,6 +1,6 @@
 name: Unstable Nightly Creation of Windows Installer for oq-engine
 on:
-  # push:
+  push:
   #schedule:
   #  - cron: "0 5 * * 5"
 jobs:
