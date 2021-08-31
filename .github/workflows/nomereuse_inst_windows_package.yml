@@ -1,42 +1,31 @@
 name: Installer python on Windows for oq-engine
-on:
-  workflow_dispatch:
-    inputs:
-      git-ref:
-        description: Git Ref 
-        default: master
-        required: true
+  # No more used for installer, switch to wheel creation
+  #on:
+  #workflow_dispatch:
+  #  inputs:
+  #    git-ref:
+  #      description: Git Ref 
+  #      default: master
+  #      required: true
   #push:
   #schedule:
-  #- cron: "0 21 * * 4"
+  #- cron: "0 21 * * *"
 jobs:
   Build_Installer:
     runs-on: windows-latest
     env:
-      #GIT_BRANCH: ${{ github.ref }}
       GIT_BRANCH: ${{ github.event.inputs.git-ref }}
-      GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
-      - name: Set Variables
-        run: |
-          echo "Working Path: ${Env:GITHUB_WORKSPACE}"
-          #$branchName = $Env:GITHUB_REF -replace 'refs/heads/', ''
-          $branchName = $Env:GITHUB_BRANCH -replace 'refs/heads/', ''
-          echo "Branch: ${branchName}"
-          echo "CURRENT_BRANCH=${branchName}" >> $Env:GITHUB_ENV
       - name: Output Variables
         run: |
-          echo "${Env:CURRENT_BRANCH}"
           echo "${Env:GIT_BRANCH}"
       - name: Set up Python using embedded distribution and create Installer
         env:
-          #GIT_BRANCH: ${{ github.ref }}
           GIT_BRANCH: ${{ github.event.inputs.git-ref }}
-          GIT_COMMIT_SHA: ${{ github.sha }}
         run: |
           cd C:\Users\runneradmin
-          pwd
-          Write-Host $Env:GIT_BRANCH
+          Write-Host "Branch for builders: "$Env:CURRENT_BRANCH
+          Write-Host "Git branch for engine and tools: "$Env:GIT_BRANCH
           curl  https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip --output python.zip
           where.exe unzip.exe
           unzip.exe python.zip -d python
@@ -54,7 +43,6 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
-          echo "${Env:GIT_BRANCH}"
           git clone -q  -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           mkdir .\oq-dist\engine
@@ -127,7 +115,15 @@ jobs:
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\LICENSE.txt" -Destination ".\" 
           makensis /V4 installer.nsi
           mkdir out
+          $Install = Get-ChildItem -Filter *.exe 
+          Get-FileHash $Install | Select-Object Hash
+          $hash = Get-FileHash $Install -Algorithm SHA256
+          $sha256 = $hash.Hash
+          $Name = $Install.Name
+          $Outfile = $Install.Name + ".sha256" 
+          Write-Output $hash.Hash  $Install.Name > $Outfile
           Copy-Item *.exe .\out
+          Copy-Item $Outfile .\out
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -158,3 +154,22 @@ jobs:
           oq --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
         shell: cmd
+
+  Upload_Installer:
+    needs: Test_Installer
+    runs-on: ubuntu-latest
+    steps:     
+      - uses: actions/checkout@v2
+      - name: Download Windows Installer from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: Installer
+      - name: rsync to downloads.openquake.org
+        shell: bash
+        env:
+          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
+          chmod 600 ./.deploy_rsa
+          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/
