@@ -120,7 +120,7 @@ jobs:
         with:
           name: Installer
           path: C:\Users\runneradmin\oq-builders\installers\windows\nsis\out
- Test_OQ:
+  Test_OQ:
     needs: Build_Installer
     runs-on: windows-latest
     steps:
