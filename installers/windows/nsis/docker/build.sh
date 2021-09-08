@@ -66,7 +66,6 @@ rm -Rf src/oq-*
 rm -Rf python-dist/python3.6/*
 rm -Rf demos/*
 
-mkdir src
 cd src
 
 if [ ! -f $PY_ZIP ]; then
