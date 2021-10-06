@@ -27,9 +27,9 @@ RUN apt-get update && \
     git gcc libcap-dev  \
     gmt gmt-gshhg \
     ghostscript \
-    build-essential && \ 
+    build-essential && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    useradd -m -u 1000 -s /bin/bash openquake  
+    useradd -m -u 1000 -s /bin/bash openquake
 #
 ARG oq_branch
 ENV LANG en_US.UTF-8
@@ -42,8 +42,8 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV GMT_SESSION_NAME=$$
 #
 # Install dependencies and engine
-RUN git clone https://github.com/gem/oq-engine.git --depth=1 --branch $oq_branch && cd oq-engine && \ 
-    pip --disable-pip-version-check install -e . -r requirements-py38-linux64.txt --no-warn-script-location 
+RUN git clone https://github.com/gem/oq-engine.git --depth=1 --branch $oq_branch && cd oq-engine && \
+    pip --disable-pip-version-check install -e . -r requirements-py38-linux64.txt --no-warn-script-location
 #
 # Install OpenQuake Tools
 #
@@ -51,13 +51,13 @@ RUN pip install pip wheel setuptools --upgrade && \
 	pip install notebook==6.3.0 jupyterlab==3.0.14 ipywidgets && \
 	cd /usr/src && git clone -q --depth=1 -b $oq_branch https://github.com/gem/oq-platform-standalone.git && pip install -e oq-platform-standalone/ && \
 	cd /usr/src && git clone -q --depth=1 -b $oq_branch https://github.com/gem/oq-platform-ipt.git && pip install -e oq-platform-ipt/ && \
-	cd /usr/src && git clone -q --depth=1 -b $oq_branch https://github.com/gem/oq-platform-taxonomy.git && pip install -e oq-platform-taxonomy/ && \ 
+	cd /usr/src && git clone -q --depth=1 -b $oq_branch https://github.com/gem/oq-platform-taxonomy.git && pip install -e oq-platform-taxonomy/ && \
 	cd /usr/src && git clone -q --depth=1 -b $oq_branch https://github.com/gem/oq-platform-taxtweb.git && pip install -e oq-platform-taxtweb/ && \
 	export PYBUILD_NAME="oq-taxonomy" && pip install -e oq-platform-taxtweb/ && unset PYBUILD_NAME && \
 	cd /usr/src && git clone https://github.com/GEMScienceTools/oq-mbtk.git --depth=1 && cd oq-mbtk && \
     pip install rtree && pip install -e . && \
     cd /usr/src && git clone https://github.com/GEMScienceTools/gmpe-smtk.git --depth=1 && cd gmpe-smtk && \
-    python3 setup.py install 
+    python3 setup.py install
 #
 USER openquake
 ENV HOME /home/openquake
@@ -66,10 +66,10 @@ ENV HOME /home/openquake
 #ADD openquake.cfg /opt/openquake/openquake.cfg
 #
 WORKDIR ${HOME}
-RUN mkdir oqdata 
+RUN mkdir oqdata
 #
-ADD scripts/start.sh ${HOME}
+ADD scripts/start.sh /usr/src
 EXPOSE 8888:8888
 STOPSIGNAL SIGINT
 ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["./start.sh"] 	
+CMD ["/usr/src/start.sh"]
