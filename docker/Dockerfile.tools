@@ -48,7 +48,7 @@ RUN git clone https://github.com/gem/oq-engine.git --depth=1 --branch $oq_branch
 # Install OpenQuake Tools
 #
 RUN pip install pip wheel setuptools --upgrade && \
-	pip install notebook==6.3.0 jupyterlab==3.0.14 ipywidgets && \
+	pip install notebook jupyterlab ipywidgets && \
 	cd /usr/src && git clone -q --depth=1 -b $oq_branch https://github.com/gem/oq-platform-standalone.git && pip install -e oq-platform-standalone/ && \
 	cd /usr/src && git clone -q --depth=1 -b $oq_branch https://github.com/gem/oq-platform-ipt.git && pip install -e oq-platform-ipt/ && \
 	cd /usr/src && git clone -q --depth=1 -b $oq_branch https://github.com/gem/oq-platform-taxonomy.git && pip install -e oq-platform-taxonomy/ && \
