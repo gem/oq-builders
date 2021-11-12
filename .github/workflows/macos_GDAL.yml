@@ -1,7 +1,8 @@
-name: macOS build GDAL whl
+name: compile macOS build GDAL whl
 on:
-  schedule:
-    - cron: "0 5 * * 1"
+  workflow_dispatch:
+ #schedule:
+   #- cron: "0 5 * * 1"
 jobs:
   GDAL-build:
     runs-on: ${{ matrix.os }}
