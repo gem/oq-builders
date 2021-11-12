@@ -64,9 +64,9 @@ function build_dep {
             if [ ! -f /usr/local/lib/libexpat.so ]; then
                 cd /tmp/src
                 curl -f -L -O https://github.com/libexpat/libexpat/releases/download/R_2_4_1/expat-2.4.1.tar.bz2
-				tar xjf expat-2.4.1.tar.bz2 
+				tar xjf expat-2.4.1.tar.bz2
 				cd expat-2.4.1
-                ./configure --prefix=/usr/local
+				./configure --prefix=/usr/local
                 make -j $NPROC
                 make install
             fi
@@ -86,7 +86,7 @@ function build_dep {
             if [ ! -f /usr/local/lib/libproj.so ]; then
                 cd /tmp/src
                 curl -f -L -O https://download.osgeo.org/proj/proj-8.2.0.zip
-                tar xzf proj-8.2.0.tar.gz
+                unzip proj-8.2.0.zip
                 cd proj-8.2.0
                 ./configure
                 make -j $NPROC
