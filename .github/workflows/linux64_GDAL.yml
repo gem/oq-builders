@@ -1,4 +1,4 @@
-name: Linux build GDAL 
+name: compile Linux build GDAL 
 on:
   workflow_dispatch:
 #  schedule:
