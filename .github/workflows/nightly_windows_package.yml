@@ -1,9 +1,6 @@
 name: Unstable Nightly Creation of Windows Installer for oq-engine
 on:
-  push:
-    nightly
-  #schedule:
-  #  - cron: "0 5 * * 5"
+  workflow_dispatch:
 jobs:
   Build_Installer:
     runs-on: windows-latest

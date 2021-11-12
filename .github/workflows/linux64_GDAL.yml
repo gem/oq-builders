@@ -1,6 +1,9 @@
 name: compile Linux build GDAL 
 on:
   workflow_dispatch:
+#  push:
+#    branches: 
+#      - gdal_macos_333
 #  schedule:
 #    - cron: "0 2 * * 3"
 jobs:
@@ -8,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [36, 37, 38]
+        python-version: [36, 37, 38, 39]
     container: 
       image: quay.io/pypa/manylinux1_x86_64
       env: 

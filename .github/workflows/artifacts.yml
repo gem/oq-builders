@@ -1,4 +1,4 @@
-name: Linux build setproctitle\
+name: Linux build setproctitle
 on:
   workflow_dispatch:
 #  schedule:
