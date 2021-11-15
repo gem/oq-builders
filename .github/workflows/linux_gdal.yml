@@ -1,9 +1,9 @@
 name: compile Linux build GDAL
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - test_gdal
+#  push:
+#    branches:
+#      - 
 #  schedule:
 #    - cron: "0 2 * * 3"
 jobs:

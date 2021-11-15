@@ -1,7 +1,7 @@
 name: brew method for macOS GDAL whl 
 on:
   workflow_dispatch:
-  push:
+#  push:
 #    branches: 
 #      - test_gdal
 #    inputs:
