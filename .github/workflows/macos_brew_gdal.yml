@@ -1,6 +1,9 @@
 name: brew method for macOS GDAL whl 
 on:
   workflow_dispatch:
+#  push:
+#    branches: 
+#      - test_gdal
 #    inputs:
 #      gdal-ref:
 #        description: GDAL Version
@@ -9,16 +12,14 @@ on:
 # pull_request:
 #    branches:
 #      - master
-# push:
-#    branches:
-#     - python3.9
 jobs:
   wheel_of_GDAL:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        os: [macos-latest]
+#        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.7, 3.8, 3.9]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
@@ -47,11 +48,56 @@ jobs:
           python setup.py install
           pip wheel --no-deps --no-binary :all: -w output .
           cd output
-          delocate-wheel -w ~/src/whl GDAL*.whl
-      - name: Test Gdal with python
-        run: python3 -c "import osgeo.gdal; print(osgeo.gdal.VersionInfo())"
+          mkdir -p ~/src/whl/${{ matrix.python-version }}
+          delocate-wheel -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
       - name: Upload artifacts of wheel
         uses: actions/upload-artifact@v2
         with:
-          name: gdal wheel macos
-          path: ~/src/whl/
+          name: gdal_wheel
+          path: ~/src/whl/${{ matrix.python-version }}
+#
+  test_of_GDAL:
+    needs: wheel_of_GDAL
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+        python-version: [3.7, 3.8, 3.9]
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: download artifact
+        uses: actions/download-artifact@v2
+        id: download
+        with:
+          name: gdal_wheel
+          path: ~/src/whl/${{ matrix.python-version }}
+      - name: 'Echo artifact download path'
+        run: echo ${{steps.download.outputs.download-path}}
+      - name: Test Gdal with python
+        shell: bash
+        run: |
+          export PIP_DEFAULT_TIMEOUT=100
+          echo "engine installation to test GDAL wheel"
+          cd ~
+          python -m venv ~/openquake/
+          echo "source ~/openquake/bin/activate"
+          source ~/openquake/bin/activate
+          python -c "import sys; print(sys.version)"
+          git clone https://github.com/gem/oq-engine.git
+          cd oq-engine
+          pip install -U pip wheel setuptools
+          pip install pytest
+          pip install -e .
+          pip install numpy==1.20
+          cd ${{steps.download.outputs.download-path}}
+          pwd
+          ls -lrt
+          wheel="$(ls *`echo ${{ matrix.python-version }} | tr -d .`*.whl)"
+          echo ${wheel}
+          pip install ${wheel}
+          cd ~/oq-engine
+          python -c "import openquake"
+          pytest openquake/sep/tests/test_utils.py
