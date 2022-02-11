@@ -135,10 +135,9 @@ rm /tmp/README.$$.md
 # Get a copy of the OQ manual if not yet available
 if [ ! -f OpenQuake\ manual.pdf ]; then
     #wget -O- https://ci.openquake.org/job/builders/job/pdf-builder/lastSuccessfulBuild/artifact/oq-engine/doc/manual/oq-manual.pdf > OpenQuake\ manual.pdf
-	echo ${ini_vers}
 	release="$(echo ${ini_vers::-2})"
 	echo "release of engine ${release}"
-	wget -O- https://docs.openquake.org/manuals/OpenQuake%20Manual%20%28${release}.pdf > OpenQuake\ manual.pdf
+	wget -O- https://docs.openquake.org/manuals/OpenQuake\ Manual\ ${release}.pdf > OpenQuake\ manual.pdf
 fi
 exit 0
 
