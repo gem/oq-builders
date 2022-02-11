@@ -1,6 +1,12 @@
 name: Unstable Nightly Creation of Windows Installer for oq-engine
 on:
-  push:
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref
+        default: master
+        required: true
+  #push:
   #schedule:
   #  - cron: "0 5 * * 5"
 jobs:
