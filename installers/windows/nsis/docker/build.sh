@@ -139,7 +139,6 @@ if [ ! -f OpenQuake\ manual.pdf ]; then
 	echo "release of engine ${release}"
 	wget -O- https://docs.openquake.org/manuals/OpenQuake\ Manual\ ${release}.pdf > OpenQuake\ manual.pdf
 fi
-exit 0
 
 if [[ $OQ_OUTPUT = *"exe"* ]]; then
     echo "Generating NSIS installer"
