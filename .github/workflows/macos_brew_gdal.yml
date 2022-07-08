@@ -94,9 +94,7 @@ jobs:
           pwd
           ls -lrt
           #wheel="$(ls *`echo ${{ matrix.python-version }} | tr -d .`*.whl)"
-          wheel="$(ls | tr -d .`*.whl)"
-          echo ${wheel}
-          pip install ${wheel}
+          pip install ~/wheelhouse/*.whl
           cd ~/oq-engine
           python -c "import openquake"
           pytest openquake/sep/tests/test_utils.py
