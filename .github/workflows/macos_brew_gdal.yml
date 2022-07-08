@@ -1,60 +1,56 @@
-name: brew method for macOS GDAL whl 
+name: brew method for macOS GDAL whl
 on:
+  push:
+    branches: [ae-macosm1]
   workflow_dispatch:
-#  push:
-#    branches: 
-#      - test_gdal
-#    inputs:
-#      gdal-ref:
-#        description: GDAL Version
-#        default: 3.3.3
-#        required: true
-# pull_request:
-#    branches:
-#      - master
 jobs:
   wheel_of_GDAL:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
-#        python-version: [3.6, 3.7, 3.8, 3.9]
-        python-version: [3.7, 3.8, 3.9]
+        include:
+         - os: macos-10.15
+           arch: x86_64
+           os_architectures: x86_64
+             #         - os: self-gem
+             #           arch: arm64
+             #           cmake_osx_architectures: arm64
+        python-version: [3.9]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install gdal using brew and build wheel
-        #env:
-          #GDAL_REF: ${{ github.event.inputs.gdal-ref }}
+      - name: Install gdal using brew l
+        env:
         run: |
-          #$gdalref = ${{ github.event.inputs.gdal-ref }}
           echo "Input GDAL version: $gdalref"
           echo "brew install gdal"
           brew install gdal
-          #
-          #test gdal installation
           echo " gdalinfo --version"
           gdalinfo --version
-          pip3 install -U pip wheel setuptools delocate
-          pip3 install numpy
-          pip3 download GDAL==3.3.3
-          tar -xvzf GDAL-3.3.3.tar.gz
-          cd GDAL-3.3.3
-          pwd
-          python setup.py build
-          python setup.py install
-          pip wheel --no-deps --no-binary :all: -w output .
-          cd output
-          mkdir -p ~/src/whl/${{ matrix.python-version }}
-          delocate-wheel -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
+      - name: build wheel
+        uses: pypa/cibuildwheel@v2.8.0
+        env:
+          CIBW_BUILD: cp39-*
+          CIBW_ARCHS: ${{ matrix.arch }}
+          CIBW_BUILD_VERBOSITY: 2
+          CIBW_ENVIRONMENT_MACOS:
+            MACOSX_DEPLOYMENT_TARGET=10.9
+            CMAKE_OSX_ARCHITECTURES='${{ matrix.os_architectures }}'
+            CIBW_ARCHS_MACOS='${{ matrix.os_architectures }}'
+            CIBW_BEFORE_BUILD_MACOS: >
+              python -m pip install numpy &&
+              pip3 download GDAL==3.5.1 &&
+              tar -xvzf GDAL-3.5.1.tar.gz &&
+              cd GDAL-3.5.1 &&
+              pwd
       - name: Upload artifacts of wheel
         uses: actions/upload-artifact@v2
         with:
           name: gdal_wheel
-          path: ~/src/whl/${{ matrix.python-version }}
+          path: ./wheelhouse/*.whl
 #
   test_of_GDAL:
     needs: wheel_of_GDAL
