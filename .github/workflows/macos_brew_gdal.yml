@@ -34,10 +34,12 @@ jobs:
           python -m pip install numpy 
           pip3 download GDAL==3.5.1 
           tar -xvzf GDAL-3.5.1.tar.gz 
+          mkdir ~/wheelhouse 
       - name: build wheel
         uses: pypa/cibuildwheel@v2.8.0
         with:
           package-dir: ./GDAL-3.5.1
+          output-dir: ~/wheelhouse
         env:
           CIBW_BUILD: cp39-*
           CIBW_ARCHS: ${{ matrix.arch }}
