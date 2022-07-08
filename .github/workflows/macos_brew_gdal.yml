@@ -22,8 +22,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install gdal using brew l
-        env:
+      - name: Install gdal using brew
         run: |
           echo "Input GDAL version: $gdalref"
           echo "brew install gdal"
