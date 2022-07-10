@@ -47,6 +47,8 @@ jobs:
           python setup.py install
           pip wheel --no-deps --no-binary :all: -w output .
           cd output
+          echo "listing folder of wheel"
+          ls -lrt  ~/src/whl
           rm -rf ~/src/whl
           mkdir -p ~/src/whl/${{ matrix.python-version }}
       - name: Upload artifacts of wheel
@@ -63,8 +65,10 @@ jobs:
           echo "engine installation to test GDAL wheel"
           cd ~
           python3.9 -c "import sys; print(sys.version)"
-          python3.9 -m venv oq-test
-          source ./oq-test/bin/activate
+          rm -rf ./oq-gdal
+          python3.9 -m venv oq-gdal
+          source ./oq-gdal/bin/activate
+          rm -rf oq-engine
           git clone https://github.com/gem/oq-engine.git
           cd oq-engine
           pip3 install -U pip wheel setuptools pytest numpy
