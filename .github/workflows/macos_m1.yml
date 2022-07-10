@@ -49,6 +49,8 @@ jobs:
           cd output
           rm -rf ~/src/whl
           mkdir -p ~/src/whl/${{ matrix.python-version }}
+      - name: Upload artifacts of wheel
+        uses: actions/upload-artifact@v2
         with:
           name: gdal_wheel
           path: ~/src/whl/${{ matrix.python-version }}
