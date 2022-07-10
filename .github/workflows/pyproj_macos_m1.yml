@@ -36,9 +36,8 @@ jobs:
       - name: Download pyproj sources
         run: |
            export PIP_DEFAULT_TIMEOUT=100
-           pip3 download --no-deps --no-binary :all: pyproj==3.3.1
+           curl -L -v -o pyproj-3.3.1.tar.gz https://github.com/pyproj4/pyproj/archive/refs/tags/3.3.1.tar.gz
            tar -zxvf pyproj-3.3.1.tar.gz
-
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.8.0
         with:
