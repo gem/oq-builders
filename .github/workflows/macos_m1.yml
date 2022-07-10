@@ -48,7 +48,7 @@ jobs:
           pip wheel --no-deps --no-binary :all: -w output .
           cd output
           mkdir -p ~/src/whl/${{ matrix.python-version }}
-          delocate-wheel -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
+          delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
           deactivate
       - name: Upload artifacts of wheel
         uses: actions/upload-artifact@v2
