@@ -1,5 +1,6 @@
 name: brew method for macOS GDAL whl 
 on:
+  push:
   workflow_dispatch:
 #  push:
 #    branches: 
@@ -18,8 +19,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-#        python-version: [3.6, 3.7, 3.8, 3.9]
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.9]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
@@ -40,9 +40,9 @@ jobs:
           gdalinfo --version
           pip3 install -U pip wheel setuptools delocate
           pip3 install numpy
-          pip3 download GDAL==3.3.3
-          tar -xvzf GDAL-3.3.3.tar.gz
-          cd GDAL-3.3.3
+          pip3 download GDAL==3.5.1
+          tar -xvzf GDAL-3.5.1.tar.gz
+          cd GDAL-3.5.1
           pwd
           python setup.py build
           python setup.py install
@@ -62,7 +62,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.9]
     steps:
       - name: Set up Python
         uses: actions/setup-python@v2
