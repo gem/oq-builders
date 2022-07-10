@@ -63,7 +63,7 @@ jobs:
           CIBW_BEFORE_TEST: python3.9 -m pip install shapely~=1.7.1 || echo "Shapely install failed"
           CIBW_TEST_COMMAND: >
             pyproj -v &&
-            python -c "import pyproj; pyproj.Proj(init='epsg:4269')"  &&
+            python3.9 -c "import pyproj; pyproj.Proj(init='epsg:4269')"  &&
             cp -r {package}/test . &&
             python3.9 -m pytest test -v -s
 
