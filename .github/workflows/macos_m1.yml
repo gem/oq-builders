@@ -39,9 +39,9 @@ jobs:
           source ./oq-builders/bin/activate
           echo "source ./oq-builders/bin/activate"
           pip3 install -U pip wheel setuptools delocate numpy
-          pip3 download GDAL==3.5.0
-          tar -xvzf GDAL-3.5.0.tar.gz
-          cd GDAL-3.5.0
+          pip3 download GDAL==3.5.1
+          tar -xvzf GDAL-3.5.1.tar.gz
+          cd GDAL-3.5.1
           pwd
           python setup.py build
           python setup.py install
@@ -61,7 +61,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [m1Gem]
         python-version: [3.9]
     steps:
       - name: download artifact
