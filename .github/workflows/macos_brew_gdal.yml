@@ -1,4 +1,4 @@
-name: brew method for macOS GDAL whl 
+name: Intel GDAL MacOS
 on:
   workflow_dispatch:
 #  push:

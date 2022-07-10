@@ -1,18 +1,7 @@
-name: M1 GDAL brew
+name: M1 GDAL wheel 
 on:
   push:
   workflow_dispatch:
-#  push:
-#    branches:
-#      - test_gdal
-#    inputs:
-#      gdal-ref:
-#        description: GDAL Version
-#        default: 3.3.3
-#        required: true
-# pull_request:
-#    branches:
-#      - master
 jobs:
   wheel_of_GDAL:
     runs-on: ${{ matrix.os }}
@@ -51,6 +40,7 @@ jobs:
           ls -lrt  ~/src/whl
           rm -rf ~/src/whl
           mkdir -p ~/src/whl/${{ matrix.python-version }}
+          delocate-listdeps GDAL*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
       - name: Upload artifacts of wheel
         uses: actions/upload-artifact@v2
         with:
