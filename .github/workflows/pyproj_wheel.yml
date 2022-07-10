@@ -60,12 +60,12 @@ jobs:
             LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
           CIBW_BEFORE_ALL_MACOS: bash ./wheels/builders/proj-compile-wheels.sh
           CIBW_TEST_REQUIRES: cython pytest oldest-supported-numpy pandas xarray
-          CIBW_BEFORE_TEST: python -m pip install shapely~=1.7.1 || echo "Shapely install failed"
+          CIBW_BEFORE_TEST: python3.9 -m pip install shapely~=1.7.1 || echo "Shapely install failed"
           CIBW_TEST_COMMAND: >
             pyproj -v &&
             python -c "import pyproj; pyproj.Proj(init='epsg:4269')"  &&
             cp -r {package}/test . &&
-            python -m pytest test -v -s
+            python3.9 -m pytest test -v -s
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
