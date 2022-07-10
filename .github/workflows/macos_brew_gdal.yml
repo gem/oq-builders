@@ -91,7 +91,7 @@ jobs:
           pip install -U pip wheel setuptools
           pip install pytest
           pip install -e .
-          pip install numpy==1.20
+          pip install numpy
           cd ${{steps.download.outputs.download-path}}
           pwd
           ls -lrt
