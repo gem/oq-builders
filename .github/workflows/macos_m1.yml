@@ -39,16 +39,16 @@ jobs:
           source ./oq-builders/bin/activate
           echo "source ./oq-builders/bin/activate"
           pip3 install -U pip wheel setuptools delocate numpy
-          pip3 download GDAL==3.5.1
-          tar -xvzf GDAL-3.5.1.tar.gz
-          cd GDAL-3.5.1
+          pip3 download GDAL==3.5.0
+          tar -xvzf GDAL-3.5.0.tar.gz
+          cd GDAL-3.5.0
           pwd
           python setup.py build
           python setup.py install
           pip wheel --no-deps --no-binary :all: -w output .
           cd output
           mkdir -p ~/src/whl/${{ matrix.python-version }}
-          delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
+          delocate-listdeps GDAL*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
           deactivate
       - name: Upload artifacts of wheel
         uses: actions/upload-artifact@v2
