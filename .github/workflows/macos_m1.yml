@@ -1,4 +1,4 @@
-name: brew method for macOS GDAL whl
+name: M1 GDAL brew
 on:
   push:
   workflow_dispatch:
@@ -47,7 +47,7 @@ jobs:
           python setup.py install
           pip wheel --no-deps --no-binary :all: -w output .
           cd output
-          rm -rf ~/src/whl/
+          rm -rf ~/src/whl
           mkdir -p ~/src/whl/${{ matrix.python-version }}
         with:
           name: gdal_wheel
