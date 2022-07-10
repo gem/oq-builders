@@ -1,6 +1,5 @@
 name: brew method for macOS GDAL whl 
 on:
-  push:
   workflow_dispatch:
 #  push:
 #    branches: 

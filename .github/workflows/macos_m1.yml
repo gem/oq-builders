@@ -1,9 +1,9 @@
-name: brew method for macOS GDAL whl 
+name: brew method for macOS GDAL whl
 on:
   push:
   workflow_dispatch:
 #  push:
-#    branches: 
+#    branches:
 #      - test_gdal
 #    inputs:
 #      gdal-ref:
@@ -79,17 +79,18 @@ jobs:
           echo "engine installation to test GDAL wheel"
           cd ~
           python3.9 -c "import sys; print(sys.version)"
+          python3.9 -m venv oq-test
+          source ./oq-test/bin/activate
           git clone https://github.com/gem/oq-engine.git
           cd oq-engine
-          pip install -U pip wheel setuptools
-          pip install pytest numpy
-          pip install -e .
+          pip3 install -U pip wheel setuptools pytest numpy
+          pip3 install -e .
           cd ${{steps.download.outputs.download-path}}
           pwd
           ls -lrt
           wheel="$(ls *`echo ${{ matrix.python-version }} | tr -d .`*.whl)"
           echo ${wheel}
-          pip install ${wheel}
+          pip3 install ${wheel}
           cd ~/oq-engine
-          python -c "import openquake"
+          python3.9 -c "import openquake"
           pytest openquake/sep/tests/test_utils.py
