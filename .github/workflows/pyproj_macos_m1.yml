@@ -59,17 +59,16 @@ jobs:
             LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
           CIBW_BEFORE_ALL_MACOS: bash ./wheels/builders/proj-compile-wheels.sh
           CIBW_TEST_REQUIRES: cython pytest oldest-supported-numpy pandas xarray
-          CIBW_BEFORE_TEST: python3 -m pip -U install pytest pip shapely matplotlib || echo "Shapely install failed"
+          CIBW_BEFORE_TEST: pip install -U pytest pip shapely matplotlib 
           CIBW_TEST_COMMAND: >
             pyproj -v &&
-            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
-            git clone https://github.com/gem/oq-engine.git
-            cd oq-engine
-            pip install -U pip wheel setuptools pytest numpy
-            pip install ./wheelhouse/*.whl
-            pip freeze
-            pip install -e .
-            oq --version
+            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" &&
+            pip install ./wheelhouse/*.whl  &&
+            git clone https://github.com/gem/oq-engine.git &&
+            cd oq-engine  &&
+            pip freeze  &&
+            pip install -e .  &&
+            oq --version  
             #cp -r {package}/test . &&
             #pytest test -v -s
 
