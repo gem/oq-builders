@@ -1,4 +1,4 @@
-name: Wheels for engine
+name: M1 pyproj wheel
 on:
   push:
   workflow_dispatch:
@@ -63,6 +63,13 @@ jobs:
           CIBW_TEST_COMMAND: >
             pyproj -v &&
             python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
+            git clone https://github.com/gem/oq-engine.git
+            cd oq-engine
+            pip install -U pip wheel setuptools pytest numpy
+            pip install ./wheelhouse/*.whl
+            pip freeze
+            pip install -e .
+            oq --version
             #cp -r {package}/test . &&
             #pytest test -v -s
 
@@ -70,4 +77,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: ./wheelhouse/*.whl
-          retention-days: 1
+          retention-days: 3

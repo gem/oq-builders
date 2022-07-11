@@ -1,6 +1,6 @@
 name: M1 GDAL wheel 
 on:
-#  push:
+  push:
   workflow_dispatch:
 jobs:
   wheel_of_GDAL:
@@ -46,6 +46,7 @@ jobs:
         with:
           name: gdal_wheel
           path: ~/src/whl/${{ matrix.python-version }}
+          retention-days: 3
 
   test_of_GDAL:
     needs: wheel_of_GDAL
