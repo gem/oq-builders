@@ -63,13 +63,13 @@ jobs:
           CIBW_BEFORE_TEST: pip install -U pytest pip shapely matplotlib 
           CIBW_TEST_COMMAND: >
             pyproj -v &&
-            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" &&
-            pip install ./wheelhouse/*.whl  &&
-            git clone https://github.com/gem/oq-engine.git &&
-            cd oq-engine  &&
-            pip freeze  &&
-            pip install -e .  &&
-            oq --version  
+            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
+            #pip install ./wheelhouse/*.whl  &&
+            #git clone https://github.com/gem/oq-engine.git &&
+            #cd oq-engine  &&
+            #pip freeze  &&
+            #pip install -e .  &&
+            #oq --version  
             #cp -r {package}/test . &&
             #pytest test -v -s
 
