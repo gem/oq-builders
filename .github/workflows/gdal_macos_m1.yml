@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [m1Gem]
+        os: [ARM64]
         python-version: [3.9]
     steps:
       - uses: actions/checkout@v2
@@ -28,8 +28,8 @@ jobs:
           source ./oq-builders/bin/activate
           echo "source ./oq-builders/bin/activate"
           pip3 install -U pip wheel setuptools delocate numpy
-          pip3 download GDAL==3.5.1
-          tar -xvzf GDAL-3.5.1.tar.gz
+          pip3 download GDAL==3.4.3
+          tar -xvzf GDAL-3.4.3.tar.gz
           cd GDAL-3.5.1
           pwd
           python setup.py build
