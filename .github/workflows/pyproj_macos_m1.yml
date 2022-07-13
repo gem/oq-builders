@@ -83,7 +83,10 @@ jobs:
            echo "list of output folder `ls ./output`"
            delocate-listdeps ./output/*.whl 
            delocate-wheel --require-archs arm64 ./output/*.whl -w ~/repaired_wheel
+           #
+           echo "list of repaired_wheel folder `ls ~/repaired_wheel`"
            # test wheel
+           pip install -U  ~/repaired_wheel/*.whl
            pyproj -v 
            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
            pytest test -v -s
