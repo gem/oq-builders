@@ -44,12 +44,13 @@ jobs:
            export PROJ_NETWORK=ON
            export PROJ_VERSION=${{ env.PROJ_VERSION }}
            export PROJ_DIR=${{ env.PROJ_DIR }}
+           export PROJ_LIB=${{ env.PROJ_DIR }}/share/proj
            export MACOSX_DEPLOYMENT_TARGET=10.9
            export CMAKE_OSX_ARCHITECTURES='arm64'
            export LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir/lib"
            #
            echo "env of variable"
-           env
+           env | grep PROJ
            #
            echo "PROJ_DIR: " ${PROJ_DIR}
            echo "PROJ_DIR: " ${{ env.PROJ_DIR }}
@@ -67,6 +68,7 @@ jobs:
            bash ./ci/proj-compile-wheels.sh
            #
            echo "list content of ${PROJ_DIR}  `ls ${PROJ_DIR}`"
+           echo "list content of ${PROJ_LIB}  `ls ${PROJ_LIB}`"
            #
            python3.9 -m venv venv
            source venv/bin/activate
