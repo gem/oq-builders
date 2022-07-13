@@ -86,6 +86,7 @@ jobs:
            echo "list of repaired_wheel folder `ls ~/repaired_wheel`"
            # test wheel
            which python3
+           pip install ~/repaired_wheel/*.whl
            pip freeze
            pyproj -v 
            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
