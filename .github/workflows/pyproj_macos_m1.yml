@@ -10,7 +10,7 @@ on:
 
 env:
   PROJ_VERSION: "8.2.1"
-  PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/proj_dir
+  PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
 
 jobs:
   build_wheels:
@@ -37,7 +37,7 @@ jobs:
       - name: Download pyproj sources
         env:
           PROJ_VERSION: "8.2.1"
-          PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/proj_dir
+          PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
         run: |
            export PIP_DEFAULT_TIMEOUT=100
            export PROJ_WHEEL=true
@@ -46,7 +46,7 @@ jobs:
            export PROJ_DIR=${{ env.PROJ_DIR }}
            export MACOSX_DEPLOYMENT_TARGET=10.9
            export CMAKE_OSX_ARCHITECTURES='arm64'
-           export LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
+           export LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir/lib"
            #
            echo "env of variable"
            env
@@ -65,6 +65,9 @@ jobs:
            # compile proj
            #
            bash ./ci/proj-compile-wheels.sh
+           #
+           echo "list content of ${PROJ_DIR}  `ls ${PROJ_DIR}`"
+           #
            python3.9 -m venv venv
            source venv/bin/activate
            pip install -U pip wheel setuptools delocate cython pytest 
@@ -72,9 +75,14 @@ jobs:
            #
            # make wheel
            #
+           echo "check INTERNAL_PROJ_DIR"
+           grep INTERNAL_PROJ_DIR setup.py
+           #
            python setup.py bdist_wheel 
            python -m pip wheel . --wheel-dir=./output --no-deps -vv
-           delocate-listdeps ./output/*.whl && delocate-wheel --require-archs arm64 ./output/*.whl -w ~/repaired_wheel
+           echo "list of output folder `ls ./output`"
+           delocate-listdeps ./output/*.whl 
+           delocate-wheel --require-archs arm64 ./output/*.whl -w ~/repaired_wheel
            # test wheel
            pyproj -v 
            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
