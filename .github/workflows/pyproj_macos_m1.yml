@@ -78,8 +78,6 @@ jobs:
            echo "check INTERNAL_PROJ_DIR"
            grep INTERNAL_PROJ_DIR setup.py
            #
-           python setup.py install
-           python setup.py bdist_wheel 
            python -m pip wheel . --wheel-dir=./output --no-deps -vv
            echo "list of output folder `ls ./output`"
            delocate-listdeps ./output/*.whl 
@@ -87,6 +85,7 @@ jobs:
            #
            echo "list of repaired_wheel folder `ls ~/repaired_wheel`"
            # test wheel
+           which python3
            pip freeze
            pyproj -v 
            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
