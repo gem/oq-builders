@@ -10,6 +10,7 @@ on:
 
 env:
   PROJ_VERSION: "8.2.1"
+  PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/proj_dir
 
 jobs:
   build_wheels:
@@ -34,10 +35,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Download pyproj sources
+        env:
+            PROJ_DIR=${{ env.PROJ_DIR }}
         run: |
            export PIP_DEFAULT_TIMEOUT=100
+           echo "PROJ_DIR: " ${PROJ_DIR}
+           echo "PROJ_DIR: " ${{ env.PROJ_DIR }}
            curl -L -v -o pyproj-3.3.1.tar.gz https://github.com/pyproj4/pyproj/archive/refs/tags/3.3.1.tar.gz
            tar -zxvf pyproj-3.3.1.tar.gz
+           cp ./wheels/builders/proj-compile-wheels.sh pyproj-3.3.1/ci
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.8.0
         with:
@@ -58,7 +64,7 @@ jobs:
             MACOSX_DEPLOYMENT_TARGET=10.9
             CMAKE_OSX_ARCHITECTURES='${{ matrix.cmake_osx_architectures }}'
             LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
-          CIBW_BEFORE_ALL_MACOS: bash ./wheels/builders/proj-compile-wheels.sh
+          CIBW_BEFORE_ALL_MACOS: bash ./ci/proj-compile-wheels.sh
           CIBW_TEST_REQUIRES: cython pytest oldest-supported-numpy pandas xarray
           CIBW_BEFORE_TEST: pip install -U pytest pip shapely matplotlib 
           CIBW_TEST_COMMAND: >
