@@ -56,7 +56,8 @@ jobs:
            curl -L -v -o pyproj-3.3.1.tar.gz https://github.com/pyproj4/pyproj/archive/refs/tags/3.3.1.tar.gz
            tar -zxvf pyproj-3.3.1.tar.gz
            cp ./wheels/builders/proj-compile-wheels.sh pyproj-3.3.1/ci
-           cd pyproj-3.3.1
+           mv pyproj-3.3.1 pyproj
+           cd pyproj
            echo "main folder `pwd`"
            pwd
            echo "======="
@@ -66,7 +67,7 @@ jobs:
            bash ./ci/proj-compile-wheels.sh
            python3.9 -m venv venv
            source venv/bin/activate
-           pip install -U pip wheel setuptool delocate cython pytest 
+           pip install -U pip wheel setuptools delocate cython pytest 
            pip install -U oldest-supported-numpy pandas xarray
            #
            # make wheel
