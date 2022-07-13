@@ -36,46 +36,51 @@ jobs:
       - uses: actions/checkout@v3
       - name: Download pyproj sources
         env:
-            PROJ_DIR=${{ env.PROJ_DIR }}
+          PROJ_VERSION: "8.2.1"
+          PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/proj_dir
         run: |
            export PIP_DEFAULT_TIMEOUT=100
+           export PROJ_WHEEL=true
+           export PROJ_NETWORK=ON
+           export PROJ_VERSION=${{ env.PROJ_VERSION }}
+           export PROJ_DIR=${{ env.PROJ_DIR }}
+           export MACOSX_DEPLOYMENT_TARGET=10.9
+           export CMAKE_OSX_ARCHITECTURES='arm64'
+           export LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
+           #
+           echo "env of variable"
+           env
+           #
            echo "PROJ_DIR: " ${PROJ_DIR}
            echo "PROJ_DIR: " ${{ env.PROJ_DIR }}
            curl -L -v -o pyproj-3.3.1.tar.gz https://github.com/pyproj4/pyproj/archive/refs/tags/3.3.1.tar.gz
            tar -zxvf pyproj-3.3.1.tar.gz
            cp ./wheels/builders/proj-compile-wheels.sh pyproj-3.3.1/ci
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.8.0
-        with:
-          package-dir: ./pyproj-3.3.1
-          output-dir: wheelhouse
-        env:
-          CIBW_SKIP: "*musllinux* pp*-win*"
-          CIBW_ARCHS: ${{ matrix.arch }}
-          CIBW_BUILD: cp39-*
-          CIBW_BUILD_VERBOSITY: 2
-          #CIBW_ARCHS_MACOS: universal2
-          CIBW_ENVIRONMENT_MACOS:
-            PROJ_WHEEL=true
-            PROJ_NETWORK=ON
-            PROJ_VERSION=${{ env.PROJ_VERSION }}
-            PROJ_DIR=${GITHUB_WORKSPACE}/pyproj/proj_dir
-            PROJ_LIB=${GITHUB_WORKSPACE}/pyproj/proj_dir/share/proj
-            MACOSX_DEPLOYMENT_TARGET=10.9
-            CMAKE_OSX_ARCHITECTURES='${{ matrix.cmake_osx_architectures }}'
-            LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
-          CIBW_BEFORE_ALL_MACOS: bash ./ci/proj-compile-wheels.sh
-          CIBW_TEST_REQUIRES: cython pytest oldest-supported-numpy pandas xarray
-          CIBW_BEFORE_TEST: pip install -U pytest pip shapely matplotlib 
-          CIBW_TEST_COMMAND: >
-            pyproj -v &&
-            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" &&
-            cp -r {package}/test . &&
-            pytest test -v -s
-
+           cd pyproj-3.3.1
+           echo "main folder `pwd`"
+           pwd
+           echo "======="
+           #
+           # compile proj
+           #
+           bash ./ci/proj-compile-wheels.sh
+           python3.9 -m venv venv
+           source venv/bin/activate
+           pip install -U pip wheel setuptool delocate cython pytest 
+           pip install -U oldest-supported-numpy pandas xarray
+           #
+           # make wheel
+           #
+           python setup.py bdist_wheel 
+           python -m pip wheel . --wheel-dir=./output --no-deps -vv
+           delocate-listdeps ./output/*.whl && delocate-wheel --require-archs arm64 ./output/*.whl -w ~/repaired_wheel
+           # test wheel
+           pyproj -v 
+           python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
+           pytest test -v -s
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: pyproj_whl
-          path: ./wheelhouse/*.whl
+          path: ~/repaired_wheel/*.whl
           retention-days: 3
