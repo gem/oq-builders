@@ -88,11 +88,12 @@ jobs:
            which python3
            pip install ~/repaired_wheel/*.whl
            pip freeze
-           #  I can import proj fine if I'm not in the base directory for the pyproj project
-           cd 
-           pyproj -v 
            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
            pytest test -v -s
+           #  I can import proj fine if I'm not in the base directory for the pyproj project
+           cd 
+           echo "pyproj version"
+           pyproj -v 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
