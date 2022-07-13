@@ -1,6 +1,5 @@
 name: M1 GDAL wheel 
 on:
-  push:
   workflow_dispatch:
 jobs:
   wheel_of_GDAL:
