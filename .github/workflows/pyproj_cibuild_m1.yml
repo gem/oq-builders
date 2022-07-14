@@ -28,6 +28,7 @@ jobs:
       - name: Set up Python3.9 with brew                                          
         run: |                                                                  
            brew install python@3.9
+           python3.9 -m pip install -U pip pipx setuptools
       - name: Download pyproj sources and install it
         env:
           PROJ_VERSION: "8.2.1"
