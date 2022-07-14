@@ -1,4 +1,4 @@
-name: M1 GDAL wheel 
+name: M1 GDAL wheel
 on:
   push:
   workflow_dispatch:
@@ -11,7 +11,7 @@ jobs:
         python-version: [3.9, 3.10]
     steps:
       - uses: actions/checkout@v2
-      - name: Install gdal using brew 
+      - name: Install gdal using brew
         #env:
           #GDAL_REF: ${{ github.event.inputs.gdal-ref }}
         run: |
@@ -38,7 +38,7 @@ jobs:
           pwd
           python${{ matrix.python-version }} setup.py build
           python${{ matrix.python-version }} setup.py install
-          python${{ matrix.python-version }} -m pip wheel --no-deps --no-binary :all: -w output${{ matrix.python-version }} .
+          python${{ matrix.python-version }} -m pip wheel . --no-deps --no-binary :all: -w output${{ matrix.python-version }}
           cd output${{ matrix.python-version }}
           echo "listing folder of wheel"
           ls -lrt  ~/src/whl${{ matrix.python-version }}
