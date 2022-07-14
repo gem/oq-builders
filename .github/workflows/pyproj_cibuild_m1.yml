@@ -1,0 +1,98 @@
+name: M1 pyproj wheel
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref
+        default: master
+        required: true
+env:
+  PROJ_VERSION: "8.2.1"
+  PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
+
+jobs:
+  build_wheels:
+    name: Build ${{ matrix.arch }} wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - os: ARM64
+          arch: arm64
+          cmake_osx_architectures: arm64
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python3.9 with brew
+        run: |
+           brew install python@3.9
+           python3.9 -m pip install -U pip pipx setuptools
+      - name: Download pyproj sources and install it
+        env:
+          PROJ_VERSION: "8.2.1"
+          PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
+        run: |
+           export PIP_DEFAULT_TIMEOUT=100
+           export PROJ_WHEEL=true
+           export PROJ_NETWORK=ON
+           export PROJ_VERSION=${{ env.PROJ_VERSION }}
+           export PROJ_DIR=${{ env.PROJ_DIR }}
+           export PROJ_LIB=${{ env.PROJ_DIR }}/share/proj
+           export MACOSX_DEPLOYMENT_TARGET=10.9
+           export CMAKE_OSX_ARCHITECTURES='arm64'
+           export LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir/lib"
+           #
+           echo "env of variable"
+           env
+           #
+           echo "PROJ_DIR: " ${PROJ_DIR}
+           echo "PROJ_DIR: " ${{ env.PROJ_DIR }}
+           curl -L -v -o pyproj-3.3.1.tar.gz https://github.com/pyproj4/pyproj/archive/refs/tags/3.3.1.tar.gz
+           tar -zxvf pyproj-3.3.1.tar.gz
+           cp ./wheels/builders/proj-compile-wheels.sh pyproj-3.3.1/ci
+           mv pyproj-3.3.1 pyproj
+           cd pyproj
+           echo "main folder `pwd`"
+           pwd
+           echo "=================="
+           # compile proj
+           bash ./ci/proj-compile-wheels.sh
+           # test folder move to ~
+           #mv test ~/test${{ matrix.python-version }}
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.8.0
+        with:
+          package-dir: pyproj
+        env:
+          PROJ_VERSION: "8.2.1"
+          PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
+          CIBW_SKIP: "*musllinux* pp*-win*"
+          CIBW_BUILD: "cp311-macosx_arm64	cp310-macosx_arm64 cp39-macosx_arm64 cp38-macosx_arm64"
+          CIBW_ARCHS: ${{ matrix.arch }}
+          CIBW_ENVIRONMENT_MACOS:
+            PROJ_WHEEL=true
+            PROJ_NETWORK=ON
+            PROJ_VERSION=${{ env.PROJ_VERSION }}
+            PROJ_DIR=${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
+            PROJ_LIB=${{ env.PROJ_DIR }}/share/proj
+            MACOSX_DEPLOYMENT_TARGET=10.9
+            CMAKE_OSX_ARCHITECTURES='${{ matrix.cmake_osx_architectures }}'
+            LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
+            #CIBW_BEFORE_ALL_MACOS: >
+            #pwd &&
+            #bash ./ci/proj-compile-wheels.sh
+          CIBW_TEST_REQUIRES: cython pytest oldest-supported-numpy pandas xarray
+          CIBW_BEFORE_TEST: python -m pip install shapely~=1.7.1 || echo "Shapely install failed"
+          CIBW_TEST_COMMAND: >
+            pyproj -v &&
+            python -c "import pyproj; pyproj.Proj(init='epsg:4269')"  &&
+            cp -r {package}/test . &&
+            python -m pytest test -v -s
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: ./wheelhouse/*.whl
+          retention-days: 5
