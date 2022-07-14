@@ -1,6 +1,5 @@
 name: M1 pyproj wheel
 on:
-  push:
   workflow_dispatch:
     inputs:
       git-ref:

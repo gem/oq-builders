@@ -1,5 +1,6 @@
 name: M1 GDAL wheel 
 on:
+  push:
   workflow_dispatch:
 jobs:
   wheel_of_GDAL:
@@ -7,10 +8,10 @@ jobs:
     strategy:
       matrix:
         os: [ARM64]
-        python-version: [3.9]
+        python-version: [3.9, 3.10]
     steps:
       - uses: actions/checkout@v2
-      - name: Install gdal using brew and build wheel
+      - name: Install gdal using brew 
         #env:
           #GDAL_REF: ${{ github.event.inputs.gdal-ref }}
         run: |
@@ -23,21 +24,25 @@ jobs:
           #test gdal installation
           echo " gdalinfo --version"
           gdalinfo --version
-          python3.9 -m venv oq-builders
-          source ./oq-builders/bin/activate
-          echo "source ./oq-builders/bin/activate"
-          pip3 install -U pip wheel setuptools delocate numpy
-          pip3 download GDAL==3.4.3
-          tar -xvzf GDAL-3.4.3.tar.gz
+      - name: Install gdal using brew and build wheel
+        #env:
+          brew install python@${{ matrix.python-version }}
+          #
+          python${{ matrix.python-version }} -m venv oq-builders${{ matrix.python-version }}
+          source ./oq-builders${{ matrix.python-version }}/bin/activate
+          echo "source ./oq-builders${{ matrix.python-version }}/bin/activate"
+          python${{ matrix.python-version }} -m pip install -U pip wheel setuptools delocate numpy
+          python${{ matrix.python-version }} -m pip download GDAL==3.5.1
+          tar -xvzf GDAL-3.5.1.tar.gz
           cd GDAL-3.5.1
           pwd
-          python setup.py build
-          python setup.py install
-          pip wheel --no-deps --no-binary :all: -w output .
-          cd output
+          python${{ matrix.python-version }} setup.py build
+          python${{ matrix.python-version }} setup.py install
+          python${{ matrix.python-version }} -m pip wheel --no-deps --no-binary :all: -w output${{ matrix.python-version }} .
+          cd output${{ matrix.python-version }}
           echo "listing folder of wheel"
-          ls -lrt  ~/src/whl
-          rm -rf ~/src/whl
+          ls -lrt  ~/src/whl${{ matrix.python-version }}
+          rm -rf ~/src/whl${{ matrix.python-version }}
           mkdir -p ~/src/whl/${{ matrix.python-version }}
           delocate-listdeps GDAL*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
       - name: Upload artifacts of wheel
@@ -45,14 +50,14 @@ jobs:
         with:
           name: gdal_wheel
           path: ~/src/whl/${{ matrix.python-version }}
-          retention-days: 3
+          retention-days: 5
 
   test_of_GDAL:
     needs: wheel_of_GDAL
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [m1Gem]
+        os: [ARM64]
         python-version: [3.9]
     steps:
       - name: download artifact
@@ -70,21 +75,21 @@ jobs:
           export PIP_DEFAULT_TIMEOUT=100
           echo "engine installation to test GDAL wheel"
           cd ~
-          python3.9 -c "import sys; print(sys.version)"
+          python${{ matrix.python-version }} -c "import sys; print(sys.version)"
           rm -rf ./oq-gdal
-          python3.9 -m venv oq-gdal
-          source ./oq-gdal/bin/activate
+          python${{ matrix.python-version }} -m venv oq-gdal${{ matrix.python-version }}
+          source ./oq-gdal${{ matrix.python-version }}/bin/activate
           rm -rf oq-engine
           git clone https://github.com/gem/oq-engine.git
           cd oq-engine
-          pip3 install -U pip wheel setuptools pytest numpy
-          pip3 install -e .
+          pythons{{ matrix.python-version }} -m pip install -U pip wheel setuptools pytest numpy
+          pythons{{ matrix.python-version }} -m pip install -e .
           cd ${{steps.download.outputs.download-path}}
           pwd
           ls -lrt
           wheel="$(ls *`echo ${{ matrix.python-version }} | tr -d .`*.whl)"
           echo ${wheel}
-          pip3 install ${wheel}
+          pythons{{ matrix.python-version }} -m pip install ${wheel}
           cd ~/oq-engine
-          python3.9 -c "import openquake"
+          pythons{{ matrix.python-version }} -c "import openquake"
           pytest openquake/sep/tests/test_utils.py
