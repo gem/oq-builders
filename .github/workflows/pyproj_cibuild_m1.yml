@@ -1,6 +1,6 @@
 name: M1 pyproj wheel
 on:
-  push: 
+  push:
   workflow_dispatch:
     inputs:
       git-ref:
@@ -11,7 +11,7 @@ env:
   PROJ_VERSION: "8.2.1"
   PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
 
-jobs: 
+jobs:
   build_wheels:
     name: Build ${{ matrix.arch }} wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -25,8 +25,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python3.9 with brew                                          
-        run: |                                                                  
+      - name: Set up Python3.9 with brew
+        run: |
            brew install python@3.9
            python3.9 -m pip install -U pip pipx setuptools
       - name: Download pyproj sources and install it
@@ -58,7 +58,7 @@ jobs:
            pwd
            echo "=================="
            # compile proj
-           #bash ./ci/proj-compile-wheels.sh
+           bash ./ci/proj-compile-wheels.sh
            # test folder move to ~
            #mv test ~/test${{ matrix.python-version }}
       - name: Build wheels
@@ -80,9 +80,9 @@ jobs:
             MACOSX_DEPLOYMENT_TARGET=10.9
             CMAKE_OSX_ARCHITECTURES='${{ matrix.cmake_osx_architectures }}'
             LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
-          CIBW_BEFORE_ALL_MACOS: >
-            pwd &&
-            bash ./ci/proj-compile-wheels.sh
+            #CIBW_BEFORE_ALL_MACOS: >
+            #pwd &&
+            #bash ./ci/proj-compile-wheels.sh
           CIBW_TEST_REQUIRES: cython pytest oldest-supported-numpy pandas xarray
           CIBW_BEFORE_TEST: python -m pip install shapely~=1.7.1 || echo "Shapely install failed"
           CIBW_TEST_COMMAND: >
