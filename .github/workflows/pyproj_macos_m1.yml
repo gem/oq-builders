@@ -85,8 +85,8 @@ jobs:
            mv test ~
            #  I can import proj fine if I'm not in the base directory for the pyproj project
            cd ~
-           python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
            pip install ~/repaired_wheel/*.whl
+           python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
            pip freeze
            ls test
            pytest test -v -s
