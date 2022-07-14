@@ -12,8 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install gdal using brew
-        #env:
-          #GDAL_REF: ${{ github.event.inputs.gdal-ref }}
         run: |
           export PIP_DEFAULT_TIMEOUT=100
           #$gdalref = ${{ github.event.inputs.gdal-ref }}
@@ -26,9 +24,8 @@ jobs:
           gdalinfo --version
 
       - name: Install gdal using brew and build wheel
-        #env:
+        run: |
           brew install python@${{ matrix.python-version }}
-          #
           python${{ matrix.python-version }} -m venv oq-builders${{ matrix.python-version }}
           source ./oq-builders${{ matrix.python-version }}/bin/activate
           echo "source ./oq-builders${{ matrix.python-version }}/bin/activate"
