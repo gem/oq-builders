@@ -75,9 +75,6 @@ jobs:
            #
            # make wheel
            #
-           echo "check INTERNAL_PROJ_DIR"
-           grep INTERNAL_PROJ_DIR setup.py
-           #
            python -m pip wheel . --wheel-dir=./output --no-deps -vv
            echo "list of output folder `ls ./output`"
            delocate-listdeps ./output/*.whl 
@@ -85,13 +82,14 @@ jobs:
            #
            echo "list of repaired_wheel folder `ls ~/repaired_wheel`"
            # test wheel
-           which python3
+           mv test ~
+           #  I can import proj fine if I'm not in the base directory for the pyproj project
+           cd ~
+           python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
            pip install ~/repaired_wheel/*.whl
            pip freeze
-           python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
+           ls test
            pytest test -v -s
-           #  I can import proj fine if I'm not in the base directory for the pyproj project
-           cd 
            echo "pyproj version"
            pyproj -v 
       - name: Upload artifacts
