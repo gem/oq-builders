@@ -24,6 +24,7 @@ jobs:
           #test gdal installation
           echo " gdalinfo --version"
           gdalinfo --version
+
       - name: Install gdal using brew and build wheel
         #env:
           brew install python@${{ matrix.python-version }}
@@ -38,7 +39,7 @@ jobs:
           pwd
           python${{ matrix.python-version }} setup.py build
           python${{ matrix.python-version }} setup.py install
-          #python${{ matrix.python-version }} -m pip wheel . --no-deps --no-binary :all: -w output${{ matrix.python-version }}
+          python${{ matrix.python-version }} -m pip wheel --no-deps --no-binary :all: -w output${{ matrix.python-version }}
           cd output${{ matrix.python-version }}
           echo "listing folder of wheel"
           ls -lrt  ~/src/whl${{ matrix.python-version }}
