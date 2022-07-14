@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Download pyproj sources
+      - name: Download pyproj sources and install it
         env:
           PROJ_VERSION: "8.2.1"
           PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
@@ -48,7 +48,7 @@ jobs:
            export LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir/lib"
            #
            echo "env of variable"
-           env | grep PROJ
+           env
            #
            echo "PROJ_DIR: " ${PROJ_DIR}
            echo "PROJ_DIR: " ${{ env.PROJ_DIR }}
@@ -65,36 +65,57 @@ jobs:
            #
            bash ./ci/proj-compile-wheels.sh
            #
-           echo "list content of ${PROJ_DIR}  `ls ${PROJ_DIR}`"
-           echo "list content of ${PROJ_LIB}  `ls ${PROJ_LIB}`"
+           # test folder move to ~
+           mv test ~
+      - name: Use python3.9 for wheels
+        env:
+          PROJ_VERSION: "8.2.1"
+          PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
+        run: |
+           export PIP_DEFAULT_TIMEOUT=100
+           export PROJ_WHEEL=true
+           export PROJ_NETWORK=ON
+           export PROJ_VERSION=${{ env.PROJ_VERSION }}
+           export PROJ_DIR=${{ env.PROJ_DIR }}
+           export PROJ_LIB=${{ env.PROJ_DIR }}/share/proj
+           export MACOSX_DEPLOYMENT_TARGET=10.9
+           export CMAKE_OSX_ARCHITECTURES='arm64'
            #
-           python3.9 -m venv venv
-           source venv/bin/activate
+           # install python3.9
+           brew install python3.9
+           #
+           cd ${GITHUB_WORKSPACE}/pyproj
+           #
+           echo "main folder `pwd`"
+           pwd
+           #
+           python3.9 -m venv venv39
+           source venv39/bin/activate
            pip install -U pip wheel setuptools delocate cython pytest 
            pip install -U oldest-supported-numpy pandas xarray
            #
            # make wheel
            #
-           python -m pip wheel . --wheel-dir=./output --no-deps -vv
-           echo "list of output folder `ls ./output`"
-           delocate-listdeps ./output/*.whl 
-           delocate-wheel --require-archs arm64 ./output/*.whl -w ~/repaired_wheel
+           python -m pip wheel . --wheel-dir=./output39 --no-deps -vv
+           echo "list of output folder `ls ./output39`"
+           delocate-listdeps ./output39/*.whl 
+           delocate-wheel --require-archs arm64 ./output39/*.whl -w ~/repaired_wheel39
            #
-           echo "list of repaired_wheel folder `ls ~/repaired_wheel`"
-           # test wheel
-           mv test ~
+           echo "list of repaired_wheel folder `ls ~/repaired_wheel39`"
            #  I can import proj fine if I'm not in the base directory for the pyproj project
            cd ~
-           pip install ~/repaired_wheel/*.whl
+           pip3 install ~/repaired_wheel39/*.whl
            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
-           pip freeze
+           pip3 freeze
            ls test
            pytest test -v -s
            echo "pyproj version"
            pyproj -v 
-      - name: Upload artifacts
+           #close venv
+           deactivate
+      - name: Upload artifacts for python3.9
         uses: actions/upload-artifact@v2
         with:
           name: pyproj_whl
-          path: ~/repaired_wheel/*.whl
+          path: ~/repaired_wheel39/*.whl
           retention-days: 3
