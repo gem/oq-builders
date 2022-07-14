@@ -11,6 +11,7 @@ env:
   PROJ_VERSION: "8.2.1"
   PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
 
+jobs: 
   build_wheels:
     name: Build ${{ matrix.arch }} wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
