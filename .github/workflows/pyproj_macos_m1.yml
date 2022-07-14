@@ -109,8 +109,6 @@ jobs:
            pip3 install ~/repaired_wheel${{ matrix.python-version }}/*.whl
            python3 -c "import pyproj; pyproj.Proj(init='epsg:4269')" 
            pip3 freeze
-           ls ~/test${{ matrix.python-version }}
-           pytest test${{ matrix.python-version }} -v -s
            echo "pyproj version"
            pyproj -v 
            #close venv
