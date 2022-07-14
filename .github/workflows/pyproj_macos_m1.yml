@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ARM64]
         arch: arm64
-        python-version: [{{ matrix.python-version }}]
+        python-version: [3.9]
           #runs-on: ${{ matrix.os }}
           #strategy:
           #  fail-fast: false
