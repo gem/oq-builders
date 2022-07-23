@@ -69,7 +69,7 @@ jobs:
           PROJ_VERSION: "8.2.1"
           PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
           CIBW_SKIP: "*musllinux* pp*-win*"
-          CIBW_BUILD: "cp311-macosx_arm64	cp310-macosx_arm64 cp39-macosx_arm64 cp38-macosx_arm64"
+          CIBW_BUILD: "cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64"
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_ENVIRONMENT_MACOS:
             PROJ_WHEEL=true
