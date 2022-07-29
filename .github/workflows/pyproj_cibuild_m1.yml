@@ -1,6 +1,8 @@
 name: M1 pyproj wheel
 on:
   push:
+    branches:                                                                  
+      - test_cibw_build
   workflow_dispatch:
     inputs:
       git-ref:
@@ -8,7 +10,7 @@ on:
         default: master
         required: true
 env:
-  PROJ_VERSION: "8.2.1"
+  PROJ_VERSION: "9.0.0"
   PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
 
 jobs:
@@ -28,10 +30,11 @@ jobs:
       - name: Set up Python3.9 with brew
         run: |
            brew install python@3.9
+           brew install libtiff
            python3.9 -m pip install -U pip pipx setuptools
       - name: Download pyproj sources and install it
         env:
-          PROJ_VERSION: "8.2.1"
+          PROJ_VERSION: "9.0.0"
           PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
         run: |
            export PIP_DEFAULT_TIMEOUT=100
@@ -40,7 +43,7 @@ jobs:
            export PROJ_VERSION=${{ env.PROJ_VERSION }}
            export PROJ_DIR=${{ env.PROJ_DIR }}
            export PROJ_LIB=${{ env.PROJ_DIR }}/share/proj
-           export MACOSX_DEPLOYMENT_TARGET=10.9
+           export MACOSX_DEPLOYMENT_TARGET=12
            export CMAKE_OSX_ARCHITECTURES='arm64'
            export LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir/lib"
            #
@@ -61,15 +64,15 @@ jobs:
            bash ./ci/proj-compile-wheels.sh
            # test folder move to ~
            #mv test ~/test${{ matrix.python-version }}
-      - name: Build wheels
+      - name: Build wheels for python 3.9
         uses: pypa/cibuildwheel@v2.8.0
         with:
           package-dir: pyproj
         env:
-          PROJ_VERSION: "8.2.1"
+          PROJ_VERSION: "9.0.0"
           PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
           CIBW_SKIP: "*musllinux* pp*-win*"
-          CIBW_BUILD: "cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64"
+          CIBW_BUILD: cp39-macosx_arm64
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_ENVIRONMENT_MACOS:
             PROJ_WHEEL=true
@@ -77,7 +80,37 @@ jobs:
             PROJ_VERSION=${{ env.PROJ_VERSION }}
             PROJ_DIR=${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
             PROJ_LIB=${{ env.PROJ_DIR }}/share/proj
-            MACOSX_DEPLOYMENT_TARGET=10.9
+            MACOSX_DEPLOYMENT_TARGET=12
+            CMAKE_OSX_ARCHITECTURES='${{ matrix.cmake_osx_architectures }}'
+            LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
+            #CIBW_BEFORE_ALL_MACOS: >
+            #pwd &&
+            #bash ./ci/proj-compile-wheels.sh
+          CIBW_TEST_REQUIRES: cython pytest oldest-supported-numpy pandas xarray
+          CIBW_BEFORE_TEST: python -m pip install shapely || echo "Shapely install failed"
+          CIBW_TEST_COMMAND: >
+            pyproj -v &&
+            python -c "import pyproj; pyproj.Proj(init='epsg:4269')"  &&
+            cp -r {package}/test . &&
+            python -m pytest test -v -s
+
+      - name: Build wheels for python 3.10
+        uses: pypa/cibuildwheel@v2.8.0
+        with:
+          package-dir: pyproj
+        env:
+          PROJ_VERSION: "9.0.0"
+          PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
+          CIBW_SKIP: "*musllinux* pp*-win*"
+          CIBW_BUILD: cp310-macosx_arm64
+          CIBW_ARCHS: ${{ matrix.arch }}
+          CIBW_ENVIRONMENT_MACOS:
+            PROJ_WHEEL=true
+            PROJ_NETWORK=ON
+            PROJ_VERSION=${{ env.PROJ_VERSION }}
+            PROJ_DIR=${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
+            PROJ_LIB=${{ env.PROJ_DIR }}/share/proj
+            MACOSX_DEPLOYMENT_TARGET=12
             CMAKE_OSX_ARCHITECTURES='${{ matrix.cmake_osx_architectures }}'
             LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/proj_dir/lib"
             #CIBW_BEFORE_ALL_MACOS: >
