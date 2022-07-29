@@ -65,7 +65,7 @@ jobs:
            # test folder move to ~
            #mv test ~/test${{ matrix.python-version }}
       - name: Build wheels for python 3.9
-        uses: pypa/cibuildwheel@v2.8.0
+        uses: pypa/cibuildwheel@v2.8.1
         with:
           package-dir: pyproj
         env:
@@ -95,7 +95,7 @@ jobs:
             python -m pytest test -v -s
 
       - name: Build wheels for python 3.10
-        uses: pypa/cibuildwheel@v2.8.0
+        uses: pypa/cibuildwheel@v2.8.1
         with:
           package-dir: pyproj
         env:
