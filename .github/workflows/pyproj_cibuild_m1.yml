@@ -1,6 +1,8 @@
 name: M1 pyproj wheel
 on:
   push:
+    branches:                                                                  
+      - test_cibw_build
   workflow_dispatch:
     inputs:
       git-ref:
@@ -28,6 +30,7 @@ jobs:
       - name: Set up Python3.9 with brew
         run: |
            brew install python@3.9
+           brew install libtiff
            python3.9 -m pip install -U pip pipx setuptools
       - name: Download pyproj sources and install it
         env:
@@ -69,7 +72,7 @@ jobs:
           PROJ_VERSION: "8.2.1"
           PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
           CIBW_SKIP: "*musllinux* pp*-win*"
-          CIBW_BUILD: "cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64"
+          CIBW_BUILD: cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_ENVIRONMENT_MACOS:
             PROJ_WHEEL=true
