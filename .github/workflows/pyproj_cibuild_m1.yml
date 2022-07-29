@@ -10,7 +10,7 @@ on:
         default: master
         required: true
 env:
-  PROJ_VERSION: "8.2.1"
+  PROJ_VERSION: "9.0.0"
   PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
 
 jobs:
