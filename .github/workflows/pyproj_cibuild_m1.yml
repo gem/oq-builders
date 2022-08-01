@@ -27,14 +27,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python3.9 with brew
+      - name: Set up Python3.9 and requirements software with brew
         run: |
            brew install python@3.9
-           brew install libtiff
+           brew install cmake libtiff
            python3.9 -m pip install -U pip pipx setuptools
       - name: Download pyproj sources and install it
         env:
-          PROJ_VERSION: "9.0.0"
+          PROJ_VERSION: "8.2.0"
           PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
         run: |
            export PIP_DEFAULT_TIMEOUT=100
