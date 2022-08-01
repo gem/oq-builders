@@ -43,7 +43,7 @@ jobs:
            export PROJ_VERSION=${{ env.PROJ_VERSION }}
            export PROJ_DIR=${{ env.PROJ_DIR }}
            export PROJ_LIB=${{ env.PROJ_DIR }}/share/proj
-           export MACOSX_DEPLOYMENT_TARGET=12
+           export MACOSX_DEPLOYMENT_TARGET=10.9
            export CMAKE_OSX_ARCHITECTURES='arm64'
            export LDFLAGS="${LDFLAGS} -Wl,-rpath,${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir/lib"
            #
