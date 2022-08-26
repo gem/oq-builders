@@ -38,6 +38,7 @@ jobs:
           #test gdal installation
           echo " gdalinfo --version"
           gdalinfo --version
+          export PIP_DEFAULT_TIMEOUT=100
           pip3 install -U pip wheel setuptools delocate
           pip3 install numpy
           echo "pip3 download GDAL==${gdalref}"

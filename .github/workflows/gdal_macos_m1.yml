@@ -1,6 +1,17 @@
 name: M1 GDAL wheel 
 on:
   workflow_dispatch:
+    inputs:
+      gdal-ref:
+        description: GDAL Version
+        default: 3.4.3
+        required: true
+#  push:
+#    branches:
+#      - test_gdal
+# pull_request:
+#    branches:
+#      - master
 jobs:
   wheel_of_GDAL:
     runs-on: ${{ matrix.os }}
@@ -8,14 +19,15 @@ jobs:
       matrix:
         os: [ARM64]
         python-version: [3.9]
+          #python-version: [3.8, 3.9, "3.10"]
     steps:
       - uses: actions/checkout@v2
       - name: Install gdal using brew and build wheel
-        #env:
-          #GDAL_REF: ${{ github.event.inputs.gdal-ref }}
+        env:
+          gdalref: ${{ github.event.inputs.gdal-ref }}
         run: |
-          export PIP_DEFAULT_TIMEOUT=100
-          #$gdalref = ${{ github.event.inputs.gdal-ref }}
+          echo ${gdalref}
+          echo ${{ github.event.inputs.gdal-ref }}
           echo "Input GDAL version: $gdalref"
           echo "brew install gdal"
           brew install gdal
@@ -23,13 +35,16 @@ jobs:
           #test gdal installation
           echo " gdalinfo --version"
           gdalinfo --version
+          export PIP_DEFAULT_TIMEOUT=100
           python3.9 -m venv oq-builders
           source ./oq-builders/bin/activate
           echo "source ./oq-builders/bin/activate"
           pip3 install -U pip wheel setuptools delocate numpy
           pip3 download GDAL==3.4.3
-          tar -xvzf GDAL-3.4.3.tar.gz
-          cd GDAL-3.4.3
+          echo "pip3 download GDAL==${gdalref}"
+          pip3 download GDAL==${gdalref}
+          tar -xvzf GDAL-${gdalref}.tar.gz
+          cd GDAL-${gdalref}
           pwd
           python setup.py build
           python setup.py install
