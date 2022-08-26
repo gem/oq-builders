@@ -29,7 +29,7 @@ jobs:
           pip3 install -U pip wheel setuptools delocate numpy
           pip3 download GDAL==3.4.3
           tar -xvzf GDAL-3.4.3.tar.gz
-          cd GDAL-3.5.1
+          cd GDAL-3.4.3
           pwd
           python setup.py build
           python setup.py install

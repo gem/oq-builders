@@ -1,14 +1,14 @@
 name: Intel GDAL MacOS
 on:
   workflow_dispatch:
+    inputs:
+      gdal-ref:
+        description: GDAL Version
+        default: 3.4.3
+        required: true
 #  push:
-#    branches: 
+#    branches:
 #      - test_gdal
-#    inputs:
-#      gdal-ref:
-#        description: GDAL Version
-#        default: 3.3.3
-#        required: true
 # pull_request:
 #    branches:
 #      - master
@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        python-version: [3.9]
+        python-version: [3.8, 3.9, 3.10]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
@@ -39,9 +39,10 @@ jobs:
           gdalinfo --version
           pip3 install -U pip wheel setuptools delocate
           pip3 install numpy
-          pip3 download GDAL==3.5.1
-          tar -xvzf GDAL-3.5.1.tar.gz
-          cd GDAL-3.5.1
+          echo "pip3 download GDAL==${gdalref}"
+          pip3 download GDAL==${gdalref}
+          tar -xvzf GDAL-${gdalref}.tar.gz
+          cd GDAL-${gdalref}
           pwd
           python setup.py build
           python setup.py install
@@ -61,7 +62,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        python-version: [3.9]
+        python-version: [3.8, 3.9, 3.10]
     steps:
       - name: Set up Python
         uses: actions/setup-python@v2
