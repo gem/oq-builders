@@ -26,10 +26,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install gdal using brew and build wheel
-        #env:
-          #GDAL_REF: ${{ github.event.inputs.gdal-ref }}
+        env:
+          gdalref: ${{ github.event.inputs.gdal-ref }}
         run: |
-          #$gdalref = ${{ github.event.inputs.gdal-ref }}
+          $gdalref = ${{ github.event.inputs.gdal-ref }}
           echo "Input GDAL version: $gdalref"
           echo "brew install gdal"
           brew install gdal
@@ -97,6 +97,7 @@ jobs:
           ls -lrt
           wheel="$(ls *`echo ${{ matrix.python-version }} | tr -d .`*.whl)"
           echo ${wheel}
+          unzip -l ${wheel}
           pip install ${wheel}
           cd ~/oq-engine
           python -c "import openquake"
