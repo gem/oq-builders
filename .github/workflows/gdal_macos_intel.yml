@@ -1,14 +1,14 @@
 name: Intel GDAL MacOS
 on:
   workflow_dispatch:
+    inputs:
+      gdal-ref:
+        description: GDAL Version
+        default: 3.4.3
+        required: true
 #  push:
-#    branches: 
+#    branches:
 #      - test_gdal
-#    inputs:
-#      gdal-ref:
-#        description: GDAL Version
-#        default: 3.3.3
-#        required: true
 # pull_request:
 #    branches:
 #      - master
@@ -17,8 +17,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
-        python-version: [3.9]
+        os: [macos-11]
+        python-version: [3.8, 3.9, "3.10"]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
@@ -26,10 +26,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install gdal using brew and build wheel
-        #env:
-          #GDAL_REF: ${{ github.event.inputs.gdal-ref }}
+        env:
+          gdalref: ${{ github.event.inputs.gdal-ref }}
         run: |
-          #$gdalref = ${{ github.event.inputs.gdal-ref }}
+          echo ${gdalref}
+          echo ${{ github.event.inputs.gdal-ref }}
           echo "Input GDAL version: $gdalref"
           echo "brew install gdal"
           brew install gdal
@@ -37,11 +38,13 @@ jobs:
           #test gdal installation
           echo " gdalinfo --version"
           gdalinfo --version
+          export PIP_DEFAULT_TIMEOUT=100
           pip3 install -U pip wheel setuptools delocate
           pip3 install numpy
-          pip3 download GDAL==3.5.1
-          tar -xvzf GDAL-3.5.1.tar.gz
-          cd GDAL-3.5.1
+          echo "pip3 download GDAL==${gdalref}"
+          pip3 download GDAL==${gdalref}
+          tar -xvzf GDAL-${gdalref}.tar.gz
+          cd GDAL-${gdalref}
           pwd
           python setup.py build
           python setup.py install
@@ -60,8 +63,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
-        python-version: [3.9]
+        os: [macos-11]
+        python-version: [3.8, 3.9, "3.10"]
     steps:
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -96,6 +99,7 @@ jobs:
           ls -lrt
           wheel="$(ls *`echo ${{ matrix.python-version }} | tr -d .`*.whl)"
           echo ${wheel}
+          unzip -l ${wheel}
           pip install ${wheel}
           cd ~/oq-engine
           python -c "import openquake"
