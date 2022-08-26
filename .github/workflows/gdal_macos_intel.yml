@@ -29,7 +29,8 @@ jobs:
         env:
           gdalref: ${{ github.event.inputs.gdal-ref }}
         run: |
-          $gdalref = ${{ github.event.inputs.gdal-ref }}
+          echo ${gdalref}
+          echo ${{ github.event.inputs.gdal-ref }}
           echo "Input GDAL version: $gdalref"
           echo "brew install gdal"
           brew install gdal
