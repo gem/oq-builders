@@ -32,7 +32,7 @@ jobs:
           GIT_COMMIT_SHA: ${{ github.sha }}
         run: |
           export PIP_DEFAULT_TIMEOUT=100
-          branchname=${{ env.GIT_BRANCH }}
+          branchname=master
           echo "clone engine and create wheel"
           export PIP_DEFAULT_TIMEOUT=100
           echo "Install engine with install script"
