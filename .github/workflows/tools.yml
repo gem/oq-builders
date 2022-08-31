@@ -1,17 +1,19 @@
 name: Standalone tools wheels for oq-engine
 on:
-  workflow_dispatch:                                                           
-    inputs:                                                                    
-      git-ref:                                                                 
-        description: Git Ref                                                   
-        default: master                                                        
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref
+        default: master
         required: true
-  #push:
+  push:
+    branches:
+      - tools
   #schedule:
     #- cron: "0 5 10 * 5"
 jobs:
 
-  Wheel_Installer:
+  Wheel_Tools:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -29,7 +31,8 @@ jobs:
           GIT_BRANCH: ${{ github.event.inputs.git-ref }}
           GIT_COMMIT_SHA: ${{ github.sha }}
         run: |
-          $branchname = $Env:GIT_BRANCH
+          export PIP_DEFAULT_TIMEOUT=100
+          branchname=master
           echo "clone engine and create wheel"
           export PIP_DEFAULT_TIMEOUT=100
           echo "Install engine with install script"
@@ -54,7 +57,7 @@ jobs:
                 PYBUILD_NAME="oq-taxonomy" pip3 wheel --disable-pip-version-check --no-deps -w ~/tools ./${element}
               fi
           done
-          #                                
+          #
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -62,9 +65,9 @@ jobs:
           path: ~/tools
           retention-days: 5
   Upload_OQ_tools:
-    needs: Test_OQ
     runs-on: ubuntu-latest
-    steps: 
+    needs: Wheel_Tools
+    steps:
       - uses: actions/checkout@v2
       - name: Download OQ-engine tools from build job
         uses: actions/download-artifact@v2
@@ -75,7 +78,12 @@ jobs:
         env:
           DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
         run: |
+          ls -lrt /home/runner/work/oq-builders/oq-builders/*.whl
+          mkdir ~/to_wheelhouse
+          mv /home/runner/work/oq-builders/oq-builders/*.whl ~/to_wheelhouse
+          #
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
-          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa 
-          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/var/www/wheelhouse/py/
+          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
+          gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax ~/to_wheelhouse/*.whl ftp@downloads.openquake.org:/var/www/wheelhouse/py/standalone/
