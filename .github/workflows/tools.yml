@@ -86,4 +86,4 @@ jobs:
           chmod 600 ./.deploy_rsa
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
-          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax ~/to_wheelhouse/*.whl ftp@downloads.openquake.org:/var/www/wheelhouse/py/standalone/
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax ~/to_wheelhouse/*.whl ftp@downloads.openquake.org:/var/www/wheelhouse/py/standalone/latest/
