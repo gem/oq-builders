@@ -64,7 +64,6 @@ jobs:
           path: ~/tools
           retention-days: 5
   Upload_OQ_tools:
-    needs: Test_OQ
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v2
