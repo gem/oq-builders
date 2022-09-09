@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
 #        python-version: [36, 37, 38, 39]
-        python-version: [37, 38, 39]
+        python-version: [38, 39, 310]
     container:
       image: quay.io/pypa/manylinux1_x86_64
       env:
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8, 3.9, "3.10"]
 
     steps:
     - name: Set up Python  ${{ matrix.python-version }}
@@ -62,7 +62,7 @@ jobs:
         git clone https://github.com/gem/oq-engine.git
         cd oq-engine && pip install -e .
         cd $HOME/oq-engine
-        pip install numpy==1.20
+        pip install -U numpy
         echo "cd ${{steps.download.outputs.download-path}}"
         cd ${{steps.download.outputs.download-path}}
         pwd
