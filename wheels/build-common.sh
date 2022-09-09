@@ -116,12 +116,7 @@ function get {
 
     for PYVER in $PY; do
         for PYBIN in /opt/python/cp${PYVER}*/bin; do
-            # Download python dependencies
-            if cache=$(ls /io/wheelhouse/${REQ}-${REQ_VER}*${PYVER}*.whl); then
-                ${PYBIN}/pip install -U $cache
-            else
-                ${PYBIN}/pip install -U $1
-            fi
+            ${PYBIN}/pip install -U $1
         done
     done
 }
