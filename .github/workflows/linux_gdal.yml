@@ -12,9 +12,9 @@ jobs:
     strategy:
       matrix:
 #        python-version: [36, 37, 38, 39]
-        python-version: [38, 39, 310]
+        python-version: [310]
     container:
-      image: quay.io/pypa/manylinux1_x86_64
+      image: quay.io/pypa/manylinux2014_x86_64
       env:
         GEM_SET_PY: ${{ matrix.python-version }}
       volumes:
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10"]
+        python-version: ["3.10"]
 
     steps:
     - name: Set up Python  ${{ matrix.python-version }}
