@@ -10,7 +10,7 @@ on:
         default: master
         required: true
 env:
-  PROJ_VERSION: "8.2.0"
+  PROJ_VERSION: "9.1.0"
   PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
            python3.9 -m pip install -U pip pipx setuptools
       - name: Download pyproj sources and install it
         env:
-          PROJ_VERSION: "8.2.0"
+          PROJ_VERSION: "9.1.0"
           PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
         run: |
            export PIP_DEFAULT_TIMEOUT=100
@@ -52,10 +52,10 @@ jobs:
            #
            echo "PROJ_DIR: " ${PROJ_DIR}
            echo "PROJ_DIR: " ${{ env.PROJ_DIR }}
-           curl -L -v -o pyproj-3.3.1.tar.gz https://github.com/pyproj4/pyproj/archive/refs/tags/3.3.1.tar.gz
-           tar -zxvf pyproj-3.3.1.tar.gz
-           cp ./wheels/builders/proj-compile-wheels.sh pyproj-3.3.1/ci
-           mv pyproj-3.3.1 pyproj
+           curl -L -v -o pyproj-src.tar.gz https://github.com/pyproj4/pyproj/archive/refs/tags/3.4.0.tar.gz
+           tar -zxvf pyproj-src.tar.gz
+           cp ./wheels/builders/proj-compile-wheels.sh pyproj-src/ci
+           mv pyproj-src pyproj
            cd pyproj
            echo "main folder `pwd`"
            pwd
@@ -69,7 +69,7 @@ jobs:
         with:
           package-dir: pyproj
         env:
-          PROJ_VERSION: "9.0.0"
+          PROJ_VERSION: "9.1.0"
           PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
           CIBW_SKIP: "*musllinux* pp*-win*"
           CIBW_BUILD: cp39-macosx_arm64
@@ -99,7 +99,7 @@ jobs:
         with:
           package-dir: pyproj
         env:
-          PROJ_VERSION: "8.2.0"
+          PROJ_VERSION: "9.1.0"
           PROJ_DIR: ${GITHUB_WORKSPACE}/pyproj/pyproj/proj_dir
           CIBW_SKIP: "*musllinux* pp*-win*"
           CIBW_BUILD: cp310-macosx_arm64
