@@ -39,9 +39,9 @@ build_dep jasper
 build_dep proj
 
 cd /tmp/src
-curl -f -L -O https://download.osgeo.org/gdal/3.3.3/gdal-3.3.3.tar.gz
-tar xzf gdal-3.3.3.tar.gz
-cd gdal-3.3.3
+curl -f -L -O https://download.osgeo.org/gdal/3.4.3/gdal-3.4.3.tar.gz
+tar xzf gdal-3.4.3.tar.gz
+cd gdal-3.4.3
 ./configure \
  --with-threads \
  --disable-debug \
@@ -80,7 +80,7 @@ make install
 # been copied to.
 # cp $MYDIR/gdal/gdalinit.py /tmp/src/gdal-3.2.2/swig/python/osgeo/__init__.py
 
-cd  /tmp/src/gdal-3.3.3/swig/python
+cd  /tmp/src/gdal-3.4.3/swig/python
 
 #get numpy==1.16.5
 get numpy

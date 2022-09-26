@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-#        python-version: [36, 37, 38, 39]
-        python-version: [310]
+        python-version: [36, 37, 38, 39, 310]
     container:
       image: quay.io/pypa/manylinux2014_x86_64
       env:
