@@ -51,7 +51,7 @@ jobs:
           cd ~
           pip3 install -U pip wheel setuptools delocate numpy
           echo "pip3 download GDAL==${gdalref}"
-          pip3 download GDAL==${gdalref}
+          pip3 download --no-deps --no-binary :all: GDAL==${gdalref}
           tar -xvzf GDAL-${gdalref}.tar.gz
           cd GDAL-${gdalref}
           pwd
@@ -63,14 +63,13 @@ jobs:
           sleep 10
           # Fiona wheel
           cd ~
-          echo "pip3 download Fiona==${fionaref}"
-          pip3 download Fiona==${fionaref}
+          pip3 download --no-deps --no-binary :all: Fiona==${fionaref}
           tar -xvzf Fiona-${fionaref}.tar.gz
           cd Fiona-${fionaref}
           pwd
           python setup.py build
           python setup.py install
-          pip wheel --no-deps --no-binary :all: -w output .
+          pip3 wheel --no-deps --no-binary :all: -w output .
           cd output
           echo "listing folder of wheel"
           ls -lrt  ~/src/whl
