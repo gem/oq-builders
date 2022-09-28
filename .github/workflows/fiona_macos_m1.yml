@@ -57,7 +57,7 @@ jobs:
           pwd
           python setup.py build
           python setup.py install
-          pip wheel --no-deps --no-binary :all: -w output .
+          pip wheel --no-deps --no-binary :all: -w ~/output .
           cd output
           echo "listing folder of wheel"
           sleep 10
@@ -70,12 +70,15 @@ jobs:
           pwd
           python setup.py build
           python setup.py install
-          pip3 wheel --no-deps --no-binary :all: -w output .
-          cd output
-          ls -lrt
+          pip3 wheel --no-deps --no-binary :all: -w ~/output .
+          ls -lrt ~/output
+          cd ~/output 
+          #
           mkdir -p ~/src/whl/${{ matrix.python-version }}
-          delocate-listdeps GDAL*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
-          delocate-listdeps Fiona*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} Fiona*.whl
+          #delocate-listdeps GDAL*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
+          #delocate-listdeps Fiona*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} Fiona*.whl
+          delocate-listdeps GDAL*.whl && delocate-wheel  -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
+          delocate-listdeps Fiona*.whl && delocate-wheel -w ~/src/whl/${{ matrix.python-version }} Fiona*.whl
       - name: Upload artifacts of wheel
         uses: actions/upload-artifact@v2
         with:
