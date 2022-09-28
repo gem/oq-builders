@@ -17,7 +17,7 @@ on:
 #    branches:
 #      - master
 jobs:
-  wheel_of_GDAL:
+  wheel_of_GDAL_and_Fiona:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -58,9 +58,6 @@ jobs:
           python setup.py build
           python setup.py install
           pip wheel --no-deps --no-binary :all: -w ~/output .
-          cd output
-          echo "listing folder of wheel"
-          sleep 10
           # Fiona wheel
           cd ~
           ls -lrt
