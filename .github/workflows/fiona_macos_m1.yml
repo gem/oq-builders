@@ -110,10 +110,10 @@ jobs:
           echo "engine installation to test GDAL wheel"
           cd ~
           python3.9 -c "import sys; print(sys.version)"
-          rm -rf ./oq-gdal
+          #rm -rf ./oq-gdal
           python3.9 -m venv oq-gdal
           source ./oq-gdal/bin/activate
-          rm -rf oq-engine
+          #rm -rf oq-engine
           git clone https://github.com/gem/oq-engine.git
           cd oq-engine
           pip3 install -U pip wheel setuptools pytest numpy
