@@ -1,4 +1,4 @@
-name: M1 GDAL Fiona wheel 
+name: Intel GDAL Fiona wheel 
 on:
   workflow_dispatch:
     inputs:
@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [m1whl]
+        os: [macos-11]
         python-version: [3.9]
         #os: [ARM64]
         #python-version: [3.8, 3.9, "3.10"]
@@ -89,7 +89,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [m1whl]
+        os: [macos-12]
         python-version: [3.9]
     steps:
       - name: download artifact
