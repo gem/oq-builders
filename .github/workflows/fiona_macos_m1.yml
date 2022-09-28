@@ -84,7 +84,7 @@ jobs:
           retention-days: 3
 
   test_of_GDAL:
-    needs: wheel_of_GDAL
+    needs: wheel_of_GDAL_and_Fiona:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
