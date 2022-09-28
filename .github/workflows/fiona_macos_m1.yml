@@ -105,13 +105,14 @@ jobs:
           export PIP_DEFAULT_TIMEOUT=100
           echo "engine installation to test GDAL wheel"
           cd ~
+          rm -rf oq-engine
           echo "Install python@{{ matrix.python-version }} with brew"
           brew install python@${{ matrix.python-version }}
           #
           python3.10 -c "import sys; print(sys.version)"
           #rm -rf ./oq-gdal
-          python3.10 -m venv oq-gdal
-          source ./oq-gdal/bin/activate
+          python3.10 -m venv oq-gdal3.10
+          source ./oq-gdal3.10/bin/activate
           #rm -rf oq-engine
           git clone https://github.com/gem/oq-engine.git
           cd oq-engine
