@@ -1,0 +1,125 @@
+name: M1 GDAL wheel 
+on:
+  workflow_dispatch:
+    inputs:
+      gdal-ref:
+        description: GDAL Version
+        default: 3.4.3
+        required: true
+      fiona-ref:
+        description: GDAL Version
+        default: 1.8.21
+        required: true
+#  push:
+#    branches:
+#      - test_gdal
+# pull_request:
+#    branches:
+#      - master
+jobs:
+  wheel_of_GDAL:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-11]
+        python-version: [3.9]
+        #os: [ARM64]
+        #python-version: [3.8, 3.9, "3.10"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install gdal using brew and build wheel for gdal and fiona
+        env:
+          gdalref: ${{ github.event.inputs.gdal-ref }}
+          fionaref: ${{ github.event.inputs.gdal-ref }}
+        run: |
+          echo ${gdalref}
+          echo ${{ github.event.inputs.gdal-ref }}
+          echo "Input GDAL version: $gdalref"
+          echo "brew install gdal"
+          brew install gdal
+          #
+          #test gdal installation
+          echo " gdalinfo --version"
+          gdalinfo --version
+          export PIP_DEFAULT_TIMEOUT=100
+          python3.9 -m venv oq-builders
+          source ./oq-builders/bin/activate
+          echo "source ./oq-builders/bin/activate"
+          cd ~
+          pip3 install -U pip wheel setuptools delocate numpy
+          echo "pip3 download GDAL==${gdalref}"
+          pip3 download GDAL==${gdalref}
+          tar -xvzf GDAL-${gdalref}.tar.gz
+          cd GDAL-${gdalref}
+          pwd
+          python setup.py build
+          python setup.py install
+          pip wheel --no-deps --no-binary :all: -w output .
+          cd output
+          echo "listing folder of wheel"
+          sleep 10
+          # Fiona wheel
+          cd ~
+          echo "pip3 download Fiona==${fionaref}"
+          pip3 download Fiona==${fionaref}
+          tar -xvzf Fiona-${fionaref}.tar.gz
+          cd Fiona-${fionaref}
+          pwd
+          python setup.py build
+          python setup.py install
+          pip wheel --no-deps --no-binary :all: -w output .
+          cd output
+          echo "listing folder of wheel"
+          ls -lrt  ~/src/whl
+          rm -rf ~/src/whl
+          mkdir -p ~/src/whl/${{ matrix.python-version }}
+          delocate-listdeps GDAL*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
+          delocate-listdeps Fiona*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} Fiona*.whl
+      - name: Upload artifacts of wheel
+        uses: actions/upload-artifact@v2
+        with:
+          name: gdal_wheel
+          path: ~/src/whl/${{ matrix.python-version }}
+          retention-days: 3
+
+  test_of_GDAL:
+    needs: wheel_of_GDAL
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [m1Gem]
+        python-version: [3.9]
+    steps:
+      - name: download artifact
+        uses: actions/download-artifact@v2
+        id: download
+        with:
+          name: gdal_wheel
+          path: ~/src/whl/${{ matrix.python-version }}
+
+      - name: 'Echo artifact download path'
+        run: echo ${{steps.download.outputs.download-path}}
+      - name: Test Gdal with python
+        shell: bash
+        run: |
+          export PIP_DEFAULT_TIMEOUT=100
+          echo "engine installation to test GDAL wheel"
+          cd ~
+          python3.9 -c "import sys; print(sys.version)"
+          rm -rf ./oq-gdal
+          python3.9 -m venv oq-gdal
+          source ./oq-gdal/bin/activate
+          rm -rf oq-engine
+          git clone https://github.com/gem/oq-engine.git
+          cd oq-engine
+          pip3 install -U pip wheel setuptools pytest numpy
+          pip3 install -e .
+          cd ${{steps.download.outputs.download-path}}
+          pwd
+          ls -lrt
+          wheel="$(ls *`echo ${{ matrix.python-version }} | tr -d .`*.whl)"
+          echo ${wheel}
+          pip3 install ${wheel}
+          cd ~/oq-engine
+          python3.9 -c "import openquake"
+          pytest openquake/sep/tests/test_utils.py
