@@ -55,9 +55,10 @@ jobs:
           tar -xvzf GDAL-${gdalref}.tar.gz
           cd GDAL-${gdalref}
           pwd
-          python setup.py build
-          python setup.py install
-          pip wheel --no-deps --no-binary :all: -w ~/output .
+          python3 setup.py build
+          python3 setup.py install
+          #pip wheel --no-deps --no-binary :all: -w ~/output .
+          pip wheel -w ~/output .
           # Fiona wheel
           cd ~
           ls -lrt
@@ -65,9 +66,9 @@ jobs:
           tar -xvzf Fiona-${fionaref}.tar.gz
           cd Fiona-${fionaref}
           pwd
-          python setup.py build
-          python setup.py install
-          pip3 wheel --no-deps --no-binary :all: -w ~/output .
+          python3 setup.py build_ext
+          python3 setup.py install
+          pip3 wheel -w ~/output .
           ls -lrt ~/output
           cd ~/output 
           #
@@ -106,6 +107,9 @@ jobs:
           export PIP_DEFAULT_TIMEOUT=100
           echo "engine installation to test GDAL wheel"
           cd ~
+          echo "Install python@{{ matrix.python-version }} with brew"
+          brew install python@${{ matrix.python-version }}
+          #
           python3.9 -c "import sys; print(sys.version)"
           #rm -rf ./oq-gdal
           python3.9 -m venv oq-gdal
