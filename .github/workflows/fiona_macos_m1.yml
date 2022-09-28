@@ -32,6 +32,9 @@ jobs:
           gdalref: ${{ github.event.inputs.gdal-ref }}
           fionaref: ${{ github.event.inputs.gdal-ref }}
         run: |
+          echo "Install python3.9 with brew"
+          brew install python@3.9
+          #
           echo ${gdalref}
           echo ${{ github.event.inputs.gdal-ref }}
           echo "Input GDAL version: $gdalref"
