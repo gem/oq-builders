@@ -1,4 +1,4 @@
-name: M1 GDAL wheel 
+name: M1 Fiona wheel 
 on:
   workflow_dispatch:
     inputs:
