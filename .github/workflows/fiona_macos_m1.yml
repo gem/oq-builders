@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11]
+        os: [macos-12]
         python-version: [3.9]
         #os: [ARM64]
         #python-version: [3.8, 3.9, "3.10"]
@@ -30,7 +30,7 @@ jobs:
       - name: Install gdal using brew and build wheel for gdal and fiona
         env:
           gdalref: ${{ github.event.inputs.gdal-ref }}
-          fionaref: ${{ github.event.inputs.gdal-ref }}
+          fionaref: ${{ github.event.inputs.fiona-ref }}
         run: |
           echo "Install python3.9 with brew"
           brew install python@3.9
@@ -90,7 +90,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [m1Gem]
+        os: [macos-12]
         python-version: [3.9]
     steps:
       - name: download artifact
