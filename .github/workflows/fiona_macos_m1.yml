@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12]
+        os: [macos-11]
         python-version: [3.9]
         #os: [ARM64]
         #python-version: [3.8, 3.9, "3.10"]
@@ -32,8 +32,8 @@ jobs:
           gdalref: ${{ github.event.inputs.gdal-ref }}
           fionaref: ${{ github.event.inputs.fiona-ref }}
         run: |
-          echo "Install python3.9 with brew"
-          brew install python@3.9
+          echo "Install python@{{ matrix.python-version }} with brew"
+          brew install python@${{ matrix.python-version }}
           #
           echo ${gdalref}
           echo ${{ github.event.inputs.gdal-ref }}
@@ -63,6 +63,7 @@ jobs:
           sleep 10
           # Fiona wheel
           cd ~
+          ls -lrt
           pip3 download --no-deps --no-binary :all: Fiona==${fionaref}
           tar -xvzf Fiona-${fionaref}.tar.gz
           cd Fiona-${fionaref}
@@ -71,9 +72,7 @@ jobs:
           python setup.py install
           pip3 wheel --no-deps --no-binary :all: -w output .
           cd output
-          echo "listing folder of wheel"
-          ls -lrt  ~/src/whl
-          rm -rf ~/src/whl
+          ls -lrt
           mkdir -p ~/src/whl/${{ matrix.python-version }}
           delocate-listdeps GDAL*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} GDAL*.whl
           delocate-listdeps Fiona*.whl && delocate-wheel --require-archs arm64 -w ~/src/whl/${{ matrix.python-version }} Fiona*.whl
