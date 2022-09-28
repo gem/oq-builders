@@ -22,9 +22,7 @@ jobs:
     strategy:
       matrix:
         os: [m1whl]
-        python-version: [3.9]
-        #os: [ARM64]
-        #python-version: [3.8, 3.9, "3.10"]
+        python-version: [3.10]
     steps:
       - uses: actions/checkout@v2
       - name: Install gdal using brew and build wheel for gdal and fiona
@@ -45,7 +43,7 @@ jobs:
           echo " gdalinfo --version"
           gdalinfo --version
           export PIP_DEFAULT_TIMEOUT=100
-          python3.9 -m venv oq-builders
+          python3.10 -m venv oq-builders
           source ./oq-builders/bin/activate
           echo "source ./oq-builders/bin/activate"
           cd ~
@@ -90,7 +88,7 @@ jobs:
     strategy:
       matrix:
         os: [m1whl]
-        python-version: [3.9]
+        python-version: [3.10]
     steps:
       - name: download artifact
         uses: actions/download-artifact@v2
@@ -110,9 +108,9 @@ jobs:
           echo "Install python@{{ matrix.python-version }} with brew"
           brew install python@${{ matrix.python-version }}
           #
-          python3.9 -c "import sys; print(sys.version)"
+          python3.10 -c "import sys; print(sys.version)"
           #rm -rf ./oq-gdal
-          python3.9 -m venv oq-gdal
+          python3.10 -m venv oq-gdal
           source ./oq-gdal/bin/activate
           #rm -rf oq-engine
           git clone https://github.com/gem/oq-engine.git
@@ -126,6 +124,6 @@ jobs:
           echo ${wheel}
           pip3 install ${wheel}
           cd ~/oq-engine
-          python3.9 -c "import openquake"
+          python3.10 -c "import openquake"
           pytest -vsx --color=yes openquake/sep/tests/test_utils.py
           pytest -vsx --color=yes openquake/hazardlib/tests/gsim/kotha_2020_test.py
