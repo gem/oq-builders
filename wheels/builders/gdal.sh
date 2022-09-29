@@ -82,8 +82,7 @@ make install
 
 cd  /tmp/src/gdal-3.4.3/swig/python
 
-#get numpy==1.16.5
-get numpy
+get numpy==1.23.3
 get setuptools==58.0
 build .
 

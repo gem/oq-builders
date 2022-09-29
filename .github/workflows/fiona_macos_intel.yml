@@ -127,5 +127,7 @@ jobs:
           pip3 install ${wheel}
           cd ~/oq-engine
           python3.9 -c "import openquake"
+          find . -name -name proj.db -ls
+          sleep 2
           pytest -vsx --color=yes openquake/sep/tests
           pytest -vsx --color=yes openquake/hazardlib/tests/gsim/kotha_2020_test.py
