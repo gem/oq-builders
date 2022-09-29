@@ -63,9 +63,9 @@ function build_dep {
         'expat')
             if [ ! -f /usr/local/lib/libexpat.so ]; then
                 cd /tmp/src
-                curl -f -L -O https://github.com/libexpat/libexpat/releases/download/R_2_4_1/expat-2.4.1.tar.bz2
-				tar xjf expat-2.4.1.tar.bz2
-				cd expat-2.4.1
+                curl -f -L -O https://github.com/libexpat/libexpat/releases/download/R_2_4_9/expat-2.4.9.tar.bz2
+				tar xjf expat-2.4.9.tar.bz2
+				cd expat-2.4.9
 				./configure --prefix=/usr/local
                 make -j $NPROC
                 make install
@@ -105,10 +105,12 @@ function build_dep {
 				sleep 5
 				ctest
 				ls /usr/local/share/proj
-				#
-                cd /tmp/src
-                curl -f -L -O https://download.osgeo.org/proj/proj-datumgrid-1.8.zip
-                unzip -o -d /usr/local/share/proj proj-datumgrid-1.8.zip
+                # With a successful install of PROJ we can now 
+                # install data files using the projsync utility:
+                projsync --system-directory
+                #cd /tmp/src
+                #curl -f -L -O https://download.osgeo.org/proj/proj-datumgrid-1.8.zip
+                #unzip -o -d /usr/local/share/proj proj-datumgrid-1.8.zip
             fi
             ;;
         'jasper')
