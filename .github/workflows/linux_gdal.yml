@@ -61,7 +61,7 @@ jobs:
         git clone https://github.com/gem/oq-engine.git
         cd oq-engine && pip install -e .
         cd $HOME/oq-engine
-        pip install -U numpy
+        pip install -U numpy==1.23.3
         echo "cd ${{steps.download.outputs.download-path}}"
         cd ${{steps.download.outputs.download-path}}
         pwd

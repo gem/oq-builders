@@ -90,6 +90,7 @@ function build_dep {
                 cd proj-9.1.0
                 mkdir build
                 cd build
+				#
                 cmake .. \
                 -DCMAKE_INSTALL_PREFIX=$PROJ_DIR \
                 -DBUILD_SHARED_LIBS=ON \
@@ -98,8 +99,10 @@ function build_dep {
                 -DBUILD_APPS:BOOL=OFF \
                 -DBUILD_TESTING:BOOL=OFF \
                 -DCMAKE_PREFIX_PATH=$BUILD_PREFIX \
-                -DCMAKE_INSTALL_LIBDIR=lib \
-                cmake --build . -j$NPROC \
+                -DCMAKE_INSTALL_LIBDIR=lib 
+				#
+                cmake --build . -j$NPROC
+				#
                 cmake --install .
 				sleep 5
 				ctest
