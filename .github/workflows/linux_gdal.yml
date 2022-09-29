@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [37, 38, 39, 310]
+        python-version: [38, 39, 310]
     container:
       image: quay.io/pypa/manylinux2014_x86_64
       env:
@@ -61,7 +61,7 @@ jobs:
         git clone https://github.com/gem/oq-engine.git
         cd oq-engine && pip install -e .
         cd $HOME/oq-engine
-        pip install -U numpy
+        pip install -U numpy==1.23.3
         echo "cd ${{steps.download.outputs.download-path}}"
         cd ${{steps.download.outputs.download-path}}
         pwd
@@ -73,4 +73,4 @@ jobs:
         echo ${wheel}
         pip install ${wheel}
         cd $HOME/oq-engine
-        pytest openquake/sep/tests/test_utils.py
+        pytest -vsx --color=yes openquake/sep

@@ -31,7 +31,8 @@ MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ -z $OQ_ENV_SET ]; then source $MYDIR/../build-common.sh; fi
 
-yum install -q -y gcc-c++ gcc libpng  libtiff json-c-devel zlib-devel libtiff-devel openssl-devel unzip zip libcurl-devel 
+yum install -q -y gcc-c++ gcc libpng  libtiff json-c-devel zlib-devel curl
+yum install -q -y cmake nghttp2 sqlite libtiff-devel openssl-devel unzip zip libcurl-devel 
 
 build_dep expat
 build_dep geos
@@ -72,18 +73,11 @@ cd gdal-3.4.3
 make -j $NPROC
 make install
 
-# Replace SWIG's setup.py with this modified one, which gets numpy in
-# there as a dependency.
-# cp $MYDIR/gdal/setup.py /tmp/src/gdal-3.2.2/swig/python/setup.py
-# Replace the osgeo module __init__.py with this modified one, which
-# sets the GDAL_DATA and PROJ_LIB variables on import to where they've
-# been copied to.
-# cp $MYDIR/gdal/gdalinit.py /tmp/src/gdal-3.2.2/swig/python/osgeo/__init__.py
+# 
 
 cd  /tmp/src/gdal-3.4.3/swig/python
 
-#get numpy==1.16.5
-get numpy
+get numpy==1.23.3
 get setuptools==58.0
 build .
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# Copyright (C) 2016-2019 GEM Foundation
+# Copyright (C) 2016-2022 GEM Foundation
 #
 # OpenQuake is free software: you can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License as published
@@ -63,9 +63,9 @@ function build_dep {
         'expat')
             if [ ! -f /usr/local/lib/libexpat.so ]; then
                 cd /tmp/src
-                curl -f -L -O https://github.com/libexpat/libexpat/releases/download/R_2_4_1/expat-2.4.1.tar.bz2
-				tar xjf expat-2.4.1.tar.bz2
-				cd expat-2.4.1
+                curl -f -L -O https://github.com/libexpat/libexpat/releases/download/R_2_4_9/expat-2.4.9.tar.bz2
+				tar xjf expat-2.4.9.tar.bz2
+				cd expat-2.4.9
 				./configure --prefix=/usr/local
                 make -j $NPROC
                 make install
@@ -74,9 +74,9 @@ function build_dep {
         'geos')
             if [ ! -f /usr/local/lib/libgeos.so ]; then
                 cd /tmp/src
-                curl -f -L -O https://download.osgeo.org/geos/geos-3.9.2.tar.bz2
-                tar jxf geos-3.9.2.tar.bz2
-                cd geos-3.9.2
+                curl -f -L -O https://download.osgeo.org/geos/geos-3.9.3.tar.bz2
+                tar jxf geos-3.9.3.tar.bz2
+                cd geos-3.9.3
                 ./configure
                 make -j $NPROC
                 make install
@@ -85,15 +85,23 @@ function build_dep {
         'proj')
             if [ ! -f /usr/local/lib/libproj.so ]; then
                 cd /tmp/src
-                curl -f -L -O https://download.osgeo.org/proj/proj-6.3.2.tar.gz
-                tar xzf proj-6.3.2.tar.gz
-                cd proj-6.3.2
-                ./configure
-                make -j $NPROC
-                make install
-                cd /tmp/src
-                curl -f -L -O https://download.osgeo.org/proj/proj-datumgrid-1.8.zip
-                unzip -o -d /usr/local/share/proj proj-datumgrid-1.8.zip
+                curl -f -L -O https://download.osgeo.org/proj/proj-9.1.0.tar.gz
+                tar xzf proj-9.1.0.tar.gz
+                cd proj-9.1.0
+                mkdir build
+                cd build
+				#
+                cmake .. \
+                -DBUILD_SHARED_LIBS=ON \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DENABLE_IPO=ON \
+                -DBUILD_APPS:BOOL=OFF \
+                -DBUILD_TESTING:BOOL=OFF \
+                -DCMAKE_INSTALL_LIBDIR=lib 
+				#
+                cmake --build . -j$NPROC
+				#
+                cmake --install .
             fi
             ;;
         'jasper')
