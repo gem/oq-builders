@@ -92,13 +92,11 @@ function build_dep {
                 cd build
 				#
                 cmake .. \
-                -DCMAKE_INSTALL_PREFIX=$PROJ_DIR \
                 -DBUILD_SHARED_LIBS=ON \
                 -DCMAKE_BUILD_TYPE=Release \
                 -DENABLE_IPO=ON \
                 -DBUILD_APPS:BOOL=OFF \
                 -DBUILD_TESTING:BOOL=OFF \
-                -DCMAKE_PREFIX_PATH=$BUILD_PREFIX \
                 -DCMAKE_INSTALL_LIBDIR=lib 
 				#
                 cmake --build . -j$NPROC
@@ -106,6 +104,8 @@ function build_dep {
                 cmake --install .
 				sleep 5
 				ctest
+				ls /usr/local/share/proj
+				#
                 cd /tmp/src
                 curl -f -L -O https://download.osgeo.org/proj/proj-datumgrid-1.8.zip
                 unzip -o -d /usr/local/share/proj proj-datumgrid-1.8.zip
