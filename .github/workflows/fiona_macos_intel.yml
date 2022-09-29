@@ -10,9 +10,9 @@ on:
         description: GDAL Version
         default: 1.8.21
         required: true
-#  push:
-#    branches:
-#      - test_gdal
+    push:
+      branches:
+        - ae-projdir
 # pull_request:
 #    branches:
 #      - master
@@ -127,5 +127,5 @@ jobs:
           pip3 install ${wheel}
           cd ~/oq-engine
           python3.9 -c "import openquake"
-          pytest -vsx --color=yes openquake/sep/tests/test_utils.py
+          pytest -vsx --color=yes openquake/sep/tests
           pytest -vsx --color=yes openquake/hazardlib/tests/gsim/kotha_2020_test.py
