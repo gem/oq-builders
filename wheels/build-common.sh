@@ -74,9 +74,9 @@ function build_dep {
         'geos')
             if [ ! -f /usr/local/lib/libgeos.so ]; then
                 cd /tmp/src
-                curl -f -L -O https://download.osgeo.org/geos/geos-3.9.2.tar.bz2
-                tar jxf geos-3.9.2.tar.bz2
-                cd geos-3.9.2
+                curl -f -L -O https://download.osgeo.org/geos/geos-3.9.3.tar.bz2
+                tar jxf geos-3.9.3.tar.bz2
+                cd geos-3.9.3
                 ./configure
                 make -j $NPROC
                 make install
@@ -85,9 +85,9 @@ function build_dep {
         'proj')
             if [ ! -f /usr/local/lib/libproj.so ]; then
                 cd /tmp/src
-                curl -f -L -O https://download.osgeo.org/proj/proj-6.3.2.tar.gz
-                tar xzf proj-6.3.2.tar.gz
-                cd proj-6.3.2
+                curl -f -L -O https://download.osgeo.org/proj/proj-8.2.1.tar.gz
+                tar xzf proj-8.2.1.tar.gz
+                cd proj-8.2.1
                 ./configure
                 make -j $NPROC
                 make install
