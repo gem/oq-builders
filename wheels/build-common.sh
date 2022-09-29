@@ -102,16 +102,6 @@ function build_dep {
                 cmake --build . -j$NPROC
 				#
                 cmake --install .
-				sleep 5
-				ctest
-				ls /usr/local/share/proj
-                # With a successful install of PROJ we can now 
-                # install data files using the projsync utility:
-				find / -name projsync -ls
-                #projsync --system-directory
-                #cd /tmp/src
-                #curl -f -L -O https://download.osgeo.org/proj/proj-datumgrid-1.8.zip
-                #unzip -o -d /usr/local/share/proj proj-datumgrid-1.8.zip
             fi
             ;;
         'jasper')
