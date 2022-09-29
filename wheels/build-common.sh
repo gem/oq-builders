@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# Copyright (C) 2016-2019 GEM Foundation
+# Copyright (C) 2016-2022 GEM Foundation
 #
 # OpenQuake is free software: you can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License as published
@@ -88,9 +88,21 @@ function build_dep {
                 curl -f -L -O https://download.osgeo.org/proj/proj-9.1.0.tar.gz
                 tar xzf proj-9.1.0.tar.gz
                 cd proj-9.1.0
-                ./configure
-                make -j $NPROC
-                make install
+                mkdir build
+                cd build
+                cmake .. \
+                -DCMAKE_INSTALL_PREFIX=$PROJ_DIR \
+                -DBUILD_SHARED_LIBS=ON \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DENABLE_IPO=ON \
+                -DBUILD_APPS:BOOL=OFF \
+                -DBUILD_TESTING:BOOL=OFF \
+                -DCMAKE_PREFIX_PATH=$BUILD_PREFIX \
+                -DCMAKE_INSTALL_LIBDIR=lib \
+                cmake --build . -j$NPROC \
+                cmake --install .
+				sleep 5
+				ctest
                 cd /tmp/src
                 curl -f -L -O https://download.osgeo.org/proj/proj-datumgrid-1.8.zip
                 unzip -o -d /usr/local/share/proj proj-datumgrid-1.8.zip
