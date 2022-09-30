@@ -12,7 +12,7 @@ COMMON_UTILS_SOURCED=1
 set -ex
 
 MULTIBUILD_DIR=$(dirname "${BASH_SOURCE[0]}")
-DOWNLOADS_SDIR=downloads
+DOWNLOADS_SDIR=download
 PYPY_URL=https://downloads.python.org/pypy
 # For back-compatibility.  We use the "ensurepip" module now
 # instead of get-pip.py
