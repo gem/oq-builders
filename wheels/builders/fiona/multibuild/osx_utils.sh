@@ -161,7 +161,7 @@ function pyinst_fname_for_version {
       fi
     else
       local py_osx_ver=${2:-$(macpython_sdk_for_version $py_version)}
-      echo "python-${py_version}-macosx${py_osx_ver}.${inst_ext}"
+      echo "python-${py_version}-macos${py_osx_ver}.${inst_ext}"
     fi
 }
 
@@ -300,7 +300,8 @@ function install_mac_cpython {
     local retval=""
     mkdir -p $DOWNLOADS_SDIR
     # exit early on curl errors, but don't let it exit the shell
-    cmd_notexit curl -f $MACPYTHON_URL/$py_stripped/${py_inst} > $inst_path || retval=$?
+    #cmd_notexit curl -f $MACPYTHON_URL/$py_stripped/${py_inst} > $inst_path || retval=$?
+    cmd_notexit curl -f https://www.python.org/ftp/python/3.9.13/python-3.9.13-macos11.pkg > $inst_path || retval=$?
     if [ ${retval:-0} -ne 0 ]; then
       echo "Python download failed! Check ${py_inst} exists on the server."
       exit $retval
