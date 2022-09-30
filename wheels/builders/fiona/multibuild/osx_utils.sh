@@ -104,7 +104,7 @@ function macpython_sdk_list_for_version {
     local _ver=$(fill_pyver $1)
     local _major=${_ver%%.*}
     local _return
-    _return="11.0"
+    _return="11"
     echo $_return
 }
 
@@ -155,7 +155,7 @@ function pyinst_fname_for_version {
     # default.
     if [ "$(uname -m)" == "arm64" ] || [ $(lex_ver $py_version) -ge $(lex_ver 3.10.0) ]; then
       if [ "$py_version" == "3.9.1" ]; then
-        echo "python-${py_version}-macos11.0.${inst_ext}"
+        echo "python-${py_version}-macos11..${inst_ext}"
       else
         echo "python-${py_version}-macos11.${inst_ext}"
       fi
