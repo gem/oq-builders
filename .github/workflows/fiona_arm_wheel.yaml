@@ -17,6 +17,7 @@ jobs:
       matrix:
         os: [ "macos-latest" ]
         python-version: [ "3.9"]
+        python: ["3.8"]
         platform: [ "x86_64" ]
         macos-target: [ "10.10" ]
         exclude:
@@ -36,13 +37,13 @@ jobs:
       MACOSX_DEPLOYMENT_TARGET: ${{ matrix.macos-target }}
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python3 with brew
+      - name: Set up Python3 with brew to use with multibuild
         run: |
           env
           echo $PATH
           export PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
           which brew
-          brew install python@${{ matrix.python-version }}
+          brew install python@${{ matrix.python }}
       - name: Build Wheel
         run: bash -x wheels/builders/fiona/build.sh
       - uses: actions/upload-artifact@v2
