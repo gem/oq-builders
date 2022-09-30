@@ -1,4 +1,6 @@
-
+source wheels/builders/fiona/env_vars.sh
+echo "enviroment variables"
+env
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
   # webp, zstd, xz, libtiff cause a conflict with building webp and libtiff
   # curl from brew requires zstd, use system curl
