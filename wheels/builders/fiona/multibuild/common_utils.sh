@@ -282,13 +282,7 @@ function clean_code {
     # have a .git directory. If $repo_dir is copied around, tools like
     # Versioneer which require that it be a git repository are unable
     # to determine the version.  Give submodule proper git directory
-    fill_submodule "$repo_dir"
-    (cd $repo_dir \
-        && git fetch origin \
-        && git checkout $build_commit \
-        && git clean -fxd \
-        && git reset --hard \
-        && git submodule update --init --recursive)
+	git clone -b $BUILD_COMMIT https://github.com/Toblerity/Fiona.git
 }
 
 function build_wheel_cmd {
