@@ -17,10 +17,14 @@ echo "::group::Install a virtualenv"
   before_install
 echo "::endgroup::"
 
+echo "::group::Build Library"
+  pwd
+  bash -x wheels/builders/fiona/multibuild/library_builders.sh
+echo "::endgroup::"
+
 echo "::group::Build wheel"
   pwd
   gh_clone $REPO_GIT $BUILD_COMMIT
-  bash -x ./wheels/builders/fiona/multibuild/library_builders.sh
   build_wheel $REPO_DIR $PLAT
   ls -l "${GITHUB_WORKSPACE}/${WHEEL_SDIR}/"
 echo "::endgroup::"
