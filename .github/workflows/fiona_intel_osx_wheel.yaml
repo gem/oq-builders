@@ -4,6 +4,7 @@ name: Wheels
 on: [push, pull_request, workflow_dispatch]
 
 env:
+  REPO_GIT: Toblerity/Fiona.git
   REPO_DIR: Fiona
   WHEEL_SDIR: wheelhouse
   SETUPTOOLS_USE_DISTUTILS: stdlib
