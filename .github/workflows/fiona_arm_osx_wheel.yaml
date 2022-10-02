@@ -10,22 +10,16 @@ env:
 
 jobs:
   build:
-    name: ${{ matrix.python }} ${{ matrix.os-name }} ${{ matrix.platform }}
+    name: ${{ matrix.python-version }} ${{ matrix.os-name }} ${{ matrix.platform }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ "macos-latest" ]
+        os: [ "m1gem" ]
         python-version: [ "3.9"]
         python: ["3.8"]
-        platform: [ "x86_64" ]
+        platform: [ "arm64" ]
         macos-target: [ "11" ]
-        exclude:
-          - os: "macos-latest"
-            platform: "i686"
-        include:
-          - os: "macos-latest"
-            os-name: "osx"
     env:
       BUILD_COMMIT: 1.8.21
       PLAT: "${{ matrix.platform }}"
