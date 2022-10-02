@@ -121,7 +121,7 @@ function is_function {
 }
 
 function gh_clone {
-    git clone https://github.com/$1
+    git clone -b $2 https://github.com/$1
 }
 
 # gh-clone was renamed to gh_clone, so we have this alias for
