@@ -10,16 +10,17 @@ MACPYTHON_URL=https://www.python.org/ftp/python
 MACPYTHON_PY_PREFIX=/Library/Frameworks/Python.framework/Versions
 WORKING_SDIR=working
 
-# latest Python of each version with binary download
+# As of 13 Sep 2022 - latest Python of each version with binary download
 # available.
-# See: https://www.python.org/downloads/mac-osx/
+# See: https://www.python.org/downloads/macos/
 LATEST_2p7=2.7.18
 LATEST_3p5=3.5.4
 LATEST_3p6=3.6.8
-LATEST_3p7=3.7.14
-LATEST_3p8=3.8.14
+LATEST_3p7=3.7.9
+LATEST_3p8=3.8.10
 LATEST_3p9=3.9.13
 LATEST_3p10=3.10.7
+LATEST_3p11=3.11.0rc2
 
 
 function check_python {
@@ -78,6 +79,8 @@ function fill_pyver {
         echo $LATEST_2p7
     elif [ $ver == 3 ] || [ $ver == "3.10" ]; then
         echo $LATEST_3p10
+    elif [ $ver == "3.11" ]; then
+        echo $LATEST_3p11
     elif [ $ver == "3.9" ]; then
         echo $LATEST_3p9
     elif [ $ver == "3.8" ]; then
@@ -104,7 +107,19 @@ function macpython_sdk_list_for_version {
     local _ver=$(fill_pyver $1)
     local _major=${_ver%%.*}
     local _return
-    _return="11"
+
+    if [ "$(uname -m)" = "arm64" ]; then
+        _return="11.0"
+    elif [ "$_major" -eq "2" ]; then
+        [ $(lex_ver $_ver) -lt $(lex_ver 2.7.18) ] && _return="10.6"
+        [ $(lex_ver $_ver) -ge $(lex_ver 2.7.15) ] && _return="$_return 10.9"
+    elif [ "$_major" -eq "3" ]; then
+        [ $(lex_ver $_ver) -lt $(lex_ver 3.8)    ] && _return="10.6"
+        [ $(lex_ver $_ver) -ge $(lex_ver 3.6.5)  ] && _return="$_return 10.9"
+    else
+        echo "Error version=${_ver}, expecting 2.x or 3.x" 1>&2
+        exit 1
+    fi
     echo $_return
 }
 
@@ -155,13 +170,13 @@ function pyinst_fname_for_version {
     # default.
     if [ "$(uname -m)" == "arm64" ] || [ $(lex_ver $py_version) -ge $(lex_ver 3.10.0) ]; then
       if [ "$py_version" == "3.9.1" ]; then
-        echo "python-${py_version}-macos11..${inst_ext}"
+        echo "python-${py_version}-macos11.0.${inst_ext}"
       else
         echo "python-${py_version}-macos11.${inst_ext}"
       fi
     else
       local py_osx_ver=${2:-$(macpython_sdk_for_version $py_version)}
-      echo "python-${py_version}-macos${py_osx_ver}.${inst_ext}"
+      echo "python-${py_version}-macosx${py_osx_ver}.${inst_ext}"
     fi
 }
 
@@ -300,8 +315,7 @@ function install_mac_cpython {
     local retval=""
     mkdir -p $DOWNLOADS_SDIR
     # exit early on curl errors, but don't let it exit the shell
-    #cmd_notexit curl -f $MACPYTHON_URL/$py_stripped/${py_inst} > $inst_path || retval=$?
-    cmd_notexit curl -f https://www.python.org/ftp/python/3.9.13/python-3.9.13-macos11.pkg > $inst_path || retval=$?
+    cmd_notexit curl -f $MACPYTHON_URL/$py_stripped/${py_inst} > $inst_path || retval=$?
     if [ ${retval:-0} -ne 0 ]; then
       echo "Python download failed! Check ${py_inst} exists on the server."
       exit $retval

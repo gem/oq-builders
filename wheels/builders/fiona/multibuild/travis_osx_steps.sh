@@ -1,6 +1,6 @@
 #!/bin/bash
 # Wheel build, install, run test steps on OSX
-set -ex
+set -e
 
 if [ "$PLAT" == "arm64" ] || [ "$PLAT" == "universal2" ]; then
   if [[ "$(xcrun --sdk macosx --show-sdk-version | cut -d '.' -f 1)" -lt 11 ]]; then
@@ -48,4 +48,4 @@ function before_install {
 # Local configuration may define custom pre-build, source patching.
 # It can also overwrite the functions above.
 CONFIG_PATH=${CONFIG_PATH:-config.sh}
-source $MULTIBUILD_DIR/config.sh
+source "$CONFIG_PATH"

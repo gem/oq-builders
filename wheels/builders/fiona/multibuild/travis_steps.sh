@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+
 WHEEL_SDIR=${WHEEL_SDIR:-wheelhouse}
 
 MULTIBUILD_DIR=$(dirname "${BASH_SOURCE[0]}")

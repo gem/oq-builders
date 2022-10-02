@@ -13,11 +13,12 @@ OPENBLAS_LIB_URL="https://anaconda.org/multibuild-wheels-staging/openblas-libs"
 OPENBLAS_VERSION="${OPENBLAS_VERSION:-0.3.10}"
 # We use system zlib by default - see build_new_zlib
 ZLIB_VERSION="${ZLIB_VERSION:-1.2.10}"
-LIBPNG_VERSION="${LIBPNG_VERSION:-1.6.21}"
+LIBPNG_VERSION="${LIBPNG_VERSION:-1.6.37}"
 BZIP2_VERSION="${BZIP2_VERSION:-1.0.7}"
 FREETYPE_VERSION="${FREETYPE_VERSION:-2.11.0}"
 TIFF_VERSION="${TIFF_VERSION:-4.1.0}"
 JPEG_VERSION="${JPEG_VERSION:-9b}"
+JPEGTURBO_VERSION="${JPEGTURBO_VERSION:-2.1.3}"
 OPENJPEG_VERSION="${OPENJPEG_VERSION:-2.1}"
 LCMS2_VERSION="${LCMS2_VERSION:-2.9}"
 GIFLIB_VERSION="${GIFLIB_VERSION:-5.1.3}"
@@ -133,7 +134,9 @@ function build_zlib {
     # Gives an old but safe version
     if [ -n "$IS_MACOS" ]; then return; fi  # OSX has zlib already
     if [ -e zlib-stamp ]; then return; fi
-    if [[ $MB_ML_VER == "_2_24" ]]; then
+    if [ -n "$IS_ALPINE" ]; then
+        apk add zlib-dev
+    elif [[ $MB_ML_VER == "_2_24" ]]; then
         # debian:9 based distro
         apt-get install -y zlib1g-dev
     else
@@ -159,6 +162,18 @@ function build_jpeg {
     touch jpeg-stamp
 }
 
+function build_libjpeg_turbo {
+    if [ -e jpeg-stamp ]; then return; fi
+    local cmake=$(get_modern_cmake)
+    fetch_unpack https://download.sourceforge.net/libjpeg-turbo/libjpeg-turbo-${JPEGTURBO_VERSION}.tar.gz
+    (cd libjpeg-turbo-${JPEGTURBO_VERSION} \
+        && $cmake -G"Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_INSTALL_LIBDIR=/usr/local/lib . \
+        && make install)
+
+    # Prevent build_jpeg
+    touch jpeg-stamp
+}
+
 function build_libpng {
     build_zlib
     build_simple libpng $LIBPNG_VERSION https://download.sourceforge.net/libpng
@@ -167,7 +182,7 @@ function build_libpng {
 function build_bzip2 {
     if [ -n "$IS_MACOS" ]; then return; fi  # OSX has bzip2 libs already
     if [ -e bzip2-stamp ]; then return; fi
-    fetch_unpack https://sourceware.org/pub/bzip2/bzip2-${BZIP2_VERSION}.tar.gz
+    fetch_unpack https://mirrors.kernel.org/sourceware/bzip2/bzip2-${BZIP2_VERSION}.tar.gz
     (cd bzip2-${BZIP2_VERSION} \
         && make -f Makefile-libbz2_so \
         && make install PREFIX=$BUILD_PREFIX)
@@ -186,6 +201,8 @@ function get_modern_cmake {
     local cmake=cmake
     if [ -n "$IS_MACOS" ]; then
         brew install cmake > /dev/null
+    elif [ -n "$IS_ALPINE" ]; then
+        apk add cmake > /dev/null
     elif [[ $MB_ML_VER == "_2_24" ]]; then
         # debian:9 based distro
         apt-get install -y cmake
@@ -228,7 +245,24 @@ function build_lcms2 {
 }
 
 function build_giflib {
-    build_simple giflib $GIFLIB_VERSION https://downloads.sourceforge.net/project/giflib
+    local name=giflib
+    local version=$GIFLIB_VERSION
+    local url=https://downloads.sourceforge.net/project/giflib
+    if [ $(lex_ver $GIFLIB_VERSION) -lt $(lex_ver 5.1.5) ]; then
+        build_simple $name $version $url
+    else
+        local ext=tar.gz
+        if [ -e "${name}-stamp" ]; then
+            return
+        fi
+        local name_version="${name}-${version}"
+        local archive=${name_version}.${ext}
+        fetch_unpack $url/$archive
+        (cd $name_version \
+            && make -j4 \
+            && make install)
+        touch "${name}-stamp"
+    fi
 }
 
 function build_xz {
@@ -238,10 +272,9 @@ function build_xz {
 function ensure_xz {
 	if [[ ! $(type -P "xz") ]]; then
 	    if [ -n "$IS_MACOS" ]; then
-		brew install curl
-		brew install xz
+	        brew install xz
 	    else
-		build_xz
+	        build_xz
 	    fi
 	fi
 }
@@ -412,6 +445,8 @@ function build_suitesparse {
     if [ -e suitesparse-stamp ]; then return; fi
     if [ -n "$IS_MACOS" ]; then
         brew install suite-sparse > /dev/null
+    elif [ -n "$IS_ALPINE" ]; then
+        apk add suitesparse-dev
     elif [[ $MB_ML_VER == "_2_24" ]]; then
         # debian:9 based distro
         apt-get install -y libsuitesparse-dev > /dev/null
