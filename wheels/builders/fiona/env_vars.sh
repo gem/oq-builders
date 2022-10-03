@@ -19,3 +19,4 @@ export PACKAGE_DATA=1
 export PROJ_LIB=/usr/local/share/proj
 export AUDITWHEEL_EXTRA_LIB_NAME_TAG=fiona
 export SETUPTOOLS_USE_DISTUTILS=stdlib
+export CONFIG_PATH=wheels/builders/fiona/multibuild

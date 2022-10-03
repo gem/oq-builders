@@ -47,5 +47,6 @@ function before_install {
 
 # Local configuration may define custom pre-build, source patching.
 # It can also overwrite the functions above.
-CONFIG_PATH=${CONFIG_PATH:-config.sh}
-source "$CONFIG_PATH"
+# CONFIG_PATH=${CONFIG_PATH:-config.sh}
+# source "$CONFIG_PATH"
+source wheels/builders/fiona/multibuild/config.sh
