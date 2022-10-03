@@ -58,12 +58,8 @@ else
         # centos based distro
         yum install -y libtool wget
     elif [ "${MB_PYTHON_VERSION:0:4}" == "pypy" ]; then
-        if [ -n "$IS_ALPINE" ]; then
-          apk add wget
-        else
-          # centos based distro
-          yum install -y wget
-        fi
+        # centos based distro
+        yum install -y wget
     fi
 fi
 

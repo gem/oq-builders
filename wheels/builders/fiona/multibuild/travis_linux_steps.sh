@@ -69,7 +69,6 @@ function build_multilinux {
     # Depends on
     #     MB_PYTHON_VERSION
     #     MB_ML_VER
-    #     MB_ML_LIBC (optional)
     #     UNICODE_WIDTH (optional)
     #     BUILD_DEPENDS (optional)
     #     DOCKER_IMAGE (optional)
@@ -78,8 +77,7 @@ function build_multilinux {
     local plat=$1
     [ -z "$plat" ] && echo "plat not defined" && exit 1
     local build_cmds="$2"
-    local libc=${MB_ML_LIBC:-manylinux}
-    local docker_image=${DOCKER_IMAGE:-quay.io/pypa/${libc}${MB_ML_VER}_\$plat}
+    local docker_image=${DOCKER_IMAGE:-quay.io/pypa/manylinux${MB_ML_VER}_\$plat}
     docker_image=$(eval echo "$docker_image")
     retry docker pull $docker_image
     docker run --rm \
@@ -97,7 +95,6 @@ function build_multilinux {
         -e REPO_DIR="$repo_dir" \
         -e PLAT="$PLAT" \
         -e MB_ML_VER="$MB_ML_VER" \
-        -e MB_ML_LIBC="$libc" \
         -v $PWD:/io \
         -v $HOME:/parent-home \
         $docker_image /io/$MULTIBUILD_DIR/docker_build_wrap.sh
@@ -111,7 +108,6 @@ function install_run {
     # Depends on
     #  PLAT (can be passed in as argument)
     #  MB_PYTHON_VERSION
-    #  MB_ML_LIBC (optional)
     #  UNICODE_WIDTH (optional)
     #  WHEEL_SDIR (optional)
     #  MANYLINUX_URL (optional)
@@ -119,19 +115,13 @@ function install_run {
     #  MB_TEST_VER (optional)
     local plat=${1:-${PLAT:-x86_64}}
     if [ -z "$DOCKER_TEST_IMAGE" ]; then
-        if [ "$MB_ML_LIBC" == "musllinux" ]; then
-            local docker_image="multibuild/alpine3.16_$plat"
-        elif [ "$plat" == i686 ]; then
-            local docker_image="matthewbrett/trusty:32"
-        else
-            local docker_image="multibuild/focal_{PLAT}"
-        fi
+        local bitness=$([ "$plat" == i686 ] && echo 32 || echo 64)
+        local docker_image="matthewbrett/trusty:$bitness"
     else
-        local docker_image="$DOCKER_TEST_IMAGE"
+        # aarch64 is called arm64v8 in Ubuntu
+        local plat_subst=$([ "$plat" == aarch64 ] && echo arm64v8 || echo $plat)
+        local docker_image="${DOCKER_TEST_IMAGE/\{PLAT\}/$plat_subst}"
     fi
-    # aarch64 is called arm64v8 in Ubuntu
-    local plat_subst=$([ "$plat" == aarch64 ] && echo arm64v8 || echo $plat)
-    docker_image="${docker_image/\{PLAT\}/$plat_subst}"
     docker pull $docker_image
     docker run --rm \
         -e PYTHON_VERSION="$MB_PYTHON_VERSION" \
@@ -140,7 +130,6 @@ function install_run {
         -e CONFIG_PATH="$CONFIG_PATH" \
         -e WHEEL_SDIR="$WHEEL_SDIR" \
         -e MANYLINUX_URL="$MANYLINUX_URL" \
-        -e MB_ML_LIBC="$MB_ML_LIBC" \
         -e TEST_DEPENDS="$TEST_DEPENDS" \
         -v $PWD:/io \
         $docker_image /io/$MULTIBUILD_DIR/docker_test_wrap.sh

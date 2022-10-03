@@ -27,6 +27,7 @@ fetch_unpack https://github.com/harfbuzz/harfbuzz/releases/download/2.7.4/harfbu
 suppress build_bzip2
 suppress build_openssl
 suppress build_libpng
+suppress build_libwebp
 suppress build_szip
 suppress build_swig
 # We need to find a failable test for build_github
@@ -42,10 +43,9 @@ suppress build_flex
 if [[ $MB_ML_VER != "_2_24" ]]; then
     suppress build_openblas
 fi
-suppress ensure_xz
 suppress build_tiff
-suppress build_libwebp
 suppress build_lcms2
+suppress ensure_xz
 suppress build_freetype
 suppress build_libyaml
 if [ -z "$IS_MACOS" ]; then
@@ -61,8 +61,6 @@ if [ -z "$IS_MACOS" ]; then
 fi
 suppress build_new_zlib
 suppress build_hdf5
-rm jpeg-stamp
-suppress build_libjpeg_turbo
 suppress get_modern_cmake
 
 [ ${MB_PYTHON_VERSION+x} ] || ingest "\$MB_PYTHON_VERSION is not set"
