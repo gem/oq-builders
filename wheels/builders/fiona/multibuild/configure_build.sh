@@ -2,7 +2,6 @@
 # Defines IS_MACOS, fetch_unpack
 MULTIBUILD_DIR=$(dirname "${BASH_SOURCE[0]}")
 echo $MULTIBUILD_DIR
-ls -lrt  source $MULTIBUILD_DIR/common_utils.sh
 source $MULTIBUILD_DIR/common_utils.sh
 
 # Only source configure_build once
