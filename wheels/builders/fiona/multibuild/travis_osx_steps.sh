@@ -27,8 +27,8 @@ source $MULTIBUILD_DIR/osx_utils.sh
 MB_PYTHON_OSX_VER=${MB_PYTHON_OSX_VER:-$(macpython_sdk_for_version $MB_PYTHON_VERSION)}
 
 if [ -r "$ENV_VARS_PATH" ]; then source "$ENV_VARS_PATH"; fi
-source $MULTIBUILD_DIR/configure_build.sh
-source $MULTIBUILD_DIR/library_builders.sh
+#source $MULTIBUILD_DIR/configure_build.sh
+#source $MULTIBUILD_DIR/library_builders.sh
 
 # NB - config.sh sourced at end of this function.
 # config.sh can override any function defined here.
