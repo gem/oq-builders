@@ -16,6 +16,12 @@ echo "::group::Install a virtualenv"
   before_install
 echo "::endgroup::"
 
+echo "::group::Configure and build library"
+  pwd
+  source wheels/builders/fiona/multibuild/configure_build.sh
+  source wheels/builders/fiona/multibuild/library_builders.sh
+echo "::endgroup::"
+
 echo "::group::Build wheel"
   pwd
   gh_clone $REPO_GIT $BUILD_COMMIT

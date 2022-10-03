@@ -38,7 +38,7 @@ jobs:
           echo $PATH
           export PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
           which brew
-          brew install python@${{ matrix.python }}
+          brew install python@${{ matrix.python-version }}
       - name: Build Wheel
         run: bash -x wheels/builders/fiona/build.sh
       - uses: actions/upload-artifact@v2
