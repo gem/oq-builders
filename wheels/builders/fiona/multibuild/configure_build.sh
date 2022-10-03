@@ -1,6 +1,8 @@
 # Find, load common utilities
 # Defines IS_MACOS, fetch_unpack
 MULTIBUILD_DIR=$(dirname "${BASH_SOURCE[0]}")
+echo $MULTIBUILD_DIR
+ls -lrt  source $MULTIBUILD_DIR/common_utils.sh
 source $MULTIBUILD_DIR/common_utils.sh
 
 # Only source configure_build once
@@ -11,6 +13,8 @@ CONFIGURE_BUILD_SOURCED=1
 
 BUILD_PREFIX="${BUILD_PREFIX:-/usr/local}"
 
+echo "SIAMO su un MAC: $IS_MACOS"
+#
 # IS_MACOS is defined in common_utils.sh
 if [ -n "$IS_MACOS" ]; then
     # Default compilation flags for OSX
