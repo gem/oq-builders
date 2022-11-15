@@ -87,7 +87,7 @@ jobs:
           $files.Name > .\oq-dist\tools\index.txt
           # 
           curl.exe -LO "https://docs.openquake.org/manuals/OpenQuake Manual (master).pdf"
-          #Rename-Item .\oq-manual.pdf "Openquake manual.pdf"
+          Rename-Item "OpenQuake Manual (master).pdf" "Openquake manual.pdf"
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\doc" -Destination "C:\Users\runneradmin\oq-builders\installers\windows\nsis\" -Recurse
           Write-Host "Generating NSIS installer with oq version and time of git"
           $version = Select-String -Path .\oq-engine\openquake\baselib\__init__.py -Pattern '__version__ ='
