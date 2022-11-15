@@ -20,7 +20,8 @@ jobs:
           Write-Host "Branch: ${branchName}"
           #
           cd C:\Users\runneradmin
-          curl  https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip --output python.zip
+          #curl  https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip --output python.zip
+          curl https://www.python.org/ftp/python/3.10.8/python-3.10.8-embed-amd64.zip --output python.zip
           unzip.exe python.zip -d python
           Write-Host "install pip and wheel and setuptools and markdown"
           cd python
@@ -71,11 +72,11 @@ jobs:
               Write-Host "Branch: ${branchName}"
               git clone --depth=1 https://github.com/gem/$element.git
               python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
-              if ( $element -eq "oq-platform-taxtweb" ) 
+              if ( $element -eq "oq-platform-taxtweb" )
               {
                 $Env:PYBUILD_NAME = "oq-taxonomy"
                 python -m pip -q wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
-              }    
+              }
           }
           cd ~
           cd .\oq-builders\installers\windows\nsis\
@@ -85,9 +86,8 @@ jobs:
           $files.Name > .\oq-dist\engine\index.txt
           $files = @(Get-ChildItem .\oq-dist\tools\*.whl)
           $files.Name > .\oq-dist\tools\index.txt
-          # 
-          curl.exe -LO "https://docs.openquake.org/manuals/OpenQuake Manual (master).pdf"
-          Rename-Item "OpenQuake Manual (master).pdf" "Openquake manual.pdf"
+          #
+          curl.exe -LO "https://docs.openquake.org/manuals/OpenQuake Manual (master).pdf" --output "Openquake manual.pdf"
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\doc" -Destination "C:\Users\runneradmin\oq-builders\installers\windows\nsis\" -Recurse
           Write-Host "Generating NSIS installer with oq version and time of git"
           $version = Select-String -Path .\oq-engine\openquake\baselib\__init__.py -Pattern '__version__ ='
@@ -99,12 +99,12 @@ jobs:
           makensis /V4 installer.nsi
           mkdir out
           Copy-Item *.exe .\out
-          $Install = Get-ChildItem -Filter *.exe 
+          $Install = Get-ChildItem -Filter *.exe
           Get-FileHash $Install | Select-Object Hash
           $hash = Get-FileHash $Install -Algorithm SHA256
           $sha256 = $hash.Hash
           $Name = $Install.Name
-          $Outfile = $Install.Name + ".sha256" 
+          $Outfile = $Install.Name + ".sha256"
           Write-Output $hash.Hash  $Install.Name > $Outfile
           Copy-Item $Outfile .\out
           #
@@ -129,7 +129,7 @@ jobs:
           $env:PATH="C:\Program Files\OpenQuake Engine\python\Scripts"
           Write-Host ${env:PATH}
           pwd
-      - name: Run oq 
+      - name: Run oq
         run: |
           set mypath="C:\Program Files\OpenQuake Engine"
           set PATH=%mypath%\python;%mypath%\python\Scripts;%PATH%
@@ -153,7 +153,7 @@ jobs:
     #needs: Test_Installer
     needs: Test_OQ
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - uses: actions/checkout@v2
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v2
@@ -166,5 +166,5 @@ jobs:
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
-          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa 
+          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
           rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
