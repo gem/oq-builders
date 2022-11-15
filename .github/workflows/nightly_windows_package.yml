@@ -39,7 +39,7 @@ jobs:
           Write-Host "Branch: ${branchName}"
           git clone -q  --depth=1 -b ${branchName} https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
-          git clone --depth=1 -b ${branchName} https://github.com/gem/oq-engine.git
+          git clone --depth=1 https://github.com/gem/oq-engine.git
           Write-Host "Generating zip of demos"
           $copyto = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\demos\"
           Get-ChildItem $copyto | Format-List
