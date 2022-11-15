@@ -69,7 +69,7 @@ jobs:
           $app = ("oq-platform-standalone", "oq-platform-ipt", "oq-platform-taxonomy", "oq-platform-taxtweb")
           foreach ($element in $app) {
               Write-Host "Branch: ${branchName}"
-              git clone --depth=1 -b ${branchName} https://github.com/gem/$element.git
+              git clone --depth=1 https://github.com/gem/$element.git
               python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
               if ( $element -eq "oq-platform-taxtweb" ) 
               {
