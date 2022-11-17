@@ -65,6 +65,7 @@ jobs:
           }
           cd ..
           Write-Host "Creating wheel for engine"
+          python.exe -V
           python.exe -m pip install install -r requirements-py310-win64.txt
           cd ..
           python.exe -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/engine ./oq-engine
