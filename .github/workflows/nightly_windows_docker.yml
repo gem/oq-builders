@@ -6,9 +6,9 @@ on:
         description: Git Ref
         default: master
         required: true
-  push:
-    branches:
-      - ae-nightwin
+  #  push:
+  #    branches:
+  #      - ae-nightwin
   #schedule:
   #  - cron: "0 5 * * 5"
 jobs:
