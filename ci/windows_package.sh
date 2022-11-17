@@ -2,4 +2,6 @@
 cd /home/runner/work/oq-builders/oq-builders/installers/windows/nsis
 # build the docker to use for installer
 docker build --build-arg uid=$(id -u) --rm=true -t wine -f docker/Dockerfile docker
-docker image ls
+#
+docker run -e GEM_SET_BRANCH=master -e GEM_SET_BRANCH_TOOLS=master -v $(pwd):/io -t -i --rm wine  /io/docker/build.sh
+

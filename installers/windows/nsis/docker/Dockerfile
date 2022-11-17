@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
-FROM fedora:31
+FROM fedora:36
 MAINTAINER GEM Foundation <devops@openquake.org>
 
 RUN dnf -y install wget python3-markdown wget git zip unzip && \
