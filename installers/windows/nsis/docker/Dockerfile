@@ -33,9 +33,9 @@ ENV PATH /opt/wine-stable/bin:$PATH
 ENV WINEDEBUG -all 
 WORKDIR $HOME
 
-RUN wget -q --cache=off http://cdn.ftp.openquake.org/windows/thirdparties/nsis-3.01-setup.exe && \
-    wget -q --cache=off http://cdn.ftp.openquake.org/windows/thirdparties/python-3.6.6-win64.zip && \
-    wget -q --cache=off http://cdn.ftp.openquake.org/windows/thirdparties/get-pip.py
+RUN wget --cache=off https://ftp.openquake.org/windows/thirdparties/nsis-3.08-setup.exe  && \
+    wget --cache=off https://ftp.openquake.org/windows/thirdparties/python-3.6.6-win64.zip && \
+    wget --cache=off https://ftp.openquake.org/windows/thirdparties/get-pip.py
 
 # Workaround for:
 # - https://bugs.winehq.org/show_bug.cgi?id=42474
@@ -43,6 +43,6 @@ RUN wget -q --cache=off http://cdn.ftp.openquake.org/windows/thirdparties/nsis-3
 ADD dlloverride.reg .
 RUN wine regedit dlloverride.reg && sleep 10
 
-RUN wine nsis-3.01-setup.exe /S && sleep 10
+RUN wine nsis-3.08-setup.exe /S && sleep 10
 
 CMD /bin/bash /io/docker/build.sh
