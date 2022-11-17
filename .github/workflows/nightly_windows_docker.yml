@@ -1,4 +1,4 @@
-name: Unstable Nightly Windows with docker
+name:  Nightly docker Windows
 on:
   workflow_dispatch:
     inputs:
