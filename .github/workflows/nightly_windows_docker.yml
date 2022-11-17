@@ -8,7 +8,7 @@ on:
         required: true
   push:
     branches:
-      - ae-nightly
+      - ae-nightwin
   #schedule:
   #  - cron: "0 5 * * 5"
 jobs:
