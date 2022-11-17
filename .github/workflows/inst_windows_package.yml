@@ -1,9 +1,9 @@
-name: Installer python on Windows for oq-engine
+name: Package Windows for oq-engine
 on:
   workflow_dispatch:
   #  inputs:
   #    git-ref:
-  #      description: Git Ref 
+  #      description: Git Ref
   #      default: master
   #      required: true
   #push:
@@ -42,10 +42,10 @@ jobs:
           Set-Alias -Name python -Value C:\Users\runneradmin\python\python.exe
           Set-Alias -Name pip -Value C:\Users\runneradmin\python\Scripts\pip.exe
           cd ~
-          git clone -q  -b ${Env:GIT_BRANCH} --depth=1 https://github.com/gem/oq-builders
+          git clone -b ${Env:GIT_BRANCH}  --depth=1 https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           mkdir .\oq-dist\engine
-          git clone -q --depth=1 https://github.com/gem/oq-engine.git
+          git clone -b master --depth=1 https://github.com/gem/oq-engine.git
           cd oq-engine
           Copy-Item -Path ".\install.py" -Destination "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-dist\engine" -Recurse
           python -c "import sys; print(sys.version)"
@@ -54,14 +54,14 @@ jobs:
           echo "Downloading standalone apps"
           $app = ("oq-platform-standalone", "oq-platform-ipt", "oq-platform-taxonomy", "oq-platform-taxtweb")
           foreach ($element in $app) {
-          git clone -q --depth=1 https://github.com/gem/$element.git
+          git clone -q -b master --depth=1 https://github.com/gem/$element.git
               python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
-              if ( $element -eq "oq-platform-taxtweb" ) 
+              if ( $element -eq "oq-platform-taxtweb" )
               {
                 $env:PYBUILD_NAME = "oq-taxonomy"
-                echo ${env:PYBUILD_NAME} 
+                echo ${env:PYBUILD_NAME}
                 python -m pip -q wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
-              }    
+              }
           }
           cd ~
           cd .\oq-builders\installers\windows\nsis
@@ -105,18 +105,18 @@ jobs:
           $files = @(Get-ChildItem .\oq-dist\tools\*.whl)
           $files.Name > .\oq-dist\tools\index.txt
           curl.exe "https://docs.openquake.org/manuals/OpenQuake%20Manual%20(master).pdf" --output "Openquake manual.pdf"
-          Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\installer.nsi" -Destination ".\" 
-          Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\openquake*.*" -Destination ".\" 
-          Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-*.*" -Destination ".\" 
-          Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\LICENSE.txt" -Destination ".\" 
+          Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\installer.nsi" -Destination ".\"
+          Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\openquake*.*" -Destination ".\"
+          Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-*.*" -Destination ".\"
+          Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\LICENSE.txt" -Destination ".\"
           makensis /V4 installer.nsi
           mkdir out
-          $Install = Get-ChildItem -Filter *.exe 
+          $Install = Get-ChildItem -Filter *.exe
           Get-FileHash $Install | Select-Object Hash
           $hash = Get-FileHash $Install -Algorithm SHA256
           $sha256 = $hash.Hash
           $Name = $Install.Name
-          $Outfile = $Install.Name + ".sha256" 
+          $Outfile = $Install.Name + ".sha256"
           Write-Output $hash.Hash  $Install.Name > $Outfile
           Copy-Item *.exe .\out
           Copy-Item $Outfile .\out
@@ -136,13 +136,13 @@ jobs:
           name: Installer
       - name: Execute the Installer
         run: |
-          $Install = Get-ChildItem -Filter *.exe 
+          $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           cd "C:\Program Files\OpenQuake\"
           $env:PATH="C:\Program Files\OpenQuake\python\Scripts"
           echo ${env:PATH}
           pwd
-      - name: Run oq 
+      - name: Run oq
         run: |
           set mypath=C:\Program Files\OpenQuake
           set PATH=%mypath%\python;%mypath%\python\Scripts;%PATH%
@@ -154,7 +154,7 @@ jobs:
   Upload_Installer:
     needs: Test_Installer
     runs-on: ubuntu-latest
-    steps:     
+    steps:
       - uses: actions/checkout@v2
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v2
