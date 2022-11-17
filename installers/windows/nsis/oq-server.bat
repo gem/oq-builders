@@ -9,7 +9,7 @@ if not exist python\pycached (
    echo Building python cache. This may take a while.
    echo Please wait ...
    python.exe -m compileall -qq .
-   copy /y nul python3.6\pycached >nul
+   copy /y nul python3.8\pycached >nul
 )
 
 echo Starting the server.
