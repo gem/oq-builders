@@ -1,4 +1,4 @@
-name: Installer python on Windows for oq-engine
+name: Package Windows for oq-engine
 on:
   workflow_dispatch:
   #  inputs:
