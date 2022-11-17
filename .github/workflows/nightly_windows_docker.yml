@@ -30,7 +30,7 @@ jobs:
         run: |
           pwd
           ls -lrt
-          bash -x oq_builders/ci/windows_package.sh
+          bash -x ci/windows_package.sh
           #
           #      - name: Upload Artifacts
           #        uses: actions/upload-artifact@v3
