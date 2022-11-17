@@ -164,8 +164,8 @@ jobs:
           # Create credential object
           # Create credential object
           $credObject = New-Object System.Management.Automation.PSCredential -ArgumentList $username, $password
-          Start-Process -FilePath "oq.exe" -Wait -Credential $credObject
-          Start-Process -FilePath "oq.exe engine --run https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip" -Wait -Credential $credObject
+          Start-Process -FilePath "C:\Program Files\OpenQuake Engine\python\Scripts\oq.exe" -Wait -Credential $credObject
+          Start-Process -FilePath "C:\Program Files\OpenQuake Engine\python\Scripts\oq.exe engine --run https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip" -Wait -Credential $credObject
       - name: Run oq webui console and curl for the standalone tools
         run: |
           Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
