@@ -1,7 +1,6 @@
 name: Installer python on Windows for oq-engine
-  # No more used for installer, switch to wheel creation
-  #on:
-  #workflow_dispatch:
+on:
+  workflow_dispatch:
   #  inputs:
   #    git-ref:
   #      description: Git Ref 
@@ -105,8 +104,7 @@ jobs:
           $files.Name > .\oq-dist\engine\index.txt
           $files = @(Get-ChildItem .\oq-dist\tools\*.whl)
           $files.Name > .\oq-dist\tools\index.txt
-          curl.exe -LO https://ci.openquake.org/job/builders/job/pdf-builder/lastSuccessfulBuild/artifact/oq-engine/doc/manual/oq-manual.pdf
-          Rename-Item .\oq-manual.pdf "Openquake manual.pdf"
+          curl.exe "https://docs.openquake.org/manuals/OpenQuake%20Manual%20(master).pdf" --output "Openquake manual.pdf"
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\installer.nsi" -Destination ".\" 
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\openquake*.*" -Destination ".\" 
           Copy-Item -Path "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-*.*" -Destination ".\" 

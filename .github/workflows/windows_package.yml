@@ -1,10 +1,10 @@
 name: Create Windows Installer for oq-engine
 on:
-  workflow_dispatch:                                                           
-    inputs:                                                                    
-      git-ref:                                                                 
-        description: Git Ref                                                   
-        default: master                                                        
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref
+        default: master
         required: true
   #push:
   #schedule:
@@ -22,7 +22,7 @@ jobs:
         run: |
           $branchName = $Env:GIT_BRANCH
           Write-Host "Branch: ${branchName}"
-          Write-Host "CURRENT_BRANCH=${branchName}" 
+          Write-Host "CURRENT_BRANCH=${branchName}"
           Write-Host "${Env:CURRENT_BRANCH}"
           Write-Host "Git branch for engine and tools: "$Env:GIT_BRANCH
           Write-Host "branchName, Git branch for engine and tools: " ${branchName}
@@ -48,28 +48,28 @@ jobs:
           git clone -q  --depth=1 -b ${branchName} https://github.com/gem/oq-builders
           cd .\oq-builders\installers\windows\nsis\
           git clone --depth=1 -b ${branchName} https://github.com/gem/oq-engine.git
-          Write-Host "Generating zip of demos"                                  
+          Write-Host "Generating zip of demos"
           $copyto = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\demos\"
-          Get-ChildItem $copyto | Format-List                                   
-          cd oq-engine\demos\                                                   
-          $demos = ("hazard", "risk")                                           
-          foreach ($element in $demos) {                                        
+          Get-ChildItem $copyto | Format-List
+          cd oq-engine\demos\
+          $demos = ("hazard", "risk")
+          foreach ($element in $demos) {
             $path = "C:\Users\runneradmin\oq-builders\installers\windows\nsis\oq-engine\demos\" + $element
-            $source = Get-ChildItem -Path .\$element -Directory                 
-            write-host "Source is " $source                                     
-            Foreach ($s in $source) {                                           
-            Add-Type -assembly "system.io.compression.filesystem"               
-            $destination = Join-path -path $path -ChildPath "$($s.name).zip"    
-            write-host "Destination is" $destination                            
+            $source = Get-ChildItem -Path .\$element -Directory
+            write-host "Source is " $source
+            Foreach ($s in $source) {
+            Add-Type -assembly "system.io.compression.filesystem"
+            $destination = Join-path -path $path -ChildPath "$($s.name).zip"
+            write-host "Destination is" $destination
             [io.compression.zipfile]::CreateFromDirectory($s.fullname, $destination)
-            }                                                                   
-            Get-ChildItem *.zip | Format-List                                   
-            $zipfolder = $copyto + $element                                     
-            md $zipfolder                                                       
+            }
+            Get-ChildItem *.zip | Format-List
+            $zipfolder = $copyto + $element
+            md $zipfolder
             Get-ChildItem -Path $path -Include *.zip -Recurse | Copy-Item -Destination $zipfolder
-          }                                                                     
-          cd ..                                                                 
-          Write-Host "Creating wheel for engine"                                
+          }
+          cd ..
+          Write-Host "Creating wheel for engine"
           python -m pip install install -r requirements-py38-win64.txt
           cd ..
           python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/engine ./oq-engine
@@ -79,11 +79,11 @@ jobs:
               Write-Host "Branch: ${branchName}"
               git clone --depth=1 -b ${branchName} https://github.com/gem/$element.git
               python -m pip wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
-              if ( $element -eq "oq-platform-taxtweb" ) 
+              if ( $element -eq "oq-platform-taxtweb" )
               {
                 $Env:PYBUILD_NAME = "oq-taxonomy"
                 python -m pip -q wheel --disable-pip-version-check --no-deps -w oq-dist/tools ./$element
-              }    
+              }
           }
           cd ~
           cd .\oq-builders\installers\windows\nsis\
@@ -106,15 +106,15 @@ jobs:
           makensis /V4 installer.nsi
           mkdir out
           Copy-Item *.exe .\out
-          $Install = Get-ChildItem -Filter *.exe                                
-          Get-FileHash $Install | Select-Object Hash                            
-          $hash = Get-FileHash $Install -Algorithm SHA256                       
-          $sha256 = $hash.Hash                                                  
-          $Name = $Install.Name                                                 
-          $Outfile = $Install.Name + ".sha256"                                  
-          Write-Output $hash.Hash  $Install.Name > $Outfile                     
-          Copy-Item $Outfile .\out                                              
-          #                                
+          $Install = Get-ChildItem -Filter *.exe
+          Get-FileHash $Install | Select-Object Hash
+          $hash = Get-FileHash $Install -Algorithm SHA256
+          $sha256 = $hash.Hash
+          $Name = $Install.Name
+          $Outfile = $Install.Name + ".sha256"
+          Write-Output $hash.Hash  $Install.Name > $Outfile
+          Copy-Item $Outfile .\out
+          #
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -135,7 +135,7 @@ jobs:
           $env:PATH="C:\Program Files\OpenQuake Engine\python\Scripts"
           Write-Host ${env:PATH}
           pwd
-      - name: Run oq 
+      - name: Run oq
         run: |
           set mypath="C:\Program Files\OpenQuake Engine"
           set PATH=%mypath%\python;%mypath%\python\Scripts;%PATH%
@@ -159,7 +159,7 @@ jobs:
     #needs: Test_Installer
     needs: Test_OQ
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - uses: actions/checkout@v2
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v2
@@ -172,7 +172,7 @@ jobs:
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
-          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa 
+          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
           rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/
 
 
