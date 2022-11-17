@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
-FROM fedora:31
+FROM fedora:36
 MAINTAINER GEM Foundation <devops@openquake.org>
 
 RUN dnf -y install wget python3-markdown wget git zip unzip && \
@@ -43,6 +43,6 @@ RUN wget --cache=off https://ftp.openquake.org/windows/thirdparties/nsis-3.08-se
 ADD dlloverride.reg .
 RUN wine regedit dlloverride.reg && sleep 10
 
-RUN wine nsis-3.01-setup.exe /S && sleep 10
+RUN wine nsis-3.08-setup.exe /S && sleep 10
 
 CMD /bin/bash /io/docker/build.sh
