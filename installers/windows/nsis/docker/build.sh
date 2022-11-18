@@ -103,7 +103,7 @@ for app in oq-platform-standalone oq-platform-ipt oq-platform-taxtweb oq-platfor
 done
 
 echo "Extracting python wheels"
-wine ../python-dist/python3.10/python.exe -m pip -q install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py38-win64.txt
+wine ../python-dist/python3.10/python.exe -m pip -q install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py310-win64.txt
 
 cd $DIR/oq-dist
 for d in *; do
