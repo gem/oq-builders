@@ -35,7 +35,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Installer
-          path: /home/runner/work/oq-builders/oq-builders/installers/windows/nsis/*OpenQuake_Engine*
+          path: /home/runner/work/oq-builders/oq-builders/out
+          retention-days: 5
           #
           #  Test_OQ:
           #    needs: Build_Installer
@@ -73,8 +74,8 @@ jobs:
           #          curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
           #          ping 127.0.0.1 -n 6 > null
           #          curl.exe -X HEAD -I http://127.0.0.1:8800/taxtweb/
+          #
           #  Upload_Installer:
-          #    #needs: Build_Installer
           #    #needs: Test_Installer
           #    needs: Test_OQ
           #    runs-on: ubuntu-latest
