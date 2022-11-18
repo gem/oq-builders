@@ -78,7 +78,7 @@ if [ ! -f $PIP ]; then
 fi
 ls -lrt ../python-dist/python3.10
 #
-wine ../python-dist/python3.10/python.exe -v $PIP
+wine ../python-dist/python3.10/python.exe $PIP
 
 # Extract wheels to be included in the installation
 # Make sure symlinks are ignored to retain compatibility with WINE/Windows
