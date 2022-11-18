@@ -40,7 +40,7 @@ SetCompressor lzma
 
 RequestExecutionLevel admin
 
-; Modern UI installer stuff 
+; Modern UI installer stuff
 !include "MUI2.nsh"
 !define MUI_ABORTWARNING
 !define MUI_ICON "openquake_small.ico"
@@ -73,11 +73,18 @@ InstallDir "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}"
 
 Function .onInit
   ${IfNot} ${RunningX64}
+      IfSilent +2
       MessageBox MB_OK "A 64bit OS is required"
       Quit
   ${EndIf}
+  ${IfNot} ${AtLeastWin8.1}
+    IfSilent +2
+    MessageBox MB_OK "Your Windows version is not supported. Please use Windows 10"
+	Quit
+  ${EndIf}
   ${IfNot} ${AtLeastWin10}
-    MessageBox MB_OK "Your Windows version is not supported. Use at your own risk."
+    IfSilent +2
+    MessageBox MB_OK "Your Windows version is not recommended. Use at your own risk."
   ${EndIf}
 FunctionEnd
 
@@ -95,18 +102,18 @@ Section "!Core Files" SecCore
   File "oq-console.bat"
   File "LICENSE.txt"
 
-  SetOutPath "$INSTDIR\python3.6"
-  File /r "python-dist\python3.6\*.*"
+  SetOutPath "$INSTDIR\python3.8"
+  File /r "python-dist\python3.8\*.*"
 
   ; Install MSVCRT if it's not already on the system
   IfFileExists "$SYSDIR\ucrtbase.dll" skip_msvcrt
-  SetOutPath "$INSTDIR\python3.6"
+  SetOutPath "$INSTDIR\python3.8"
   File "dist\msvcrt\x64\*.dll"
   skip_msvcrt:
 
   ; Install MSVCP if it's not already on the system
   IfFileExists "$SYSDIR\msvcp140.dll" skip_msvcp
-  SetOutPath "$INSTDIR\python3.6"
+  SetOutPath "$INSTDIR\python3.8"
   File "dist\msvcp\x64\msvcp140.dll"
   skip_msvcp:
 
@@ -123,13 +130,13 @@ Section "!OpenQuake Engine" SecEngine
 
   SetOutPath "$PLUGINSDIR\oq-dist\engine"
   DetailPrint "Installing the OpenQuake Engine..."
-  nsExec::ExecToLog '$INSTDIR\python3.6\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
+  nsExec::ExecToLog '$INSTDIR\python3.8\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
 Section "OpenQuake Tools" SecTools
   SetOutPath "$PLUGINSDIR\oq-dist\tools"
   DetailPrint "Installing the OpenQuake Tools..."
-  nsExec::ExecToLog '$INSTDIR\python3.6\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
+  nsExec::ExecToLog '$INSTDIR\python3.8\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
 Section "OpenQuake Engine demos and documentation" SecDocDemo
@@ -168,8 +175,8 @@ Section -post
   ; Byte-compile Python files.
   RMDir /r "$INSTDIR\oq-dist"
   DetailPrint "Byte-compiling Python modules..."
-  nsExec::ExecToLog '$INSTDIR\python3.6\python.exe -m compileall -qq "$INSTDIR"'
-  FileOpen $0 "$INSTDIR\python3.6\pycached" w
+  nsExec::ExecToLog '$INSTDIR\python3.8\python.exe -m compileall -qq "$INSTDIR"'
+  FileOpen $0 "$INSTDIR\python3.8\pycached" w
   FileClose $0
 
   WriteUninstaller $INSTDIR\uninstall.exe
@@ -189,17 +196,27 @@ Section -post
 
   ; Check if we need to reboot
   IfRebootFlag 0 noreboot
+    IfSilent +2
     MessageBox MB_YESNO "A reboot is required to finish the installation. Do you wish to reboot now?" \
                 /SD IDNO IDNO noreboot
     Reboot
   noreboot:
 SectionEnd
 
+
+Section "Create Installer log"
+SectionIn RO
+  DetailPrint "Create Installer log"
+  StrCpy $0 "$INSTDIR\install.log"
+  Push $0
+  Call DumpLog
+SectionEnd
+
 Section "Uninstall"
   SetShellVarContext all
   Delete $INSTDIR\uninstall.exe
   Delete "$INSTDIR\${PRODUCT_ICON}"
-  RMDir /r "$INSTDIR\python3.6"
+  RMDir /r "$INSTDIR\python3.8"
   ; Uninstall files
     Delete "$INSTDIR\README.html"
     Delete "$INSTDIR\LICENSE.txt"
@@ -208,6 +225,7 @@ Section "Uninstall"
     Delete "$INSTDIR\openquake.ico"
     Delete "$INSTDIR\oq-server.bat"
     Delete "$INSTDIR\oq-console.bat"
+	Delete "$INSTDIR\install.log"
   ; Uninstall directories
     RMDir /r "$INSTDIR\demos"
   ; Uninstall shortcuts
@@ -326,6 +344,47 @@ Function PageLeaveReinstall
 
 FunctionEnd
 
+
+Function DumpLog
+  Exch $5
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $6
+  FindWindow $0 "#32770" "" $HWNDPARENT
+  GetDlgItem $0 $0 1016
+  StrCmp $0 0 exit
+  FileOpen $5 $5 "w"
+  StrCmp $5 "" exit
+    SendMessage $0 ${LVM_GETITEMCOUNT} 0 0 $6
+    System::Call '*(&t${NSIS_MAX_STRLEN})p.r3'
+    StrCpy $2 0
+    System::Call "*(i, i, i, i, i, p, i, i, i) p  (0, 0, 0, 0, 0, r3, ${NSIS_MAX_STRLEN}) .r1"
+    loop: StrCmp $2 $6 done
+      System::Call "User32::SendMessage(p, i, p, p) p ($0, ${LVM_GETITEMTEXT}, $2, r1)"
+      System::Call "*$3(&t${NSIS_MAX_STRLEN} .r4)"
+      !ifdef DumpLog_As_UTF16LE
+      FileWriteUTF16LE ${DumpLog_As_UTF16LE} $5 "$4$\r$\n"
+      !else
+      FileWrite $5 "$4$\r$\n" ; Unicode will be translated to ANSI!
+      !endif
+      IntOp $2 $2 + 1
+      Goto loop
+    done:
+      FileClose $5
+      System::Free $1
+      System::Free $3
+  exit:
+    Pop $6
+    Pop $4
+    Pop $3
+    Pop $2
+    Pop $1
+    Pop $0
+    Pop $5
+FunctionEnd
 !endif
 
 #Function .onMouseOverSection
@@ -339,7 +398,7 @@ FunctionEnd
 #
 #    StrCmp $0 ${sec_app} "" +2
 #      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The ${PRODUCT_NAME} by GEM."
-#    
+#
 #    StrCmp $0 ${sec_icon} "" +2
 #      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The OpenQuake Engine desktop icon."
 #FunctionEnd
