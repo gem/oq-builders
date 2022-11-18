@@ -9,3 +9,8 @@ ls -lrt *OpenQuake_Engine*
 echo "move output to folder for upload artifacts"
 mkdir /home/runner/work/oq-builders/oq-builders/out
 mv *OpenQuake_Engine* /home/runner/work/oq-builders/oq-builders/out
+#Generate SHA-256 Hashes for Files
+cd /home/runner/work/oq-builders/oq-builders/out
+for pkg in *; do
+	sha256sum $pkg > $pkg.sha256
+done

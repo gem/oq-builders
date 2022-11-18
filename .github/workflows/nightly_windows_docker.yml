@@ -57,7 +57,8 @@ jobs:
         run: |
           set mypath="C:\Program Files\OpenQuake Engine"
           set PATH=%mypath%\python;%mypath%\python3.8\Scripts;%PATH%
-          type "C:\Program Files\Openquake Engine\install.log"
+          cd "C:\Program Files\Openquake Engine"
+          dir
           oq --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
         shell: cmd
