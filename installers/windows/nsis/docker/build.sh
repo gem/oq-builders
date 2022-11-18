@@ -76,7 +76,8 @@ unzip -q $PY_ZIP -d ../python-dist/python3.10
 if [ ! -f $PIP ]; then
     PIP=${HOME}/${PIP}
 fi
-ls -lrt ../python-dist/python3.10
+# test wine and NSIS
+wine ${HOME}/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /VERSION
 #
 wine ../python-dist/python3.10/python.exe $PIP
 
@@ -141,7 +142,7 @@ fi
 
 if [[ $OQ_OUTPUT = *"exe"* ]]; then
     echo "Generating NSIS installer"
-    wine ${HOME}/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis /V4 installer.nsi
+    wine ${HOME}/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /V4 installer.nsi
 fi
 
 if [[ $OQ_OUTPUT = *"zip"* ]]; then
