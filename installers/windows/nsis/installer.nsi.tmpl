@@ -40,7 +40,7 @@ SetCompressor lzma
 
 RequestExecutionLevel admin
 
-; Modern UI installer stuff 
+; Modern UI installer stuff
 !include "MUI2.nsh"
 !define MUI_ABORTWARNING
 !define MUI_ICON "openquake_small.ico"
@@ -348,7 +348,7 @@ FunctionEnd
 #
 #    StrCmp $0 ${sec_app} "" +2
 #      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The ${PRODUCT_NAME} by GEM."
-#    
+#
 #    StrCmp $0 ${sec_icon} "" +2
 #      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The OpenQuake Engine desktop icon."
 #FunctionEnd
