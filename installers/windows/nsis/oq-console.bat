@@ -1,16 +1,17 @@
 @echo off
 setlocal
-set mypath="C:\Program Files\OpenQuake Engine"
-set PATH=%mypath%\python;%mypath%\python\Scripts;%PATH%
+set mypath=%~dp0
+set PATH=%mypath%\python3.8;%mypath%\python3.8\Scripts;%PATH%
 
-if not exist python\pycached (
+if not exist python3.8\pycached (
    echo Building python cache. This may take a while.
    echo Please wait ...
    python.exe -m compileall -qq .
-   copy /y nul python\pycached >nul
+   copy /y nul python3.8\pycached >nul
 )
 
 echo OpenQuake environment loaded
+echo To see versions of installed software run 'pip freeze'
 echo To run OpenQuake use 'oq' and 'oq engine'
 cmd /k
 
