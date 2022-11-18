@@ -195,6 +195,15 @@ Section -post
   noreboot:
 SectionEnd
 
+
+Section "Create Installer log"
+SectionIn RO
+  DetailPrint "Create Installer log"
+  StrCpy $0 "$INSTDIR\install.log"
+  Push $0
+  Call DumpLog
+SectionEnd
+
 Section "Uninstall"
   SetShellVarContext all
   Delete $INSTDIR\uninstall.exe
