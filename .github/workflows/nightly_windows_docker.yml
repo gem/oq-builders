@@ -8,9 +8,9 @@ on:
         required: true
   #  push:
   #    branches:
-  #      - ae-nightwin
-  #schedule:
-  #  - cron: "0 5 * * 5"
+  #      -
+  schedule:
+    - cron: "0 5 * * 5"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
