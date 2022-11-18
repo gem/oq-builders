@@ -29,7 +29,6 @@ jobs:
       - name: Docker build of the container and create installer
         run: |
           bash -x ci/windows_package.sh
-          ls -lrt installers/windows/nsis/*OpenQuake_Engine*
           #
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
@@ -37,60 +36,60 @@ jobs:
           name: Installer
           path: /home/runner/work/oq-builders/oq-builders/out
           retention-days: 5
-          #
-          #  Test_OQ:
-          #    needs: Build_Installer
-          #    runs-on: windows-latest
-          #    steps:
-          #      - name: Download Windows Installer from build job
-          #        uses: actions/download-artifact@v3
-          #        with:
-          #          name: Installer
-          #      - name: Execute the Installer
-          #        run: |
-          #          $Install = Get-ChildItem -Filter *.exe
-          #          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
-          #          cd "C:\Program Files\OpenQuake Engine\"
-          #          $env:PATH="C:\Program Files\OpenQuake Engine\python\Scripts"
-          #          Write-Host ${env:PATH}
-          #          pwd
-          #      - name: Run oq
-          #        run: |
-          #          set mypath="C:\Program Files\OpenQuake Engine"
-          #          set PATH=%mypath%\python;%mypath%\python\Scripts;%PATH%
-          #          type "C:\Program Files\Openquake Engine\install.log"
-          #          oq --version
-          #          oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
-          #        shell: cmd
-          #      - name: Run oq webui console and curl for the standalone tools
-          #        run: |
-          #          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
-          #          ping 127.0.0.1 -n 6 > null
-          #          Get-Job
-          #          netstat -o -n -a | findstr 8800
-          #          ping 127.0.0.1 -n 6 > null
-          #          curl.exe -X HEAD -I http://127.0.0.1:8800/ipt/
-          #          ping 127.0.0.1 -n 6 > null
-          #          curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
-          #          ping 127.0.0.1 -n 6 > null
-          #          curl.exe -X HEAD -I http://127.0.0.1:8800/taxtweb/
-          #
-          #  Upload_Installer:
-          #    #needs: Test_Installer
-          #    needs: Test_OQ
-          #    runs-on: ubuntu-latest
-          #    steps:
-          #      - uses: actions/checkout@v3
-          #      - name: Download Windows Installer from build job
-          #        uses: actions/download-artifact@v3
-          #        with:
-          #          name: Installer
-          #      - name: rsync to downloads.openquake.org
-          #        shell: bash
-          #        env:
-          #          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
-          #        run: |
-          #          gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
-          #          chmod 600 ./.deploy_rsa
-          #          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
-          #          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
+
+  Test_OQ:
+    needs: Build_Installer
+    runs-on: windows-latest
+    steps:
+      - name: Download Windows Installer from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: Installer
+      - name: Execute the Installer
+        run: |
+          $Install = Get-ChildItem -Filter *.exe
+          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
+          cd "C:\Program Files\OpenQuake Engine\"
+          $env:PATH="C:\Program Files\OpenQuake Engine\python3.8\Scripts"
+          Write-Host ${env:PATH}
+          pwd
+      - name: Run oq
+        run: |
+          set mypath="C:\Program Files\OpenQuake Engine"
+          set PATH=%mypath%\python;%mypath%\python3.8\Scripts;%PATH%
+          type "C:\Program Files\Openquake Engine\install.log"
+          oq --version
+          oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
+        shell: cmd
+      - name: Run oq webui console and curl for the standalone tools
+        run: |
+          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3.8\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
+          ping 127.0.0.1 -n 6 > null
+          Get-Job
+          netstat -o -n -a | findstr 8800
+          ping 127.0.0.1 -n 6 > null
+          curl.exe -X HEAD -I http://127.0.0.1:8800/ipt/
+          ping 127.0.0.1 -n 6 > null
+          curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
+          ping 127.0.0.1 -n 6 > null
+          curl.exe -X HEAD -I http://127.0.0.1:8800/taxtweb/
+
+  Upload_Installer:
+    needs: Build_Installer
+    #needs: Test_OQ
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Windows Installer from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: Installer
+      - name: rsync to downloads.openquake.org
+        shell: bash
+        env:
+          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
+          chmod 600 ./.deploy_rsa
+          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
