@@ -76,7 +76,9 @@ unzip -q $PY_ZIP -d ../python-dist/python3.10
 if [ ! -f $PIP ]; then
     PIP=${HOME}/${PIP}
 fi
-wine ../python-dist/python3.10/python.exe $PIP
+ls -lrt ../python-dist/python3.10
+#
+wine ../python-dist/python3.10/python.exe -v $PIP
 
 # Extract wheels to be included in the installation
 # Make sure symlinks are ignored to retain compatibility with WINE/Windows
