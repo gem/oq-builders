@@ -8,9 +8,9 @@ on:
         required: true
   #  push:
   #    branches:
-  #      - ae-nightwin
-  #schedule:
-  #  - cron: "0 5 * * 5"
+  #      -
+  schedule:
+    - cron: "0 5 * * 5"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
@@ -50,13 +50,13 @@ jobs:
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           cd "C:\Program Files\OpenQuake Engine\"
-          $env:PATH="C:\Program Files\OpenQuake Engine\python3.8\Scripts"
+          $env:PATH="C:\Program Files\OpenQuake Engine\python3.10\Scripts"
           Write-Host ${env:PATH}
           pwd
       - name: Run oq
         run: |
           set mypath="C:\Program Files\OpenQuake Engine"
-          set PATH=%mypath%\python;%mypath%\python3.8\Scripts;%PATH%
+          set PATH=%mypath%\python;%mypath%\python3.10\Scripts;%PATH%
           cd "C:\Program Files\Openquake Engine"
           dir
           oq --version
@@ -64,7 +64,7 @@ jobs:
         shell: cmd
       - name: Run oq webui console and curl for the standalone tools
         run: |
-          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3.8\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
+          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3.10\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
           ping 127.0.0.1 -n 6 > null
           Get-Job
           netstat -o -n -a | findstr 8800
@@ -76,8 +76,7 @@ jobs:
           curl.exe -X HEAD -I http://127.0.0.1:8800/taxtweb/
 
   Upload_Installer:
-    needs: Build_Installer
-    #needs: Test_OQ
+    needs: Test_OQ
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
