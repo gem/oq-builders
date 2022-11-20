@@ -89,17 +89,17 @@ git config --global core.symlinks false
 echo "Downloading core apps"
 for app in oq-engine; do
     git clone -q -b $OQ_BRANCH --depth=1 https://github.com/gem/${app}.git
-    wine ../python-dist/python3/python.exe -m pip -q wheel --disable-pip-version-check --no-deps -w ../oq-dist/engine ./${app}
+    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/engine ./${app}
 done
 
 ## Standalone apps
 echo "Downloading standalone apps"
 for app in oq-platform-standalone oq-platform-ipt oq-platform-taxtweb oq-platform-taxonomy; do
     git clone -q -b $TOOLS_BRANCH --depth=1 https://github.com/gem/${app}.git
-    wine ../python-dist/python3/python.exe -m pip -q wheel --disable-pip-version-check --no-deps -w ../oq-dist/tools ./${app}
+    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/tools ./${app}
     if [ "$app" = "oq-platform-taxtweb" ]; then
         export PYBUILD_NAME="oq-taxonomy"
-        wine ../python-dist/python3/python.exe -m pip -q wheel --disable-pip-version-check --no-deps -w ../oq-dist/tools ./${app}
+        wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/tools ./${app}
         unset PYBUILD_NAME
     fi
 done
