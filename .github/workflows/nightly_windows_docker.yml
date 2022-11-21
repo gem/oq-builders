@@ -50,13 +50,13 @@ jobs:
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           cd "C:\Program Files\OpenQuake Engine\"
-          $env:PATH="C:\Program Files\OpenQuake Engine\python3.10\Scripts"
+          $env:PATH="C:\Program Files\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
           pwd
       - name: Run oq
         run: |
           set mypath="C:\Program Files\OpenQuake Engine"
-          set PATH=%mypath%\python;%mypath%\python3.10\Scripts;%PATH%
+          set PATH=%mypath%\python;%mypath%\python3\Scripts;%PATH%
           cd "C:\Program Files\Openquake Engine"
           dir
           oq --version
@@ -64,7 +64,7 @@ jobs:
         shell: cmd
       - name: Run oq webui console and curl for the standalone tools
         run: |
-          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3.10\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
+          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
           ping 127.0.0.1 -n 6 > null
           Get-Job
           netstat -o -n -a | findstr 8800
