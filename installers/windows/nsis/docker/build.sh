@@ -46,7 +46,7 @@ fi
 
 function fix-scripts {
 	for f in $*; do
-		sed -i 's/z:\\io\\python-dist\\python3\\//g' "$f"
+		sed -i 's/Z:\\io\\python-dist\\python3\\//g' "$f"
 	done
 }
 
