@@ -1,6 +1,5 @@
 [copr-cli]
-login = inejnyrkdckgsocfwlad
-username = gem
-token = fhbmononwekpokigxisnemnjthjduq
+login = <login>
+username = <username>
+token = <token>
 copr_url = https://copr.fedorainfracloud.org
-# expiration date: 2021-03-30
