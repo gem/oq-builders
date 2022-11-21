@@ -17,12 +17,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
-FROM fedora:31
+FROM fedora:36
 MAINTAINER GEM Foundation <devops@openquake.org>
 
 RUN dnf -y install wget python3-markdown git zip unzip && \
     dnf -y install 'dnf-command(config-manager)' && \
-	dnf -y config-manager --add-repo https://dl.winehq.org/wine-builds/fedora/31/winehq.repo && \
+	dnf -y config-manager --add-repo https://dl.winehq.org/wine-builds/fedora/36/winehq.repo && \
 	dnf -y install winehq-stable
     
 # instead of use ARG use: --build-arg uid=$(id -u)
