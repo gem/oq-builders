@@ -102,18 +102,18 @@ Section "!Core Files" SecCore
   File "oq-console.bat"
   File "LICENSE.txt"
 
-  SetOutPath "$INSTDIR\python3.10"
-  File /r "python-dist\python3.10\*.*"
+  SetOutPath "$INSTDIR\python3"
+  File /r "python-dist\python3\*.*"
 
   ; Install MSVCRT if it's not already on the system
   IfFileExists "$SYSDIR\ucrtbase.dll" skip_msvcrt
-  SetOutPath "$INSTDIR\python3.10"
+  SetOutPath "$INSTDIR\python3"
   File "dist\msvcrt\x64\*.dll"
   skip_msvcrt:
 
   ; Install MSVCP if it's not already on the system
   IfFileExists "$SYSDIR\msvcp140.dll" skip_msvcp
-  SetOutPath "$INSTDIR\python3.10"
+  SetOutPath "$INSTDIR\python3"
   File "dist\msvcp\x64\msvcp140.dll"
   skip_msvcp:
 
@@ -130,13 +130,13 @@ Section "!OpenQuake Engine" SecEngine
 
   SetOutPath "$PLUGINSDIR\oq-dist\engine"
   DetailPrint "Installing the OpenQuake Engine..."
-  nsExec::ExecToLog '$INSTDIR\python3.10\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
+  nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
 Section "OpenQuake Tools" SecTools
   SetOutPath "$PLUGINSDIR\oq-dist\tools"
   DetailPrint "Installing the OpenQuake Tools..."
-  nsExec::ExecToLog '$INSTDIR\python3.10\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
+  nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
 Section "OpenQuake Engine demos and documentation" SecDocDemo
@@ -175,8 +175,8 @@ Section -post
   ; Byte-compile Python files.
   RMDir /r "$INSTDIR\oq-dist"
   DetailPrint "Byte-compiling Python modules..."
-  nsExec::ExecToLog '$INSTDIR\python3.10\python.exe -m compileall -qq "$INSTDIR"'
-  FileOpen $0 "$INSTDIR\python3.10\pycached" w
+  nsExec::ExecToLog '$INSTDIR\python3\python.exe -m compileall -qq "$INSTDIR"'
+  FileOpen $0 "$INSTDIR\python3\pycached" w
   FileClose $0
 
   WriteUninstaller $INSTDIR\uninstall.exe
@@ -216,7 +216,7 @@ Section "Uninstall"
   SetShellVarContext all
   Delete $INSTDIR\uninstall.exe
   Delete "$INSTDIR\${PRODUCT_ICON}"
-  RMDir /r "$INSTDIR\python3.10"
+  RMDir /r "$INSTDIR\python3"
   ; Uninstall files
     Delete "$INSTDIR\README.html"
     Delete "$INSTDIR\LICENSE.txt"
