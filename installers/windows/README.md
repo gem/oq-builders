@@ -8,8 +8,14 @@ Use the same universal installers of engine
 - NSIS: http://nsis.sourceforge.net/Main_Page
 - OQ python dependencies: http://ftp.openquake.org/wheelhouse/windows
 - Python markdown: https://pypi.python.org/pypi/Markdown
+- Python3 in Wine in Docker: https://github.com/webcomics/pywine
 
 Microsoft Windows is not required.
+
+### Build Python3 in Wine in Docker
+```bash
+$ docker run -v $(pwd):/io -ti --entrypoint ./py_to_zip.bash tobix/pywine:3.9
+```
 
 ### Build with Docker
 
