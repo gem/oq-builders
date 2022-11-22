@@ -6,7 +6,7 @@ Use the same universal installers of engine
 - WINE: https://www.winehq.org/
 - Python: https://www.python.org/
 - NSIS: http://nsis.sourceforge.net/Main_Page
-- OQ python dependencies: http://ftp.openquake.org/wheelhouse/windows
+- OQ python dependencies: https://ftp.openquake.org/wheelhouse/windows
 - Python markdown: https://pypi.python.org/pypi/Markdown
 - Python3 in Wine in Docker: https://github.com/webcomics/pywine
 
