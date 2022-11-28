@@ -10,7 +10,7 @@ on:
   #    branches:
   #      -
   schedule:
-    - cron: "0 5 * * 5"
+    - cron: "0 5 * * *"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
