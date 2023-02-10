@@ -3,12 +3,16 @@ on:
   workflow_dispatch:
     inputs:
       git-ref:
-        description: Git Ref
+        description: Branch of Openquake Builders
         default: master
         required: true
       path:
         description: Path to upload packages
         default: /oq-engine/
+        required: true
+      oq-ref:
+        description: Branch of Openquake Engine
+        default: master
         required: true
   #  push:
   #    branches:
@@ -19,6 +23,8 @@ jobs:
   Build_Installer:
     runs-on: ubuntu-latest
     env:
+      GEM_SET_BRANCH: ${{ github.event.inputs.oq-ref }}
+      GEM_SET_BRANCH_TOOLS: ${{ github.event.inputs.oq-ref }}
       GIT_BRANCH: ${{ github.ref }}
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
@@ -32,6 +38,10 @@ jobs:
           ref: ${{ github.event.inputs.git-ref }}
       - name: Docker build of the container and create installer
         run: |
+          echo "Check variable for build packages"
+          echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}" 
+          echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
+          sleep 2
           bash -x ci/windows_package.sh
           #
       - name: Upload Artifacts
