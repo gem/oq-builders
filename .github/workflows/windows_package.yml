@@ -29,6 +29,7 @@ jobs:
     env:
       GEM_SET_BRANCH: ${{ github.event.inputs.oq-ref }}
       GEM_SET_BRANCH_TOOLS: ${{ github.event.inputs.oq-ref }}
+      GEM_SET_RELEASE: ${{ github.event.inputs.oq-rel }}
       GIT_BRANCH: ${{ github.ref }}
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
@@ -45,6 +46,7 @@ jobs:
           echo "Check variable for build packages"
           echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}"
           echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
+          echo "GEM_SET_RELEASE: ${GEM_SET_RELEASE}"
           sleep 2
           bash -x ci/windows_package.sh
           #
