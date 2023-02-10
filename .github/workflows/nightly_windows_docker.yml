@@ -1,4 +1,4 @@
-name:  Nightly docker Windows
+name:  Package for Windows
 on:
   workflow_dispatch:
     inputs:
