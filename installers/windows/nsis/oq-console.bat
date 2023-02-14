@@ -2,6 +2,7 @@
 setlocal
 set mypath=%~dp0
 set PATH=%mypath%\python3;%mypath%\python3\Scripts;%PATH%
+set NUMBA_CACHE_DIR=%TEMP%\openquake
 
 if not exist python3\pycached (
    echo Building python cache. This may take a while.
