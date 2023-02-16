@@ -116,6 +116,9 @@ jobs:
           rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
         if: github.event.inputs.path == ''
       - name: rsync to downloads.openquake.org 
+        if: github.event.inputs.path != ''
+        with:
+          ref: ${{ github.event.inputs.path }}
         shell: bash
         env:
           DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
@@ -125,6 +128,3 @@ jobs:
           chmod 600 ./.deploy_rsa
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
           rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/${folder}
-        if: github.event.inputs.path != ''
-        with:
-          ref: ${{ github.event.inputs.path }}
