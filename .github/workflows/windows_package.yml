@@ -2,6 +2,10 @@ name:  Package for Windows
 on:
   workflow_dispatch:
     inputs:
+      git-ref:
+        description: Branch of OQ builders
+        default: master
+        required: true   
       path:
         description: Path to upload packages
         default: /oq-engine/
@@ -10,10 +14,6 @@ on:
         description: Branch of Openquake Engine
         default: master
         required: true
-      git-ref:
-        description: Branch of Openquake Web Tools
-        default: master
-        required: true   
       oq-rel:
         description: Build Number of Openquake Engine
         default: 1
