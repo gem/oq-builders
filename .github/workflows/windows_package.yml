@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       git-ref:
-        description: Branch of OQ builders
+        description: Branch of gem/oq-builders repository
         default: master
         required: true   
       path:
