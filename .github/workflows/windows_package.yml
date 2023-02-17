@@ -118,7 +118,7 @@ jobs:
           if test -z "$folder" 
           then
                 echo "\$folder is empty"
-                folder=nightly/
+                folder=oq-engine/nightly/
                 echo $folder
           else
                 echo "\$folder is NOT empty"
