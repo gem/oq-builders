@@ -13,8 +13,9 @@ if not exist python3\pycached (
    copy /y nul python3\pycached >nul
 )
 
-echo Starting the server.
-echo Please wait ...
+echo Starting OpenQuake Engine server
+echo This may take some time, please wait...
+
 REM Start the WebUI using django
 oq webui start %OQ_HOST%:%OQ_PORT%
 
