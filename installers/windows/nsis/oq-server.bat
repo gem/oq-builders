@@ -13,10 +13,7 @@ if not exist python3\pycached (
    copy /y nul python3\pycached >nul
 )
 
-echo Obtaining OQ Engine version
-for /f %%i in ('oq -v') do set OQ_VERSION=%%i
-
-echo Starting the OpenQuake Engine server version %OQ_VERSION%
+echo Starting OpenQuake Engine server
 echo This may take some time, please wait...
 
 REM Start the WebUI using django
