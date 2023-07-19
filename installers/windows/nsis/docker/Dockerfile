@@ -17,12 +17,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
-FROM fedora:36
+FROM fedora:38
 MAINTAINER GEM Foundation <devops@openquake.org>
 
 RUN dnf -y install wget python3-markdown git zip unzip && \
     dnf -y install 'dnf-command(config-manager)' && \
-	dnf -y config-manager --add-repo https://dl.winehq.org/wine-builds/fedora/36/winehq.repo && \
+	dnf -y config-manager --add-repo https://dl.winehq.org/wine-builds/fedora/38/winehq.repo && \
 	dnf -y install winehq-stable
     
 # instead of use ARG use: --build-arg uid=$(id -u)
@@ -36,7 +36,7 @@ ENV WINEDEBUG -all
 WORKDIR $HOME
 
 RUN wget --cache=off https://ftp.openquake.org/windows/thirdparties/nsis-3.08-setup.exe  && \
-	wget --cache=off https://ftp.openquake.org/windows/thirdparties/python-3.9.11-win64.zip  && \
+	wget --cache=off https://ftp.openquake.org/windows/thirdparties/python-3.10.10-win64.zip  && \
     wget --cache=off https://ftp.openquake.org/windows/thirdparties/get-pip.py
 #
 # Workaround for:
