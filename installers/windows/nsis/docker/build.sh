@@ -52,7 +52,7 @@ function fix-scripts {
 
 
 # Default software distribution
-PY="3.9.11"
+PY="3.10.10"
 PY_ZIP="python-${PY}-win64.zip"
 PIP="get-pip.py"
 
