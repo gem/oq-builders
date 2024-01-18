@@ -94,6 +94,8 @@ jobs:
           curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
           ping 127.0.0.1 -n 6 > null
           curl.exe -X HEAD -I http://127.0.0.1:8800/taxtweb/
+          ping 127.0.0.1 -n 6 > null
+          curl.exe --fail http://127.0.0.1:8800/1/outputs/
 
   Upload_Installer:
     needs: Test_OQ
