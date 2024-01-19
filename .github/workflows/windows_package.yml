@@ -85,7 +85,7 @@ jobs:
         shell: cmd
       - name: Run oq webui console and curl for the standalone tools
         run: |
-          $env:PATH="C:\Program Files\OpenQuake Engine\python3\Scripts"
+          $env:PATH += ";C:\Program Files\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
           Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
           ping 127.0.0.1 -n 6 > null
