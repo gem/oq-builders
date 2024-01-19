@@ -5,7 +5,7 @@ on:
       git-ref:
         description: Branch of gem/oq-builders repository
         default: master
-        required: true   
+        required: true
       path:
         description: Path to upload packages
         default: /oq-engine/
@@ -22,7 +22,7 @@ on:
   #    branches:
   #      -
   schedule:
-    - cron: "20 04 * * *"
+    - cron: "20 11 * * *"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
@@ -79,11 +79,14 @@ jobs:
           set PATH=%mypath%\python;%mypath%\python3\Scripts;%PATH%
           cd "C:\Program Files\Openquake Engine"
           dir
-          oq --version
+          oq.exe --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
+          oq.exe engine --list-risk-calculations
         shell: cmd
       - name: Run oq webui console and curl for the standalone tools
         run: |
+          $env:PATH="C:\Program Files\OpenQuake Engine\python3\Scripts"
+          Write-Host ${env:PATH}
           Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
           ping 127.0.0.1 -n 6 > null
           Get-Job
@@ -95,8 +98,8 @@ jobs:
           ping 127.0.0.1 -n 6 > null
           curl.exe -X HEAD -I http://127.0.0.1:8800/taxtweb/
           ping 127.0.0.1 -n 6 > null
-          curl.exe --fail http://127.0.0.1:8800/engine/3/outputs/
-
+          oq.exe engine --list-risk-calculations
+          curl.exe --fail http://127.0.0.1:8800/engine/1/outputs/
   Upload_Installer:
     needs: Test_OQ
     runs-on: ubuntu-latest
@@ -106,7 +109,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: Installer
-      - name: rsync to downloads.openquake.org 
+      - name: rsync to downloads.openquake.org
         shell: bash
         env:
           DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
@@ -117,7 +120,7 @@ jobs:
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
           # print value of folder
           echo "Folder to upload packages: ${folder}"
-          if test -z "$folder" 
+          if test -z "$folder"
           then
                 echo "\$folder is empty"
                 folder=oq-engine/nightly/
