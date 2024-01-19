@@ -81,15 +81,9 @@ jobs:
           dir
           oq.exe --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
-          oq.exe engine --list-risk-calculations
         shell: cmd
       - name: Run oq webui console and curl for the standalone tools
         run: |
-          $env:PATH="C:\Program Files\OpenQuake Engine\python3\Scripts"
-          Write-Host ${env:PATH}
-          Write-Host "Check list of Risk calcs"
-          oq.exe engine --list-risk-calculations
-          ping 127.0.0.1 -n 6 > null
           Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
           ping 127.0.0.1 -n 6 > null
           Get-Job
