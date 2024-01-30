@@ -108,6 +108,7 @@ jobs:
       - name: Display WebUI log in case of failure
         if: ${{ failure() }}
         run: |
+          Start-Sleep -Seconds 2
           cat webui.log
   Upload_Installer:
     needs: Test_OQ
