@@ -87,7 +87,7 @@ jobs:
         run: |
           $env:PATH += ";C:\Program Files\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
-          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
+          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s 1> webui.log 2>&1}
           ping 127.0.0.1 -n 6 > null
           Get-Job
           netstat -o -n -a | findstr 8800
@@ -103,6 +103,12 @@ jobs:
           ping 127.0.0.1 -n 6 > null
           oq.exe engine --list-risk-calculations
           curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs
+          curl.exe -v --fail -G http://127.0.0.1:8800/engine/100/outputs
+  Display_WebUI_log:
+    needs: Test_OQ
+    if: ${{ failure() }}
+    run: |
+        cat webui.log
   Upload_Installer:
     needs: Test_OQ
     runs-on: ubuntu-latest
