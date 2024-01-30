@@ -103,9 +103,6 @@ jobs:
           ping 127.0.0.1 -n 6 > null
           oq.exe engine --list-risk-calculations
           curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs
-          # FIXME: the following causes a failure and we should see the webui log as a consequence
-          curl.exe -v --fail -G http://127.0.0.1:8800/engine/100/outputs
-          cat webui.log
       - name: Upload Artifact WebUI log
         uses: actions/upload-artifact@v3
         with:
