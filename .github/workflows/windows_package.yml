@@ -106,11 +106,12 @@ jobs:
           # FIXME: the following causes a failure and we should see the webui log as a consequence
           curl.exe -v http://127.0.0.1:8800/engine/100/outputs
           cat webui.log
-      - name: Display WebUI log in case of failure
-        if: ${{ failure() }}
-        run: |
-          Start-Sleep -Seconds 2
-          cat webui.log
+      - name: Upload Artifact WebUI log
+        uses: actions/upload-artifact@v3
+        with:
+          name: WebUI_log
+          path: webui.log
+          retention-days: 5
   Upload_Installer:
     needs: Test_OQ
     runs-on: ubuntu-latest
