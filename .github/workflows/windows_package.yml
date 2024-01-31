@@ -87,7 +87,7 @@ jobs:
         run: |
           $env:PATH += ";C:\Program Files\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
-          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s}
+          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s 1> webui.log 2>&1}
           ping 127.0.0.1 -n 6 > null
           Get-Job
           netstat -o -n -a | findstr 8800
@@ -103,6 +103,12 @@ jobs:
           ping 127.0.0.1 -n 6 > null
           oq.exe engine --list-risk-calculations
           curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs
+      - name: Upload Artifact WebUI log
+        uses: actions/upload-artifact@v3
+        with:
+          name: WebUI_log
+          path: webui.log
+          retention-days: 5
   Upload_Installer:
     needs: Test_OQ
     runs-on: ubuntu-latest
