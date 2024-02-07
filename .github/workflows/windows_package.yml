@@ -34,10 +34,10 @@ jobs:
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
       - name: Clone Repository (Latest)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: github.event.inputs.git-ref == ''
       - name: Clone Repository (Custom Ref)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: github.event.inputs.git-ref != ''
         with:
           ref: ${{ github.event.inputs.git-ref }}
@@ -51,7 +51,7 @@ jobs:
           bash -x ci/windows_package.sh
           #
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Installer
           path: /home/runner/work/oq-builders/oq-builders/out
@@ -62,7 +62,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Download Windows Installer from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: Installer
       - name: Execute the Installer
@@ -104,7 +104,7 @@ jobs:
           oq.exe engine --list-risk-calculations
           curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs
       - name: Upload Artifact WebUI log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: WebUI_log
           path: webui.log
@@ -113,9 +113,9 @@ jobs:
     needs: Test_OQ
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Download Windows Installer from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: Installer
       - name: rsync to downloads.openquake.org
