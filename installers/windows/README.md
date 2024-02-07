@@ -14,7 +14,9 @@ Microsoft Windows is not required.
 
 ### Build Python3 in Wine in Docker
 ```bash
-$ docker run -v $(pwd):/io -ti --entrypoint ./nsis/py_to_zip.bash tobix/pywine:3.11
+$ cd nsis
+$ docker run -v $(pwd):/io -ti tobix/pywine:3.11 bash
+# execute /io/py_to_zip.bash
 ```
 
 ### Build with Docker
@@ -37,7 +39,7 @@ otherwise `master` is used.
 ```bash
 $ docker run -e GEM_SET_BRANCH=engine-X.Y -e GEM_SET_RELEASE=Z -v $(pwd):/io -t -i --rm wine /io/docker/build.sh
 ```
-where `Z` is the build number for the package. 
+where `Z` is the build number for the package.
 
 #### Output types
 ```bash
