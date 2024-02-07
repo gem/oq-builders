@@ -14,7 +14,7 @@ Microsoft Windows is not required.
 
 ### Build Python3 in Wine in Docker
 ```bash
-$ docker run -v $(pwd):/io -ti --entrypoint ./py_to_zip.bash tobix/pywine:3.9
+$ docker run -v $(pwd):/io -ti --entrypoint ./nsis/py_to_zip.bash tobix/pywine:3.11
 ```
 
 ### Build with Docker
