@@ -26,7 +26,7 @@
 !define PRODUCT_VERSION "${VER_CODE}.${VER_BUILD}"
 !define PUBLISHER "GEM Foundation"
 !define COMP_NAME "GEM Foundation"
-!define COPYRIGHT ""
+!define COPYRIGHT "https://github.com/gem/oq-engine/blob/master/LICENSE"
 !define BITNESS "64"
 !define ARCH_TAG ""
 !define INSTALLER_NAME "OpenQuake_Engine_${VER_CODE}-${VER_BUILD}.exe"
@@ -41,16 +41,6 @@
 !include "x64.nsh"
 !include "WinVer.nsh"
 
-######################################################################
-
-VIProductVersion  "${VERSION}"
-VIAddVersionKey "ProductName"  "${APP_NAME}"
-VIAddVersionKey "CompanyName"  "${COMP_NAME}"
-VIAddVersionKey "LegalCopyright"  "${COPYRIGHT}"
-VIAddVersionKey "FileDescription"  "${DESCRIPTION}"
-VIAddVersionKey "FileVersion"  "${PRODUCT_VERSION}"
-
-######################################################################
 SetCompressor LZMA
 
 RequestExecutionLevel User
@@ -73,13 +63,15 @@ Page custom PageReinstall PageLeaveReinstall
 !insertmacro MUI_LANGUAGE "English"
 
 !ifdef VER_CODE & VER_BUILD
-VIAddVersionKey "CompanyName" "${PUBLISHER}"
-VIAddVersionKey "LegalCopyright" "https://github.com/gem/oq-engine/blob/master/LICENSE"
+VIAddVersionKey "CompanyName"  "${COMP_NAME}"
+VIAddVersionKey "LegalCopyright"  "${COPYRIGHT}"
 VIAddVersionKey "FileDescription" "OpenQuake Setup"
-VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
+VIAddVersionKey "ProductName"  "${APP_NAME}"
 VIAddVersionKey "ProductVersion" "${VER_CODE}"
-VIAddVersionKey "FileVersion" "${VER_CODE}"
+VIAddVersionKey "FileVersion"  "${PRODUCT_VERSION}"
 VIProductVersion ${PRODUCT_VERSION}
+
+######################################################################
 !endif
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
