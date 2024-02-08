@@ -83,7 +83,7 @@ jobs:
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
           cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-          Start-Job -ScriptBlock{& oq.exe webui start 127.0.0.1:8800 -s 1> "$env:LOCALAPPDATA\Temp\webui.log" 2>&1}
+          Start-Job -ScriptBlock{& oq.exe webui start 127.0.0.1:8800 -s 2>&1 > "$env:LOCALAPPDATA\Temp\webui.log" }
           ping 127.0.0.1 -n 6 > null
           Get-Job
           netstat -o -n -a | findstr 8800
