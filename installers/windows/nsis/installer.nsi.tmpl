@@ -18,11 +18,14 @@
 
 !define /date MYTIMESTAMP "%y%m%d%H%M"
 !define MYVERSION "2.99.0" # OpenQuake 2 tree
-!define PRODUCT_NAME "OpenQuake Engine"
+!define APP_NAME "OpenQuake Engine"
+!define PRODUCT_NAME "${APP_NAME}"
+!define WEB_SITE "https://github.com/gem/oq-engine"
 !define VER_CODE "${MYVERSION}"
 !define VER_BUILD "${MYTIMESTAMP}"
 !define PRODUCT_VERSION "${VER_CODE}.${VER_BUILD}"
 !define PUBLISHER "GEM Foundation"
+!define COMP_NAME "GEM Foundation"
 !define BITNESS "64"
 !define ARCH_TAG ""
 !define INSTALLER_NAME "OpenQuake_Engine_${VER_CODE}-${VER_BUILD}.exe"
@@ -36,7 +39,7 @@
 !include "x64.nsh"
 !include "WinVer.nsh"
 
-SetCompressor lzma
+SetCompressor LZMA
 
 RequestExecutionLevel User
 
