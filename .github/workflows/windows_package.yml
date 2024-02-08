@@ -69,25 +69,20 @@ jobs:
         run: |
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
-          cd "C:\Program Files\OpenQuake Engine\"
-          $env:PATH="C:\Program Files\OpenQuake Engine\python3\Scripts"
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
           pwd
       - name: Run oq
         run: |
-          set mypath="C:\Program Files\OpenQuake Engine"
-          set PATH=%mypath%\python;%mypath%\python3\Scripts;%PATH%
-          cd "C:\Program Files\Openquake Engine"
-          dir
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
           oq.exe engine --list-risk-calculations
-        shell: cmd
       - name: Run oq webui console and curl for the standalone tools
         run: |
-          $env:PATH += ";C:\Program Files\OpenQuake Engine\python3\Scripts"
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
-          Start-Job -ScriptBlock{& 'C:\Program Files\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s 1> webui.log 2>&1}
+          Start-Job -ScriptBlock{& '$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts\oq.exe' webui start 127.0.0.1:8800 -s 1> webui.log 2>&1}
           ping 127.0.0.1 -n 6 > null
           Get-Job
           netstat -o -n -a | findstr 8800
