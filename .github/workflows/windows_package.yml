@@ -103,7 +103,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: WebUI_log
-          path: C:\\Users\\runneradmin\\AppData\\Local\\Temp
+          path: C:\\Users\\runneradmin\\AppData\\Local\\Temp\\webui.log
           retention-days: 5
   Upload_Installer:
     needs: Test_OQ
