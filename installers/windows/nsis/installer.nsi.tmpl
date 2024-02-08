@@ -95,6 +95,13 @@ Function .onInit
   ${EndIf}
 FunctionEnd
 
+Function DirLeave
+${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
+    MessageBox MB_OK `"$InstDir" already exists, Uninstall Openquake Engine and run again the Installer` IDYES yep
+    Quit
+${EndIf}
+FunctionEnd
+
 Section -SETTINGS
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
