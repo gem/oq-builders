@@ -95,12 +95,6 @@ Function .onInit
   ${EndIf}
 FunctionEnd
 
-Function DirLeave
-${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
-    MessageBox MB_OK `The folder "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" already exists, It's mandatory that you uninstall Openquake Engine and run again the Installer`
-    Quit
-${EndIf}
-FunctionEnd
 
 Section -SETTINGS
   SetOutPath "$INSTDIR"
@@ -268,6 +262,11 @@ Function PageReinstall
   ReadRegDWORD $R2 HKLM "Software\${PRODUCT_NAME}" "VersionRevision"
   ReadRegDWORD $R3 HKLM "Software\${PRODUCT_NAME}" "VersionBuild"
   StrCpy $R0 $R0.$R1.$R2.$R3
+
+  ${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
+      MessageBox MB_OK `The folder "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}"  exists. It's mandatory that you uninstall Openquake Engine and run again the Installer`
+      Quit
+  ${EndIf}
 
   ${VersionCompare} ${VER_CODE}.${VER_BUILD} $R0 $R0
   ${If} $R0 == 0
