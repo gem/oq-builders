@@ -103,7 +103,7 @@ SectionEnd
 
 Section "!Core Files" SecCore
   SectionIn RO
-  SetShellVarContext all
+  SetShellVarContext current
 
   SetOutPath "$INSTDIR"
   File "openquake_black.ico"
@@ -221,7 +221,7 @@ SectionIn RO
 SectionEnd
 
 Section "Uninstall"
-  SetShellVarContext all
+  SetShellVarContext current
   Delete $INSTDIR\uninstall.exe
   Delete "$INSTDIR\${PRODUCT_ICON}"
   RMDir /r "$INSTDIR\python3"
