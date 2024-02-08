@@ -97,7 +97,7 @@ FunctionEnd
 
 Function DirLeave
 ${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
-    MessageBox MB_OK `"$InstDir" already exists, Uninstall Openquake Engine and run again the Installer` IDYES yep
+    MessageBox MB_OK `The folder "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" already exists, Uninstall Openquake Engine and run again the Installer` IDYES yep
     Quit
 ${EndIf}
 FunctionEnd
