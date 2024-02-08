@@ -26,10 +26,12 @@
 !define PRODUCT_VERSION "${VER_CODE}.${VER_BUILD}"
 !define PUBLISHER "GEM Foundation"
 !define COMP_NAME "GEM Foundation"
+!define COPYRIGHT ""
 !define BITNESS "64"
 !define ARCH_TAG ""
 !define INSTALLER_NAME "OpenQuake_Engine_${VER_CODE}-${VER_BUILD}.exe"
 !define PRODUCT_ICON "openquake.ico"
+!define DESCRIPTION "The OpenQuake Engine is an open source software that provides calculation and assessment of seismic hazard, risk and decision-making tools via the data, methods and standards that are being developed by the GEM"
 # WOW6432Node is needed because we are running 64bit software. It's hardcoded since we support only
 # installations on 64bit systems (code is 64bit only)
 !define REG_KEY "Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -39,6 +41,16 @@
 !include "x64.nsh"
 !include "WinVer.nsh"
 
+######################################################################
+
+VIProductVersion  "${VERSION}"
+VIAddVersionKey "ProductName"  "${APP_NAME}"
+VIAddVersionKey "CompanyName"  "${COMP_NAME}"
+VIAddVersionKey "LegalCopyright"  "${COPYRIGHT}"
+VIAddVersionKey "FileDescription"  "${DESCRIPTION}"
+VIAddVersionKey "FileVersion"  "${PRODUCT_VERSION}"
+
+######################################################################
 SetCompressor LZMA
 
 RequestExecutionLevel User
