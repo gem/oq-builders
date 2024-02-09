@@ -272,20 +272,17 @@ Function PageReinstall
   ${VersionCompare} ${VER_CODE}.${VER_BUILD} $R0 $R0
   ${If} $R0 == 0
     StrCpy $R1 "${PRODUCT_NAME} ${PRODUCT_VERSION} is already installed. Select the operation you want to perform and click Next to continue."
-    StrCpy $R2 "Add/Reinstall components"
-    StrCpy $R3 "Uninstall ${PRODUCT_NAME}"
+    StrCpy $R2 "Uninstall ${PRODUCT_NAME}"
     !insertmacro MUI_HEADER_TEXT "Already Installed" "Choose the maintenance option to perform."
     StrCpy $R0 "2"
   ${ElseIf} $R0 == 1
     StrCpy $R1 "An $R4 version of ${PRODUCT_NAME} is installed on your system. It's recommended that you uninstall the current version before installing. Select the operation you want to perform and click Next to continue."
     StrCpy $R2 "Uninstall before installing"
-    StrCpy $R3 "Upgrade/Repair"
     !insertmacro MUI_HEADER_TEXT "Already Installed" "Choose how you want to install ${PRODUCT_NAME}."
     StrCpy $R0 "1"
   ${ElseIf} $R0 == 2
     StrCpy $R1 "A newer version of ${PRODUCT_NAME} is already installed! It is not recommended that you install an older version. If you really want to install this older version, it's better to uninstall the current version first. Select the operation you want to perform and click Next to continue."
     StrCpy $R2 "Uninstall before installing"
-    StrCpy $R3 "Do not uninstall"
     !insertmacro MUI_HEADER_TEXT "Already Installed" "Choose how you want to install ${PRODUCT_NAME}."
     StrCpy $R0 "1"
   ${Else}
@@ -301,10 +298,6 @@ Function PageReinstall
   ${NSD_CreateRadioButton} 30u 50u -30u 8u $R2
   Pop $R2
   ${NSD_OnClick} $R2 PageReinstallUpdateSelection
-
-  ${NSD_CreateRadioButton} 30u 70u -30u 8u $R3
-  Pop $R3
-  ${NSD_OnClick} $R3 PageReinstallUpdateSelection
 
   ${If} $ReinstallPageCheck != 2
     SendMessage $R2 ${BM_SETCHECK} ${BST_CHECKED} 0
