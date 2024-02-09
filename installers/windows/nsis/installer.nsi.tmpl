@@ -34,7 +34,7 @@
 !define DESCRIPTION "The OpenQuake Engine is an open source software that provides calculation and assessment of seismic hazard, risk and decision-making tools via the data, methods and standards that are being developed by the GEM"
 # WOW6432Node is needed because we are running 64bit software. It's hardcoded since we support only
 # installations on 64bit systems (code is 64bit only)
-!define REG_KEY "Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
+!define REG_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
 !include "FileFunc.nsh"
 !include "WordFunc.nsh"
@@ -198,7 +198,7 @@ Section -post
   WriteRegStr HKCU "${REG_KEY}" "DisplayName" "${PRODUCT_NAME}"
   WriteRegStr HKCU "${REG_KEY}" "Publisher" "${PUBLISHER}"
   WriteRegStr HKCU "${REG_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
-  WriteRegStr HKCU "${REG_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegStr HKCU "${REG_KEY}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
   WriteRegStr HKCU "${REG_KEY}" "InstallLocation" "$INSTDIR"
   WriteRegStr HKCU "${REG_KEY}" "DisplayIcon" "$INSTDIR\${PRODUCT_ICON}"
   WriteRegDWORD HKCU "${REG_KEY}" "NoModify" 1
