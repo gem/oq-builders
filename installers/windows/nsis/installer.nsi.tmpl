@@ -190,17 +190,17 @@ Section -post
   WriteUninstaller $INSTDIR\uninstall.exe
 
   ; Add ourselves to Add/remove programs
-  WriteRegStr HKLM "${REG_KEY}" "DisplayName" "${PRODUCT_NAME}"
-  WriteRegStr HKLM "${REG_KEY}" "Publisher" "${PUBLISHER}"
-  WriteRegStr HKLM "${REG_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
-  WriteRegStr HKLM "${REG_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegStr HKLM "${REG_KEY}" "InstallLocation" "$INSTDIR"
-  WriteRegStr HKLM "${REG_KEY}" "DisplayIcon" "$INSTDIR\${PRODUCT_ICON}"
-  WriteRegDWORD HKLM "${REG_KEY}" "NoModify" 1
-  WriteRegDWORD HKLM "${REG_KEY}" "NoRepair" 1
+  WriteRegStr HKCU "${REG_KEY}" "DisplayName" "${PRODUCT_NAME}"
+  WriteRegStr HKCU "${REG_KEY}" "Publisher" "${PUBLISHER}"
+  WriteRegStr HKCU "${REG_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
+  WriteRegStr HKCU "${REG_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegStr HKCU "${REG_KEY}" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKCU "${REG_KEY}" "DisplayIcon" "$INSTDIR\${PRODUCT_ICON}"
+  WriteRegDWORD HKCU "${REG_KEY}" "NoModify" 1
+  WriteRegDWORD HKCU "${REG_KEY}" "NoRepair" 1
   ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
   IntFmt $0 "0x%08X" $0
-  WriteRegDWORD HKLM "${REG_KEY}" "EstimatedSize" "$0"
+  WriteRegDWORD HKCU "${REG_KEY}" "EstimatedSize" "$0"
 
   ; Check if we need to reboot
   IfRebootFlag 0 noreboot
@@ -242,7 +242,7 @@ Section "Uninstall"
     Delete "$SMPROGRAMS\OpenQuake Engine (webui).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
   RMDir $INSTDIR
-  DeleteRegKey HKLM "${REG_KEY}"
+  DeleteRegKey HKCU "${REG_KEY}"
 SectionEnd
 
 
@@ -252,15 +252,15 @@ Var ReinstallPageCheck
 
 Function PageReinstall
 
-  ReadRegStr $R0 HKLM "Software\${PRODUCT_NAME}" ""
-  ReadRegStr $R1 HKLM "${REG_KEY}" "UninstallString"
+  ReadRegStr $R0 HKCU "Software\${PRODUCT_NAME}" ""
+  ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
   ${IfThen} "$R0$R1" == "" ${|} Abort ${|}
 
   StrCpy $R4 "older"
-  ReadRegDWORD $R0 HKLM "Software\${PRODUCT_NAME}" "VersionMajor"
-  ReadRegDWORD $R1 HKLM "Software\${PRODUCT_NAME}" "VersionMinor"
-  ReadRegDWORD $R2 HKLM "Software\${PRODUCT_NAME}" "VersionRevision"
-  ReadRegDWORD $R3 HKLM "Software\${PRODUCT_NAME}" "VersionBuild"
+  ReadRegDWORD $R0 HKCU "Software\${PRODUCT_NAME}" "VersionMajor"
+  ReadRegDWORD $R1 HKCU "Software\${PRODUCT_NAME}" "VersionMinor"
+  ReadRegDWORD $R2 HKCU "Software\${PRODUCT_NAME}" "VersionRevision"
+  ReadRegDWORD $R3 HKCU "Software\${PRODUCT_NAME}" "VersionBuild"
   StrCpy $R0 $R0.$R1.$R2.$R3
 
   ${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
@@ -343,7 +343,7 @@ Function PageLeaveReinstall
   StrCmp $R1 "1" reinst_done ; Same version, skip to add/reinstall components?
 
   reinst_uninstall:
-  ReadRegStr $R1 HKLM "${REG_KEY}" "UninstallString"
+  ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
 
   ;Run uninstaller
     HideWindow
