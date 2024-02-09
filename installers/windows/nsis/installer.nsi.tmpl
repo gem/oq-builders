@@ -264,7 +264,7 @@ Function PageReinstall
   StrCpy $R0 $R0.$R1.$R2.$R3
 
   ${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
-      MessageBox MB_OK|MB_ICONEXCLAMATION ` It looks like you have installed a previous version of the OpenQuake engine in $\r$\n "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" . $\r$\n Please uninstall the old engine using the "Add or Remove Programs" section of the Control Panel and then run this installer again.`
+      MessageBox MB_OK|MB_ICONEXCLAMATION ` It looks like you have installed a previous version of the OpenQuake engine in  "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" . $\r$\n Please uninstall the old engine using the "Add or Remove Programs" section of the Control Panel and then run this installer again.`
       Quit
   ${EndIf}
 
