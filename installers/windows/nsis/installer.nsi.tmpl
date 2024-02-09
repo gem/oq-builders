@@ -95,7 +95,7 @@ Function .onInit
   ${EndIf}
 
   ${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
-      MessageBox MB_OK|MB_ICONEXCLAMATION ` It looks like you have installed a previous version of the OpenQuake engine in  "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" $\r$\n Please uninstall the old engine using the "Add or Remove Programs" section of the Control Panel and then run this installer again.`
+      MessageBox MB_OK|MB_ICONEXCLAMATION `It looks like you have installed a previous version of the OpenQuake engine in "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" $\r$\n $\r$\n Please stop all OpenQuake engine processes and close associated windows THEN uninstall the old engine using the "Add or Remove Programs" section of the Control Panel and then run this installer again. `
       Quit
   ${EndIf}
 FunctionEnd
@@ -227,6 +227,7 @@ SectionEnd
 
 Section "Uninstall"
   SetShellVarContext current
+  MessageBox MB_OK|MB_ICONEXCLAMATION `Please stop all OpenQuake engine processes and close associated windows BEFORE pressing OK to uninstall the engine.`
   Delete $INSTDIR\uninstall.exe
   Delete "$INSTDIR\${PRODUCT_ICON}"
   RMDir /r "$INSTDIR\python3"
@@ -271,17 +272,17 @@ Function PageReinstall
 
   ${VersionCompare} ${VER_CODE}.${VER_BUILD} $R0 $R0
   ${If} $R0 == 0
-    StrCpy $R1 "${PRODUCT_NAME} ${PRODUCT_VERSION} is already installed. Select the operation you want to perform and click Next to continue."
+    StrCpy $R1 "${PRODUCT_NAME} ${PRODUCT_VERSION} is already installed Click Next to continue."
     StrCpy $R2 "Uninstall ${PRODUCT_NAME}"
     !insertmacro MUI_HEADER_TEXT "Already Installed" "Choose the maintenance option to perform."
     StrCpy $R0 "2"
   ${ElseIf} $R0 == 1
-    StrCpy $R1 "An $R4 version of ${PRODUCT_NAME} is installed on your system. It's recommended that you uninstall the current version before installing. Select the operation you want to perform and click Next to continue."
+    StrCpy $R1 "An $R4 version of ${PRODUCT_NAME} is installed on your system. It's recommended that you uninstall the current version before installing. Click Next to continue."
     StrCpy $R2 "Uninstall before installing"
     !insertmacro MUI_HEADER_TEXT "Already Installed" "Choose how you want to install ${PRODUCT_NAME}."
     StrCpy $R0 "1"
   ${ElseIf} $R0 == 2
-    StrCpy $R1 "A newer version of ${PRODUCT_NAME} is already installed! It is not recommended that you install an older version. If you really want to install this older version, it's better to uninstall the current version first. Select the operation you want to perform and click Next to continue."
+    StrCpy $R1 "A newer version of ${PRODUCT_NAME} is already installed! It is not recommended that you install an older version. Click Next to continue."
     StrCpy $R2 "Uninstall before installing"
     !insertmacro MUI_HEADER_TEXT "Already Installed" "Choose how you want to install ${PRODUCT_NAME}."
     StrCpy $R0 "1"
