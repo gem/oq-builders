@@ -1,5 +1,6 @@
 ## OpenQuake installers for Windows ##
 Use the same universal installers of engine
+NOTE: This version of installers requires ADMIN right on Windows
 
 ### Requirements
 
