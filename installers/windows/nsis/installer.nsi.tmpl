@@ -93,6 +93,11 @@ Function .onInit
     IfSilent +2
     MessageBox MB_OK "Your Windows version is not recommended. Use at your own risk."
   ${EndIf}
+
+  ${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
+      MessageBox MB_OK|MB_ICONEXCLAMATION ` It looks like you have installed a previous version of the OpenQuake engine in  "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" . $\r$\n Please uninstall the old engine using the "Add or Remove Programs" section of the Control Panel and then run this installer again.`
+      Quit
+  ${EndIf}
 FunctionEnd
 
 
@@ -263,10 +268,6 @@ Function PageReinstall
   ReadRegDWORD $R3 HKCU "Software\${PRODUCT_NAME}" "VersionBuild"
   StrCpy $R0 $R0.$R1.$R2.$R3
 
-  ${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
-      MessageBox MB_OK|MB_ICONEXCLAMATION ` It looks like you have installed a previous version of the OpenQuake engine in  "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" . $\r$\n Please uninstall the old engine using the "Add or Remove Programs" section of the Control Panel and then run this installer again.`
-      Quit
-  ${EndIf}
 
   ${VersionCompare} ${VER_CODE}.${VER_BUILD} $R0 $R0
   ${If} $R0 == 0
