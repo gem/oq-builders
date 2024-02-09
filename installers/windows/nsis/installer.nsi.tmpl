@@ -100,6 +100,12 @@ Function .onInit
   ${EndIf}
 FunctionEnd
 
+Function un.onInit
+MessageBox MB_OK|MB_ICONEXCLAMATION `Please stop all OpenQuake engine processes and close associated windows BEFORE pressing OK to uninstall the engine.`
+Abort
+NoAbort:
+FunctionEnd
+
 
 Section -SETTINGS
   SetOutPath "$INSTDIR"
@@ -227,7 +233,6 @@ SectionEnd
 
 Section "Uninstall"
   SetShellVarContext current
-  MessageBox MB_OK|MB_ICONEXCLAMATION `Please stop all OpenQuake engine processes and close associated windows BEFORE pressing OK to uninstall the engine.`
   Delete $INSTDIR\uninstall.exe
   Delete "$INSTDIR\${PRODUCT_ICON}"
   RMDir /r "$INSTDIR\python3"
