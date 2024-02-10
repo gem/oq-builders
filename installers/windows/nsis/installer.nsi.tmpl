@@ -102,7 +102,7 @@ FunctionEnd
 
 Function un.onInit
 	MessageBox MB_OK|MB_ICONEXCLAMATION `Please stop all OpenQuake engine processes and close associated windows BEFORE pressing OK to uninstall the engine.`
-    MessageBox MB_YESNO|MB_ICONQUESTION  "This will uninstall. Continue?" IDYES NoAbort
+    MessageBox MB_YESNO|MB_ICONQUESTION  "Have you close all OQ processes, Can we uninstall?" IDYES NoAbort
       Abort ; causes uninstaller to quit.
     NoAbort:
 FunctionEnd
