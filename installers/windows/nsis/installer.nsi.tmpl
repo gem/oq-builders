@@ -259,8 +259,8 @@ Section "Uninstall"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
   RMDir $INSTDIR
   ${If} ${FileExists} "$INSTDIR"
-    MessageBox MB_OK|MB_ICONEXCLAMATION `"Unable to remove installation folder "$INSTDIR" $\r\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
-	Abort "Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. "
+    MessageBox MB_OK|MB_ICONEXCLAMATION `Unable to remove installation folder "$INSTDIR" $\r\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
+	Abort `Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
   ${EndIf}
   DeleteRegKey HKCU "${REG_KEY}"
 SectionEnd
