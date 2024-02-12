@@ -251,6 +251,10 @@ Section "Uninstall"
     Delete "$SMPROGRAMS\OpenQuake Engine (webui).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
   RMDir $INSTDIR
+  ${If} ${FileExists} "$INSTDIR"
+    MessageBox MB_OK|MB_ICONEXCLAMATION `It looks like you still have the installation folder of the OpenQuake engine in "$INSTDIR" $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
+    Quit
+  ${EndIf}
   DeleteRegKey HKCU "${REG_KEY}"
 SectionEnd
 
