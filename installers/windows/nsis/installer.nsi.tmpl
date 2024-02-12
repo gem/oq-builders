@@ -98,6 +98,12 @@ Function .onInit
       MessageBox MB_OK|MB_ICONEXCLAMATION `It looks like you have installed a previous version of the OpenQuake engine in "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" $\r$\n $\r$\n Please stop all OpenQuake engine processes and close associated windows THEN uninstall the old engine using the "Add or Remove Programs" section of the Control Panel and then run this installer again. `
       Quit
   ${EndIf}
+
+ ${If} ${FileExists} "$InstDir\*"
+    MessageBox MB_OK|MB_ICONEXCLAMATION `"$INSTDIR" already exists $\r\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
+     Quit
+ ${EndIf}
+
 FunctionEnd
 
 Function un.onInit
@@ -189,6 +195,7 @@ Section "OpenQuake Engine desktop icons" SecIcon
 SectionEnd
 
 Section -post
+  SetOutPath "$INSTDIR"
   ; Byte-compile Python files.
   RMDir /r "$INSTDIR\oq-dist"
   DetailPrint "Byte-compiling Python modules..."
@@ -252,8 +259,8 @@ Section "Uninstall"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
   RMDir $INSTDIR
   ${If} ${FileExists} "$INSTDIR"
-    MessageBox MB_OK|MB_ICONEXCLAMATION `It looks like you still have the installation folder of the OpenQuake engine in "$INSTDIR" $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
-    Quit
+    MessageBox MB_OK|MB_ICONEXCLAMATION `"Unable to remove installation folder "$INSTDIR" $\r\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
+	Abort "Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. "
   ${EndIf}
   DeleteRegKey HKCU "${REG_KEY}"
 SectionEnd
