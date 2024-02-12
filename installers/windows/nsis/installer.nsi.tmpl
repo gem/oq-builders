@@ -57,7 +57,7 @@ RequestExecutionLevel User
 Page custom PageReinstall PageLeaveReinstall
 !endif
 !insertmacro MUI_PAGE_COMPONENTS
-!define MUI_PAGE_CHECK_FOLDER_AND_LEAVE "DirectoryExist"
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE DirectoryLeave
 !insertmacro MUI_PAGE_DIRECTORY 
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -405,11 +405,13 @@ FunctionEnd
 !endif
 
 
-Function DirectoryExist
- ${If} ${FileExists} "$InstDir\*"
+Function DirectoryLeave
+
+ ${If} ${FileExists} "$InstDir\*.*"
     MessageBox MB_OK|MB_ICONEXCLAMATION `"$INSTDIR" already exists $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again.`
      Quit
  ${EndIf}
+
 FunctionEnd
 
 #Function .onMouseOverSection
