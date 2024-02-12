@@ -58,7 +58,7 @@ Page custom PageReinstall PageLeaveReinstall
 !endif
 !insertmacro MUI_PAGE_COMPONENTS
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE DirectoryLeave
-!insertmacro MUI_PAGE_DIRECTORY 
+!insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_LANGUAGE "English"
@@ -233,7 +233,6 @@ SectionEnd
 
 Section "Uninstall"
   SetShellVarContext current
-  Delete $INSTDIR\uninstall.exe
   Delete "$INSTDIR\${PRODUCT_ICON}"
   RMDir /r "$INSTDIR\python3"
   ; Uninstall files
@@ -252,11 +251,26 @@ Section "Uninstall"
     Delete "$DESKTOP\OpenQuake Engine (console).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (webui).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
+  
+  ; https://nsis.sourceforge.io/Reference/FindFirst
+  ; Check that INSTDIR contains only uninstall.exe 
+
+   FindFirst $0 $1 $INSTDIR\*.*
+   loop_unexe:
+     StrCmp $1 "" done_unexe
+     StrCmp $1 "uninstall.exe" ignore_uninstall found_badfile
+     DetailPrint $1
+   ignore_uninstall:
+     FindNext $0 $1
+     Goto loop_unexe
+   found_badfile:
+     FindClose $0
+     MessageBox MB_OK|MB_ICONEXCLAMATION `Unable to remove installation folder "$INSTDIR" $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
+     Abort `Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
+   done_unexe:
+     FindClose $0
+  Delete $INSTDIR\uninstall.exe
   RMDir $INSTDIR
-  ${If} ${FileExists} "$INSTDIR"
-    MessageBox MB_OK|MB_ICONEXCLAMATION `Unable to remove installation folder "$INSTDIR" $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
-	Abort `Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
-  ${EndIf}
   DeleteRegKey HKCU "${REG_KEY}"
 SectionEnd
 
@@ -358,7 +372,7 @@ Function PageLeaveReinstall
     ${IfThen} ${Errors} ${|} StrCpy $0 2 ${|} ; ExecWait failed, set fake exit code
 
   reinst_done:
- 
+
 FunctionEnd
 
 
