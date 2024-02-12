@@ -103,6 +103,12 @@ for app in oq-platform-standalone oq-platform-ipt oq-platform-taxtweb oq-platfor
     fi
 done
 
+echo "Downloading ScienceTools apps"
+for app in oq-mbtk; do
+    git clone -b $OQ_BRANCH --depth=1 https://github.com/GEMScienceTools/${app}.git
+    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/mbtk ./${app}
+done
+
 echo "Extracting python wheels"
 wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
 
