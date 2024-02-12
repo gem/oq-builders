@@ -112,6 +112,9 @@ done
 echo "Extracting python wheels"
 wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
 
+echo "Extracting python wheels for oq-mbtk"
+wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-mbtk/requirements-windows.txt
+
 cd $DIR/oq-dist
 for d in *; do
 	ls $d | grep whl > $d/index.txt
