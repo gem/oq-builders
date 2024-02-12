@@ -99,12 +99,6 @@ Function .onInit
       MessageBox MB_OK|MB_ICONEXCLAMATION `It looks like you have installed a previous version of the OpenQuake engine in "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" $\r$\n $\r$\n Please stop all OpenQuake engine processes and close associated windows THEN uninstall the old engine using the "Add or Remove Programs" section of the Control Panel and then run this installer again. `
       Quit
   ${EndIf}
-
- ${If} ${FileExists} "$InstDir\*"
-    MessageBox MB_OK|MB_ICONEXCLAMATION `"$INSTDIR" already exists $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
-     Quit
- "${EndIf}
-
 FunctionEnd
 
 Function un.onInit
@@ -413,9 +407,9 @@ FunctionEnd
 
 Function DirectoryExist
  ${If} ${FileExists} "$InstDir\*"
-    MessageBox MB_OK|MB_ICONEXCLAMATION `"$INSTDIR" already exists $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
+    MessageBox MB_OK|MB_ICONEXCLAMATION `"$INSTDIR" already exists $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again.`
      Quit
- "${EndIf}
+ ${EndIf}
 FunctionEnd
 
 #Function .onMouseOverSection
