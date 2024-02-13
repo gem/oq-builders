@@ -251,9 +251,9 @@ Section "Uninstall"
     Delete "$DESKTOP\OpenQuake Engine (console).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (webui).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
-  
+
   ; https://nsis.sourceforge.io/Reference/FindFirst
-  ; Check that INSTDIR contains only uninstall.exe 
+  ; Check that INSTDIR contains only uninstall.exe
 
    DetailPrint "FindFirst"
    ClearErrors
@@ -262,11 +262,11 @@ Section "Uninstall"
      DetailPrint $1
 	 StrCpy $2 "$INSTDIR\$1"
      DetailPrint $2
-	 StrCmp $1 "." ignore_uninstall
-     StrCmp $1 ".." ignore_uninstall
    loop_unexe:
      DetailPrint "loop_unexe: $1"
      StrCmp $1 "" done_unexe
+	 StrCmp $1 "." ignore_uninstall
+     StrCmp $1 ".." ignore_uninstall
      StrCmp $1 "uninstall.exe" ignore_uninstall found_badfile
    ignore_uninstall:
      DetailPrint "ignore_uninstall: $1"
