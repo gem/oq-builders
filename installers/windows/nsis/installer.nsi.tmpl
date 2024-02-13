@@ -259,6 +259,7 @@ Section "Uninstall"
    FindFirst $0 $1 $INSTDIR\*.*
      DetailPrint $0
      DetailPrint $1
+	 StrCpy $2 "$INSTDIR\$1"
      DetailPrint $2
    loop_unexe:
      DetailPrint $1
