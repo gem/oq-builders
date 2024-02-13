@@ -280,6 +280,7 @@ Section "Uninstall"
      Abort `Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
    done_unexe:
      DetailPrint "done_unexe: $1"
+	 Delete $INSTDIR\uninstall.exe
      FindClose $0
 
   RMDir $INSTDIR
