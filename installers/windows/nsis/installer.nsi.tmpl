@@ -252,35 +252,34 @@ Section "Uninstall"
     Delete "$SMPROGRAMS\OpenQuake Engine (webui).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
 
-  ; https://nsis.sourceforge.io/Reference/FindFirst
-  ; Check that INSTDIR contains only uninstall.exe
-
-   DetailPrint "FindFirst"
+   ; 
+   ; Check that INSTDIR contains only uninstall.exe
+   ; See NSIS reference for FindFirst
+   ;   https://nsis.sourceforge.io/Reference/FindFirst
+   ; Note that the . and .. entries are also present and should be ignored.
+   ; $0 is a "handle" to the Search and is used by FindNext and FindClose
+   ; $1 is the current name of the file/directory under consideration
    ClearErrors
    FindFirst $0 $1 "$INSTDIR\*.*"
-     DetailPrint $0
-     DetailPrint $1
-	 StrCpy $2 "$INSTDIR\$1"
-     DetailPrint $2
    loop_unexe:
-     DetailPrint "loop_unexe: $1"
-     StrCmp $1 "" done_unexe
-	 StrCmp $1 "." ignore_uninstall
-     StrCmp $1 ".." ignore_uninstall
-     StrCmp $1 "uninstall.exe" ignore_uninstall found_badfile
-   ignore_uninstall:
-     DetailPrint "ignore_uninstall: $1"
-	 ClearErrors
+     DetailPrint "Checking INSTDIR, found '$1'"
+     StrCmp $1 "" done_unexe ; End of List
+     StrCmp $1 "." ignore_file
+     StrCmp $1 ".." ignore_file
+     StrCmp $1 "uninstall.exe" ignore_file found_badfile
+   ignore_file:
+     DetailPrint "ignore_file: $1"
+     ClearErrors
      FindNext $0 $1
      Goto loop_unexe
    found_badfile:
-     DetailPrint "found_badfile: $1"
+     DetailPrint "Found unnexpected file: $1 in $INSTDIR"
      FindClose $0
      MessageBox MB_OK|MB_ICONEXCLAMATION `Unable to remove installation folder "$INSTDIR" $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
      Abort `Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
    done_unexe:
      DetailPrint "done_unexe: $1"
-	 Delete $INSTDIR\uninstall.exe
+     Delete $INSTDIR\uninstall.exe
      FindClose $0
 
   RMDir $INSTDIR
@@ -378,8 +377,18 @@ Function PageLeaveReinstall
     HideWindow
 
     ClearErrors
-    ExecWait '$R1 _?=$INSTDIR' $0
-
+    ; https://stackoverflow.com/questions/24595887/waiting-for-nsis-uninstaller-to-finish-in-nsis-installer-either-fails-or-the-uni
+    ; suggests that the standard command to run the old uninstaller:
+    ;   ExecWait '$R1 _?=$INSTDIR' $0
+    ; will keep (old) uninstall.exe open and so prevent
+    ; it from deleting itself.  This is a problem since the install folder will
+    ; not be deleted, and the installer will refuse to proceed. 
+    ; See also:
+    ; 
+    ; Copy old uninstaller to a temporary folder and run from there
+    CreateDirectory "$pluginsdir\unold"
+    CopyFiles /SILENT /FILESONLY "$R1" "$pluginsdir\unold\uninstall.exe"
+    ExecWait '"$pluginsdir\unold\uninstall.exe" _?=$oldinstall' $0
     BringToFront
 
     ${IfThen} ${Errors} ${|} StrCpy $0 2 ${|} ; ExecWait failed, set fake exit code
