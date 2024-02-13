@@ -386,9 +386,15 @@ Function PageLeaveReinstall
     ; See also:
     ; 
     ; Copy old uninstaller to a temporary folder and run from there
-    CreateDirectory "$pluginsdir\unold"
-    CopyFiles /SILENT /FILESONLY "$R1" "$pluginsdir\unold\uninstall.exe"
-    ExecWait '"$pluginsdir\unold\uninstall.exe" _?=$oldinstall' $0
+    DetailPrint "PageLeaveReinstall: calling InitPluginsDir"
+    InitPluginsDir
+    DetailPrint "PageLeaveReinstall: creating $PLUGINSDIR\unold"
+    ClearErrors
+    CreateDirectory "$PLUGINSDIR\unold"
+    DetailPrint " copying $R1 to $PLUGINSDIR\unold\uninstall.exe"
+    CopyFiles /SILENT /FILESONLY "$R1" "$PLUGINSDIR\unold\uninstall.exe"
+    DetailPrint " ExecWait $PLUGINSDIR\unold\uninstall.exe"
+    ExecWait '$PLUGINSDIR\unold\uninstall.exe _?=$INSTDIR' $0
     BringToFront
 
     ${IfThen} ${Errors} ${|} StrCpy $0 2 ${|} ; ExecWait failed, set fake exit code
