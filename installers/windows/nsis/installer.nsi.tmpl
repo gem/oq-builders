@@ -255,31 +255,29 @@ Section "Uninstall"
   ; https://nsis.sourceforge.io/Reference/FindFirst
   ; Check that INSTDIR contains only uninstall.exe 
 
-   SetOutPath "$INSTDIR"
-   FindFirst $0 $1 $INSTDIR\*.*
+   DetailPrint "FindFirst"
+   FindFirst $0 $1 "$INSTDIR\*"
      DetailPrint $0
      DetailPrint $1
 	 StrCpy $2 "$INSTDIR\$1"
      DetailPrint $2
    loop_unexe:
-     DetailPrint $1
+     DetailPrint "loop_unexe: $1"
      StrCmp $1 "" done_unexe
      StrCmp $1 "uninstall.exe" ignore_uninstall found_badfile
    ignore_uninstall:
-     DetailPrint $1
+     DetailPrint "ignore_uninstall: $1"
      FindNext $0 $1
      Goto loop_unexe
    found_badfile:
-     DetailPrint $1
+     DetailPrint "found_badfile: $1"
      FindClose $0
      MessageBox MB_OK|MB_ICONEXCLAMATION `Unable to remove installation folder "$INSTDIR" $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
      Abort `Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
    done_unexe:
-     DetailPrint $1
+     DetailPrint "done_unexe: $1"
      FindClose $0
 
-  Delete $INSTDIR\uninstall.exe
-  SetOutPath "$LOCALAPPDATA"
   RMDir $INSTDIR
   DeleteRegKey HKCU "${REG_KEY}"
 SectionEnd
