@@ -256,17 +256,21 @@ Section "Uninstall"
   ; Check that INSTDIR contains only uninstall.exe 
 
    DetailPrint "FindFirst"
-   FindFirst $0 $1 "$INSTDIR\*"
+   ClearErrors
+   FindFirst $0 $1 "$INSTDIR\*.*"
      DetailPrint $0
      DetailPrint $1
 	 StrCpy $2 "$INSTDIR\$1"
      DetailPrint $2
+	 StrCmp $1 "." ignore_uninstall
+     StrCmp $1 ".." ignore_uninstall
    loop_unexe:
      DetailPrint "loop_unexe: $1"
      StrCmp $1 "" done_unexe
      StrCmp $1 "uninstall.exe" ignore_uninstall found_badfile
    ignore_uninstall:
      DetailPrint "ignore_uninstall: $1"
+	 ClearErrors
      FindNext $0 $1
      Goto loop_unexe
    found_badfile:
