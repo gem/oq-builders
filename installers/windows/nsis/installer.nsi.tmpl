@@ -252,7 +252,7 @@ Section "Uninstall"
     Delete "$SMPROGRAMS\OpenQuake Engine (webui).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
 
-   ; 
+   ;
    ; Check that INSTDIR contains only uninstall.exe
    ; See NSIS reference for FindFirst
    ;   https://nsis.sourceforge.io/Reference/FindFirst
@@ -374,7 +374,7 @@ Function PageLeaveReinstall
   ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
 
   ;Run uninstaller
-    HideWindow
+    ; HideWindow ;do not hide window to debug
 
     ClearErrors
     ; https://stackoverflow.com/questions/24595887/waiting-for-nsis-uninstaller-to-finish-in-nsis-installer-either-fails-or-the-uni
@@ -382,9 +382,9 @@ Function PageLeaveReinstall
     ;   ExecWait '$R1 _?=$INSTDIR' $0
     ; will keep (old) uninstall.exe open and so prevent
     ; it from deleting itself.  This is a problem since the install folder will
-    ; not be deleted, and the installer will refuse to proceed. 
+    ; not be deleted, and the installer will refuse to proceed.
     ; See also:
-    ; 
+    ;
     ; Copy old uninstaller to a temporary folder and run from there
     DetailPrint "PageLeaveReinstall: calling InitPluginsDir"
     InitPluginsDir
