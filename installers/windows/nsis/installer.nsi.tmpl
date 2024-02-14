@@ -389,7 +389,7 @@ Function PageLeaveReinstall
     ; Copy old uninstaller to a temporary folder and run from there
     MessageBox MB_OK "PageLeaveReinstall: calling InitPluginsDir"
     MessageBox MB_OK "REG KEY: $R1"
-    ${CharStrip} """ $R1 $R2
+    ${CharStrip} "$\"" $R1 $R2
     MessageBox MB_OK "KEY: $R2"
     InitPluginsDir
     MessageBox MB_OK "PageLeaveReinstall: creating $PLUGINSDIR\unold"
