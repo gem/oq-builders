@@ -379,7 +379,7 @@ Function PageLeaveReinstall
   ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
 
   ;Run uninstaller
-    HideWindow ;do not hide window to debug
+    HideWindow 
 
     ClearErrors
     ; https://stackoverflow.com/questions/24595887/waiting-for-nsis-uninstaller-to-finish-in-nsis-installer-either-fails-or-the-uni
@@ -397,7 +397,7 @@ Function PageLeaveReinstall
     ClearErrors
     CreateDirectory "$PLUGINSDIR\unold"
     DetailPrint " copying $R1 to $PLUGINSDIR\unold"
-    CopyFiles /SILENT /FILESONLY $R1 "$PLUGINSDIR\unold"
+    CopyFiles $R1 "$PLUGINSDIR\unold\"
     DetailPrint " ExecWait $PLUGINSDIR\unold\uninstall.exe"
     ExecWait '$PLUGINSDIR\unold\uninstall.exe _?=$INSTDIR' $0
 
