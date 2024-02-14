@@ -389,21 +389,20 @@ Function PageLeaveReinstall
     ; Copy old uninstaller to a temporary folder and run from there
     MessageBox MB_OK "PageLeaveReinstall: calling InitPluginsDir"
     InitPluginsDir
-	MessageBox MB_OK "PageLeaveReinstall: creating $PLUGINSDIR\unold"
+    MessageBox MB_OK "PageLeaveReinstall: creating $PLUGINSDIR\unold"
     ClearErrors
     CreateDirectory "$PLUGINSDIR\unold"
     MessageBox MB_OK " copying $R1 to $PLUGINSDIR\unold"
-    MessageBox MB_OK " CopyFiles $R1 $PLUGINSDIR\unold\uninstall.exe"
-    CopyFiles $R1 $PLUGINSDIR\unold\uninstall.exe
-	IfErrors copyFailed
-
-	ClearErrors
-    MessageBox MB_OK " ExecWait $PLUGINSDIR\unold\uninstall.exe"
-    ExecWait '$PLUGINSDIR\unold\uninstall.exe _?=$INSTDIR' $0
-
-    copyFailed:
+    CopyFiles $R1 $PLUGINSDIR\unold
+    IfErrors copyFailed copyOK
+  copyFailed:
     MessageBox MB_OK "Copy operation failed."
     Return
+
+  copyOK:
+    ClearErrors
+    MessageBox MB_OK " ExecWait $PLUGINSDIR\unold\uninstall.exe"
+    ExecWait '$PLUGINSDIR\unold\uninstall.exe _?=$INSTDIR' $0
 
     ; Make window visible again
     BringToFront
