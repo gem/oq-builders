@@ -415,7 +415,8 @@ Function PageLeaveReinstall
     MessageBox MB_OK " copying $R2 to $PLUGINSDIR\unold"
 
     CopyFiles "$R2" "$PLUGINSDIR\unold"
-	ExecShell explore "$PLUGINSDIR\unold"
+	; If you wanto to open explore window:
+	; ExecShell explore "$PLUGINSDIR\unold"
     IfErrors copyFailed copyOK
   copyFailed:
     MessageBox MB_OK "Copy operation failed."
