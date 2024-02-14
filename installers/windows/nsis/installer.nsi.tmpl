@@ -187,7 +187,6 @@ Section "OpenQuake Engine demos and documentation" SecDocDemo
   File "OpenQuake manual.pdf"
   SetOutPath "$INSTDIR\demos"
   File /r /x ".gitignore" "demos\*.*"
-
 SectionEnd
 
 Section "OpenQuake Engine menu icons" SecMenu
@@ -206,10 +205,8 @@ Section "OpenQuake Engine desktop icons" SecIcon
       "" "$INSTDIR\openquake.ico"
 SectionEnd
 
-Section "OpenQuake Model Building Toolkit" SecEngine
+Section "OpenQuake Model Building Toolkit" SecMbtk
   SectionIn RO
-  SetOutPath "$INSTDIR"
-
   SetOutPath "$PLUGINSDIR\oq-dist\mbtk"
   DetailPrint "Installing the OpenQuake Model Building Toolkit..."
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
