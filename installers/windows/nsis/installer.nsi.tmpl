@@ -393,10 +393,10 @@ Function PageLeaveReinstall
     ClearErrors
     CreateDirectory "$PLUGINSDIR\unold"
     MessageBox MB_OK " copying $R1 to $PLUGINSDIR\unold"
-    ; CopyFiles $R1 "$PLUGINSDIR\unold\"  try to use File and SetOutPath
-	SetOutPath "$PLUGINSDIR\unold"
-    MessageBox MB_OK " File $R1"
-	File $R1
+    MessageBox MB_OK " CopyFiles $R1 $PLUGINSDIR\unold\uninstall.exe"
+    CopyFiles $R1 $PLUGINSDIR\unold\uninstall.exe"  try to use File and SetOutPath
+	; SetOutPath "$PLUGINSDIR\unold"
+	; File $R1
     MessageBox MB_OK " ExecWait $PLUGINSDIR\unold\uninstall.exe"
     ExecWait '$PLUGINSDIR\unold\uninstall.exe _?=$INSTDIR' $0
 
