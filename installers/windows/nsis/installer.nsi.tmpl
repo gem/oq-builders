@@ -284,10 +284,6 @@ Section "Uninstall"
 
   RMDir $INSTDIR
   DeleteRegKey HKCU "${REG_KEY}"
-  ; Add uninstall.log
-  StrCpy $0 "$TEMP\OQ_uninstall.log"
-  Push $0
-  Call DumpLog
 SectionEnd
 
 !ifdef VER_CODE & VER_BUILD
