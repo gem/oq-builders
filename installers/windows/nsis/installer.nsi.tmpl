@@ -206,6 +206,15 @@ Section "OpenQuake Engine desktop icons" SecIcon
       "" "$INSTDIR\openquake.ico"
 SectionEnd
 
+Section "OpenQuake Model Building Toolkit" SecEngine
+  SectionIn RO
+  SetOutPath "$INSTDIR"
+
+  SetOutPath "$PLUGINSDIR\oq-dist\mbtk"
+  DetailPrint "Installing the OpenQuake Model Building Toolkit..."
+  nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
+SectionEnd
+
 Section -post
   SetOutPath "$INSTDIR"
   ; Byte-compile Python files.
