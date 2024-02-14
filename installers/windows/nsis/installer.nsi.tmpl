@@ -279,23 +279,20 @@ Section "Uninstall"
    ClearErrors
    FindFirst $0 $1 "$INSTDIR\*.*"
    loop_unexe:
-     DetailPrint "Checking INSTDIR, found '$1'"
      StrCmp $1 "" done_unexe ; End of List
      StrCmp $1 "." ignore_file
      StrCmp $1 ".." ignore_file
      StrCmp $1 "uninstall.exe" ignore_file found_badfile
    ignore_file:
-     DetailPrint "ignore_file: $1"
      ClearErrors
      FindNext $0 $1
      Goto loop_unexe
    found_badfile:
-     DetailPrint "Found unnexpected file: $1 in $INSTDIR"
+     DetailPrint "Unnexpected file: $1 in $INSTDIR"
      FindClose $0
      MessageBox MB_OK|MB_ICONEXCLAMATION `Unable to remove installation folder "$INSTDIR" $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
      Abort `Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
    done_unexe:
-     DetailPrint "done_unexe: $1"
      Delete $INSTDIR\uninstall.exe
      FindClose $0
 
