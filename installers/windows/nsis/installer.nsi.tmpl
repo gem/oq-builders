@@ -44,7 +44,23 @@
 SetCompressor LZMA
 
 RequestExecutionLevel User
-
+! Add definition of Macro 
+!macro CharStrip Char InStr OutVar
+ Push '${InStr}'
+ Push '${Char}'
+  Call CharStrip
+ Pop '${OutVar}'
+!macroend
+!define CharStrip '!insertmacro CharStrip'
+;
+!macro StrStrip Str InStr OutVar
+ Push '${InStr}'
+ Push '${Str}'
+  Call StrStrip
+ Pop '${OutVar}'
+!macroend
+!define StrStrip '!insertmacro StrStrip'
+;
 ; Modern UI installer stuff
 !include "MUI2.nsh"
 !define MUI_ABORTWARNING
@@ -496,13 +512,6 @@ Pop $R2
 Pop $R1
 Exch $R0
 FunctionEnd
-!macro CharStrip Char InStr OutVar
- Push '${InStr}'
- Push '${Char}'
-  Call CharStrip
- Pop '${OutVar}'
-!macroend
-!define CharStrip '!insertmacro CharStrip'
 
 Function StrStrip
 Exch $R0 #string
@@ -533,10 +542,3 @@ Pop $R2
 Pop $R1
 Exch $R0
 FunctionEnd
-!macro StrStrip Str InStr OutVar
- Push '${InStr}'
- Push '${Str}'
-  Call StrStrip
- Pop '${OutVar}'
-!macroend
-!define StrStrip '!insertmacro StrStrip'
