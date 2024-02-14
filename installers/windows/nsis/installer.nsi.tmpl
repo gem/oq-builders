@@ -394,7 +394,7 @@ Function PageLeaveReinstall
     CreateDirectory "$PLUGINSDIR\unold"
     MessageBox MB_OK " copying $R1 to $PLUGINSDIR\unold"
     MessageBox MB_OK " CopyFiles $R1 $PLUGINSDIR\unold\uninstall.exe"
-    CopyFiles $R1 $PLUGINSDIR\unold\uninstall.exe"  try to use File and SetOutPath
+    CopyFiles $R1 $PLUGINSDIR\unold\uninstall.exe"
 	; SetOutPath "$PLUGINSDIR\unold"
 	; File $R1
     MessageBox MB_OK " ExecWait $PLUGINSDIR\unold\uninstall.exe"
