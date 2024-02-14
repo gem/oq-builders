@@ -389,9 +389,9 @@ Function PageLeaveReinstall
 
   reinst_uninstall:
 	; NOTE that value in $R1 is _already_ quoted with double-quotes
-  ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
+    ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
 
-  ;Run uninstaller
+    ;Run uninstaller
     HideWindow
 
     ClearErrors
@@ -404,27 +404,14 @@ Function PageLeaveReinstall
     ; See also:
     ;
     ; Copy old uninstaller to a temporary folder and run from there
-    MessageBox MB_OK "PageLeaveReinstall: calling InitPluginsDir"
-    MessageBox MB_OK "REG KEY: $R1"
+	; https://stackoverflow.com/questions/26949675/nsis-copyfiles-directive-not-working-with-variables-as-parameters
+    ; CopyFiles fails silently if variable contains "" 
+	; Use CharStrip to remove the quotes 
+	;
     ${CharStrip} "$\"" $R1 $R2
-    MessageBox MB_OK "KEY: $R2"
     InitPluginsDir
-    MessageBox MB_OK "PageLeaveReinstall: creating $PLUGINSDIR\unold"
-    ClearErrors
     CreateDirectory "$PLUGINSDIR\unold"
-    MessageBox MB_OK " copying $R2 to $PLUGINSDIR\unold"
-
     CopyFiles "$R2" "$PLUGINSDIR\unold"
-	; If you wanto to open explore window:
-	; ExecShell explore "$PLUGINSDIR\unold"
-    IfErrors copyFailed copyOK
-  copyFailed:
-    MessageBox MB_OK "Copy operation failed."
-    Return
-
-  copyOK:
-    ClearErrors
-    MessageBox MB_OK " ExecWait $PLUGINSDIR\unold\uninstall.exe"
     ExecWait '$PLUGINSDIR\unold\uninstall.exe _?=$INSTDIR' $0
 
     ; Make window visible again
