@@ -45,6 +45,23 @@ SetCompressor LZMA
 
 RequestExecutionLevel User
 
+# Add definition of custom macro 
+!macro CharStrip Char InStr OutVar
+ Push '${InStr}'
+ Push '${Char}'
+  Call CharStrip
+ Pop '${OutVar}'
+!macroend
+!define CharStrip '!insertmacro CharStrip'
+;
+!macro StrStrip Str InStr OutVar
+ Push '${InStr}'
+ Push '${Str}'
+  Call StrStrip
+ Pop '${OutVar}'
+!macroend
+!define StrStrip '!insertmacro StrStrip'
+;
 ; Modern UI installer stuff
 !include "MUI2.nsh"
 !define MUI_ABORTWARNING
@@ -251,29 +268,40 @@ Section "Uninstall"
     Delete "$DESKTOP\OpenQuake Engine (console).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (webui).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
-  
-  ; https://nsis.sourceforge.io/Reference/FindFirst
-  ; Check that INSTDIR contains only uninstall.exe 
 
-   FindFirst $0 $1 $INSTDIR\*.*
+   ;
+   ; Check that INSTDIR contains only uninstall.exe
+   ; See NSIS reference for FindFirst
+   ;   https://nsis.sourceforge.io/Reference/FindFirst
+   ; Note that the . and .. entries are also present and should be ignored.
+   ; $0 is a "handle" to the Search and is used by FindNext and FindClose
+   ; $1 is the current name of the file/directory under consideration
+   ClearErrors
+   FindFirst $0 $1 "$INSTDIR\*.*"
    loop_unexe:
-     StrCmp $1 "" done_unexe
-     StrCmp $1 "uninstall.exe" ignore_uninstall found_badfile
-     DetailPrint $1
-   ignore_uninstall:
+     DetailPrint "Checking INSTDIR, found '$1'"
+     StrCmp $1 "" done_unexe ; End of List
+     StrCmp $1 "." ignore_file
+     StrCmp $1 ".." ignore_file
+     StrCmp $1 "uninstall.exe" ignore_file found_badfile
+   ignore_file:
+     DetailPrint "ignore_file: $1"
+     ClearErrors
      FindNext $0 $1
      Goto loop_unexe
    found_badfile:
+     DetailPrint "Found unnexpected file: $1 in $INSTDIR"
      FindClose $0
      MessageBox MB_OK|MB_ICONEXCLAMATION `Unable to remove installation folder "$INSTDIR" $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
      Abort `Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
    done_unexe:
+     DetailPrint "done_unexe: $1"
+     Delete $INSTDIR\uninstall.exe
      FindClose $0
-  Delete $INSTDIR\uninstall.exe
+
   RMDir $INSTDIR
   DeleteRegKey HKCU "${REG_KEY}"
 SectionEnd
-
 
 !ifdef VER_CODE & VER_BUILD
 
@@ -353,20 +381,53 @@ Function PageLeaveReinstall
 
   ${NSD_GetState} $R2 $R1
 
-  StrCmp $R0 "1" 0 +2 ; Existing install is not the same version?
-  StrCmp $R1 "1" reinst_uninstall reinst_done
-
-  StrCmp $R1 "1" reinst_done ; Same version, skip to add/reinstall components?
+; Disable check versions to skip reinstall same version
+;  StrCmp $R0 "1" 0 +2 ; Existing install is not the same version?
+;  StrCmp $R1 "1" reinst_uninstall reinst_done
+;
+;  StrCmp $R1 "1" reinst_done ; Same version, skip to add/reinstall components?
 
   reinst_uninstall:
+	; NOTE that value in $R1 is _already_ quoted with double-quotes
   ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
 
   ;Run uninstaller
     HideWindow
 
     ClearErrors
-    ExecWait '$R1 _?=$INSTDIR' $0
+    ; https://stackoverflow.com/questions/24595887/waiting-for-nsis-uninstaller-to-finish-in-nsis-installer-either-fails-or-the-uni
+    ; suggests that the standard command to run the old uninstaller:
+    ;   ExecWait '$R1 _?=$INSTDIR' $0
+    ; will keep (old) uninstall.exe open and so prevent
+    ; it from deleting itself.  This is a problem since the install folder will
+    ; not be deleted, and the installer will refuse to proceed.
+    ; See also:
+    ;
+    ; Copy old uninstaller to a temporary folder and run from there
+    MessageBox MB_OK "PageLeaveReinstall: calling InitPluginsDir"
+    MessageBox MB_OK "REG KEY: $R1"
+    ${CharStrip} "$\"" $R1 $R2
+    MessageBox MB_OK "KEY: $R2"
+    InitPluginsDir
+    MessageBox MB_OK "PageLeaveReinstall: creating $PLUGINSDIR\unold"
+    ClearErrors
+    CreateDirectory "$PLUGINSDIR\unold"
+    MessageBox MB_OK " copying $R2 to $PLUGINSDIR\unold"
 
+    CopyFiles "$R2" "$PLUGINSDIR\unold"
+	; If you wanto to open explore window:
+	; ExecShell explore "$PLUGINSDIR\unold"
+    IfErrors copyFailed copyOK
+  copyFailed:
+    MessageBox MB_OK "Copy operation failed."
+    Return
+
+  copyOK:
+    ClearErrors
+    MessageBox MB_OK " ExecWait $PLUGINSDIR\unold\uninstall.exe"
+    ExecWait '$PLUGINSDIR\unold\uninstall.exe _?=$INSTDIR' $0
+
+    ; Make window visible again
     BringToFront
 
     ${IfThen} ${Errors} ${|} StrCpy $0 2 ${|} ; ExecWait failed, set fake exit code
@@ -428,18 +489,58 @@ Function DirectoryLeave
 
 FunctionEnd
 
-#Function .onMouseOverSection
-#    ; Find which section the mouse is over, and set the corresponding description.
-#    FindWindow $R0 "#32770" "" $HWNDPARENT
-#    GetDlgItem $R0 $R0 1043 ; description item (must be added to the UI)
-#
-#;    StrCmp $0 ${sec_py} 0 +2
-#;      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The Python interpreter. \
-#;            This is required for ${PRODUCT_NAME} to run."
-#
-#    StrCmp $0 ${sec_app} "" +2
-#      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The ${PRODUCT_NAME} by GEM."
-#
-#    StrCmp $0 ${sec_icon} "" +2
-#      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The OpenQuake Engine desktop icon."
-#FunctionEnd
+Function CharStrip
+Exch $R0 #char
+Exch
+Exch $R1 #in string
+Push $R2
+Push $R3
+Push $R4
+ StrCpy $R2 -1
+ IntOp $R2 $R2 + 1
+ StrCpy $R3 $R1 1 $R2
+ StrCmp $R3 "" +8
+ StrCmp $R3 $R0 0 -3
+  StrCpy $R3 $R1 $R2
+  IntOp $R2 $R2 + 1
+  StrCpy $R4 $R1 "" $R2
+  StrCpy $R1 $R3$R4
+  IntOp $R2 $R2 - 2
+  Goto -9
+  StrCpy $R0 $R1
+Pop $R4
+Pop $R3
+Pop $R2
+Pop $R1
+Exch $R0
+FunctionEnd
+
+Function StrStrip
+Exch $R0 #string
+Exch
+Exch $R1 #in string
+Push $R2
+Push $R3
+Push $R4
+Push $R5
+ StrLen $R5 $R0
+ StrCpy $R2 -1
+ IntOp $R2 $R2 + 1
+ StrCpy $R3 $R1 $R5 $R2
+ StrCmp $R3 "" +9
+ StrCmp $R3 $R0 0 -3
+  StrCpy $R3 $R1 $R2
+  IntOp $R2 $R2 + $R5
+  StrCpy $R4 $R1 "" $R2
+  StrCpy $R1 $R3$R4
+  IntOp $R2 $R2 - $R5
+  IntOp $R2 $R2 - 1
+  Goto -10
+  StrCpy $R0 $R1
+Pop $R5
+Pop $R4
+Pop $R3
+Pop $R2
+Pop $R1
+Exch $R0
+FunctionEnd
