@@ -365,16 +365,18 @@ Function PageLeaveReinstall
 
   ${NSD_GetState} $R2 $R1
 
-  StrCmp $R0 "1" 0 +2 ; Existing install is not the same version?
-  StrCmp $R1 "1" reinst_uninstall reinst_done
-
-  StrCmp $R1 "1" reinst_done ; Same version, skip to add/reinstall components?
+; Disable check versions to skip reinstall same version
+;  StrCmp $R0 "1" 0 +2 ; Existing install is not the same version?
+;  StrCmp $R1 "1" reinst_uninstall reinst_done
+;
+;  StrCmp $R1 "1" reinst_done ; Same version, skip to add/reinstall components?
 
   reinst_uninstall:
+	; NOTE that value in $R1 is _already_ quoted with double-quotes
   ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
 
   ;Run uninstaller
-    ; HideWindow ;do not hide window to debug
+    HideWindow ;do not hide window to debug
 
     ClearErrors
     ; https://stackoverflow.com/questions/24595887/waiting-for-nsis-uninstaller-to-finish-in-nsis-installer-either-fails-or-the-uni
@@ -391,10 +393,12 @@ Function PageLeaveReinstall
     DetailPrint "PageLeaveReinstall: creating $PLUGINSDIR\unold"
     ClearErrors
     CreateDirectory "$PLUGINSDIR\unold"
-    DetailPrint " copying $R1 to $PLUGINSDIR\unold\uninstall.exe"
-    CopyFiles /SILENT /FILESONLY "$R1" "$PLUGINSDIR\unold\uninstall.exe"
+    DetailPrint " copying $R1 to $PLUGINSDIR\unold"
+    CopyFiles /SILENT /FILESONLY $R1 "$PLUGINSDIR\unold\uninstall.exe"
     DetailPrint " ExecWait $PLUGINSDIR\unold\uninstall.exe"
     ExecWait '$PLUGINSDIR\unold\uninstall.exe _?=$INSTDIR' $0
+
+    ; Make window visible again
     BringToFront
 
     ${IfThen} ${Errors} ${|} StrCpy $0 2 ${|} ; ExecWait failed, set fake exit code
