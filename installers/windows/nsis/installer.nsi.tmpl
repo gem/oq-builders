@@ -32,7 +32,6 @@
 !define INSTALLER_NAME "OpenQuake_Engine_${VER_CODE}-${VER_BUILD}.exe"
 !define PRODUCT_ICON "openquake.ico"
 !define DESCRIPTION "The OpenQuake Engine is an open source software that provides calculation and assessment of seismic hazard, risk and decision-making tools via the data, methods and standards that are being developed by the GEM"
-# WOW6432Node is needed because we are running 64bit software. It's hardcoded since we support only
 # installations on 64bit systems (code is 64bit only)
 !define REG_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
@@ -150,20 +149,24 @@ Section "!OpenQuake Engine" SecEngine
   File "openquake.ico"
   File "oq-server.bat"
   File "README.html"
-
   SetOutPath "$PLUGINSDIR\oq-dist\engine"
   DetailPrint "Installing the OpenQuake Engine..."
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
-Section "!OpenQuake Tools" SecTools
-  SectionIn RO
+Section "OpenQuake Tools" SecTools
   SetOutPath "$PLUGINSDIR\oq-dist\tools"
   DetailPrint "Installing the OpenQuake Tools..."
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
-Section "!OpenQuake Engine demos and documentation" SecDocDemo
+Section "OpenQuake Model Building Toolkit" SecMbtk
+  SetOutPath "$PLUGINSDIR\oq-dist\mbtk"
+  DetailPrint "Installing the OpenQuake Model Building Toolkit..."
+  nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
+SectionEnd
+
+Section "OpenQuake Engine demos and documentation" SecDocDemo
   SectionIn RO
   # Install manual and demos in 'Public\MyDocuments'
   # keep disabled for now. It may be dangerous.
@@ -197,12 +200,6 @@ Section "!OpenQuake Engine desktop icons" SecIcon
       "" "$INSTDIR\openquake.ico"
 SectionEnd
 
-Section "!OpenQuake Model Building Toolkit" SecMbtk
-  SectionIn RO
-  SetOutPath "$PLUGINSDIR\oq-dist\mbtk"
-  DetailPrint "Installing the OpenQuake Model Building Toolkit..."
-  nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
-SectionEnd
 
 Section -post
   SetOutPath "$INSTDIR"
