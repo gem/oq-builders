@@ -155,12 +155,14 @@ Section "!OpenQuake Engine" SecEngine
 SectionEnd
 
 Section "OpenQuake Tools" SecTools
+  SectionIn RO
   SetOutPath "$PLUGINSDIR\oq-dist\tools"
   DetailPrint "Installing the OpenQuake Tools..."
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
 Section "OpenQuake Model Building Toolkit" SecMbtk
+  SectionIn RO
   SetOutPath "$PLUGINSDIR\oq-dist\mbtk"
   DetailPrint "Installing the OpenQuake Model Building Toolkit..."
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
@@ -168,14 +170,14 @@ SectionEnd
 
 Section "OpenQuake Engine demos and documentation" SecDocDemo
   SectionIn RO
-  # Install manual and demos in 'Public\MyDocuments'
+  # Install manual and demos in 'User\MyDocuments'
   # keep disabled for now. It may be dangerous.
-  # SetOutPath "$DOCUMENTS\OpenQuake"
-  # File "OpenQuake manual.pdf"
-  # SetOutPath "$DOCUMENTS\OpenQuake\demos"
-  # File /r /x ".gitignore" "demos\*.*"
+  #SetOutPath "$DOCUMENTS\OpenQuake"
+  #File "OpenQuake manual.pdf"
+  #SetOutPath "$DOCUMENTS\OpenQuake\demos"
+  #File /r /x ".gitignore" "demos\*.*"
 
-  # Keep a copy also in the installation folder
+  # Keep a copy in the installation folder
   SetOutPath "$INSTDIR"
   File "OpenQuake manual.pdf"
   SetOutPath "$INSTDIR\demos"
