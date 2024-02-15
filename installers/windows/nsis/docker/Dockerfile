@@ -35,16 +35,11 @@ ENV HOME /home/builder
 ENV WINEDEBUG -all
 WORKDIR $HOME
 
-RUN wget --cache=off https://ftp.openquake.org/windows/thirdparties/nsis-3.08-setup.exe  && \
+RUN wget --cache=off https://ftp.openquake.org/windows/thirdparties/nsis-3.09-setup.exe  && \
 	wget --cache=off https://ftp.openquake.org/windows/thirdparties/python-3.11.6-win64.zip  && \
     wget --cache=off https://ftp.openquake.org/windows/thirdparties/get-pip.py
 #
-# Workaround for:
-# - https://bugs.winehq.org/show_bug.cgi?id=42474
-# - https://bugs.python.org/issue30186
-#ADD dlloverride.reg .
-#RUN wine regedit dlloverride.reg && sleep 10
 
-RUN wine nsis-3.08-setup.exe /S && sleep 10
+RUN wine nsis-3.09-setup.exe /S && sleep 10
 
 CMD /bin/bash /io/docker/build.sh

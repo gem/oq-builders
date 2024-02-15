@@ -18,28 +18,50 @@
 
 !define /date MYTIMESTAMP "%y%m%d%H%M"
 !define MYVERSION "2.99.0" # OpenQuake 2 tree
-!define PRODUCT_NAME "OpenQuake Engine"
+!define APP_NAME "OpenQuake Engine"
+!define PRODUCT_NAME "${APP_NAME}"
+!define WEB_SITE "https://github.com/gem/oq-engine"
 !define VER_CODE "${MYVERSION}"
 !define VER_BUILD "${MYTIMESTAMP}"
 !define PRODUCT_VERSION "${VER_CODE}.${VER_BUILD}"
 !define PUBLISHER "GEM Foundation"
+!define COMP_NAME "GEM Foundation"
+!define COPYRIGHT "https://github.com/gem/oq-engine/blob/master/LICENSE"
 !define BITNESS "64"
 !define ARCH_TAG ""
 !define INSTALLER_NAME "OpenQuake_Engine_${VER_CODE}-${VER_BUILD}.exe"
 !define PRODUCT_ICON "openquake.ico"
+!define DESCRIPTION "The OpenQuake Engine is an open source software that provides calculation and assessment of seismic hazard, risk and decision-making tools via the data, methods and standards that are being developed by the GEM"
 # WOW6432Node is needed because we are running 64bit software. It's hardcoded since we support only
 # installations on 64bit systems (code is 64bit only)
-!define REG_KEY "Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
+!define REG_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
 !include "FileFunc.nsh"
 !include "WordFunc.nsh"
 !include "x64.nsh"
 !include "WinVer.nsh"
 
-SetCompressor lzma
+SetCompressor LZMA
 
-RequestExecutionLevel admin
+RequestExecutionLevel User
 
+# Add definition of custom macro 
+!macro CharStrip Char InStr OutVar
+ Push '${InStr}'
+ Push '${Char}'
+  Call CharStrip
+ Pop '${OutVar}'
+!macroend
+!define CharStrip '!insertmacro CharStrip'
+;
+!macro StrStrip Str InStr OutVar
+ Push '${InStr}'
+ Push '${Str}'
+  Call StrStrip
+ Pop '${OutVar}'
+!macroend
+!define StrStrip '!insertmacro StrStrip'
+;
 ; Modern UI installer stuff
 !include "MUI2.nsh"
 !define MUI_ABORTWARNING
@@ -52,24 +74,27 @@ RequestExecutionLevel admin
 Page custom PageReinstall PageLeaveReinstall
 !endif
 !insertmacro MUI_PAGE_COMPONENTS
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE DirectoryLeave
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_LANGUAGE "English"
 
 !ifdef VER_CODE & VER_BUILD
-VIAddVersionKey "CompanyName" "${PUBLISHER}"
-VIAddVersionKey "LegalCopyright" "https://github.com/gem/oq-engine/blob/master/LICENSE"
+VIAddVersionKey "CompanyName"  "${COMP_NAME}"
+VIAddVersionKey "LegalCopyright"  "${COPYRIGHT}"
 VIAddVersionKey "FileDescription" "OpenQuake Setup"
-VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
+VIAddVersionKey "ProductName"  "${APP_NAME}"
 VIAddVersionKey "ProductVersion" "${VER_CODE}"
-VIAddVersionKey "FileVersion" "${VER_CODE}"
+VIAddVersionKey "FileVersion"  "${PRODUCT_VERSION}"
 VIProductVersion ${PRODUCT_VERSION}
+
+######################################################################
 !endif
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "${INSTALLER_NAME}"
-InstallDir "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}"
+InstallDir "$LOCALAPPDATA\Programs\${PRODUCT_NAME}"
 
 Function .onInit
   ${IfNot} ${RunningX64}
@@ -86,7 +111,17 @@ Function .onInit
     IfSilent +2
     MessageBox MB_OK "Your Windows version is not recommended. Use at your own risk."
   ${EndIf}
+
+  ${If} ${FileExists} "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}\*"
+      MessageBox MB_OK|MB_ICONEXCLAMATION `It looks like you have installed a previous version of the OpenQuake engine in "$PROGRAMFILES${BITNESS}\${PRODUCT_NAME}" $\r$\n $\r$\n Please stop all OpenQuake engine processes and close associated windows THEN uninstall the old engine using the "Add or Remove Programs" section of the Control Panel and then run this installer again. `
+      Quit
+  ${EndIf}
 FunctionEnd
+
+Function un.onInit
+	MessageBox MB_OK|MB_ICONEXCLAMATION `Please stop all OpenQuake engine processes and close associated windows BEFORE pressing OK to uninstall the engine.`
+FunctionEnd
+
 
 Section -SETTINGS
   SetOutPath "$INSTDIR"
@@ -95,7 +130,7 @@ SectionEnd
 
 Section "!Core Files" SecCore
   SectionIn RO
-  SetShellVarContext all
+  SetShellVarContext current
 
   SetOutPath "$INSTDIR"
   File "openquake_black.ico"
@@ -172,6 +207,7 @@ Section "OpenQuake Engine desktop icons" SecIcon
 SectionEnd
 
 Section -post
+  SetOutPath "$INSTDIR"
   ; Byte-compile Python files.
   RMDir /r "$INSTDIR\oq-dist"
   DetailPrint "Byte-compiling Python modules..."
@@ -182,17 +218,17 @@ Section -post
   WriteUninstaller $INSTDIR\uninstall.exe
 
   ; Add ourselves to Add/remove programs
-  WriteRegStr HKLM "${REG_KEY}" "DisplayName" "${PRODUCT_NAME}"
-  WriteRegStr HKLM "${REG_KEY}" "Publisher" "${PUBLISHER}"
-  WriteRegStr HKLM "${REG_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
-  WriteRegStr HKLM "${REG_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegStr HKLM "${REG_KEY}" "InstallLocation" "$INSTDIR"
-  WriteRegStr HKLM "${REG_KEY}" "DisplayIcon" "$INSTDIR\${PRODUCT_ICON}"
-  WriteRegDWORD HKLM "${REG_KEY}" "NoModify" 1
-  WriteRegDWORD HKLM "${REG_KEY}" "NoRepair" 1
+  WriteRegStr HKCU "${REG_KEY}" "DisplayName" "${PRODUCT_NAME}"
+  WriteRegStr HKCU "${REG_KEY}" "Publisher" "${PUBLISHER}"
+  WriteRegStr HKCU "${REG_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
+  WriteRegStr HKCU "${REG_KEY}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
+  WriteRegStr HKCU "${REG_KEY}" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKCU "${REG_KEY}" "DisplayIcon" "$INSTDIR\${PRODUCT_ICON}"
+  WriteRegDWORD HKCU "${REG_KEY}" "NoModify" 1
+  WriteRegDWORD HKCU "${REG_KEY}" "NoRepair" 1
   ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
   IntFmt $0 "0x%08X" $0
-  WriteRegDWORD HKLM "${REG_KEY}" "EstimatedSize" "$0"
+  WriteRegDWORD HKCU "${REG_KEY}" "EstimatedSize" "$0"
 
   ; Check if we need to reboot
   IfRebootFlag 0 noreboot
@@ -213,8 +249,7 @@ SectionIn RO
 SectionEnd
 
 Section "Uninstall"
-  SetShellVarContext all
-  Delete $INSTDIR\uninstall.exe
+  SetShellVarContext current
   Delete "$INSTDIR\${PRODUCT_ICON}"
   RMDir /r "$INSTDIR\python3"
   ; Uninstall files
@@ -233,10 +268,37 @@ Section "Uninstall"
     Delete "$DESKTOP\OpenQuake Engine (console).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (webui).lnk"
     Delete "$SMPROGRAMS\OpenQuake Engine (console).lnk"
-  RMDir $INSTDIR
-  DeleteRegKey HKLM "${REG_KEY}"
-SectionEnd
 
+   ;
+   ; Check that INSTDIR contains only uninstall.exe
+   ; See NSIS reference for FindFirst
+   ;   https://nsis.sourceforge.io/Reference/FindFirst
+   ; Note that the . and .. entries are also present and should be ignored.
+   ; $0 is a "handle" to the Search and is used by FindNext and FindClose
+   ; $1 is the current name of the file/directory under consideration
+   ClearErrors
+   FindFirst $0 $1 "$INSTDIR\*.*"
+   loop_unexe:
+     StrCmp $1 "" done_unexe ; End of List
+     StrCmp $1 "." ignore_file
+     StrCmp $1 ".." ignore_file
+     StrCmp $1 "uninstall.exe" ignore_file found_badfile
+   ignore_file:
+     ClearErrors
+     FindNext $0 $1
+     Goto loop_unexe
+   found_badfile:
+     DetailPrint "Unexpected file: $1 in $INSTDIR"
+     FindClose $0
+     MessageBox MB_OK|MB_ICONEXCLAMATION `Unable to remove installation folder "$INSTDIR" $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
+     Abort `Uninstall failed - Please reboot and delete the folder "$INSTDIR" and then run this installer again. `
+   done_unexe:
+     Delete $INSTDIR\uninstall.exe
+     FindClose $0
+
+  RMDir $INSTDIR
+  DeleteRegKey HKCU "${REG_KEY}"
+SectionEnd
 
 !ifdef VER_CODE & VER_BUILD
 
@@ -244,34 +306,32 @@ Var ReinstallPageCheck
 
 Function PageReinstall
 
-  ReadRegStr $R0 HKLM "Software\${PRODUCT_NAME}" ""
-  ReadRegStr $R1 HKLM "${REG_KEY}" "UninstallString"
+  ReadRegStr $R0 HKCU "Software\${PRODUCT_NAME}" ""
+  ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
   ${IfThen} "$R0$R1" == "" ${|} Abort ${|}
 
   StrCpy $R4 "older"
-  ReadRegDWORD $R0 HKLM "Software\${PRODUCT_NAME}" "VersionMajor"
-  ReadRegDWORD $R1 HKLM "Software\${PRODUCT_NAME}" "VersionMinor"
-  ReadRegDWORD $R2 HKLM "Software\${PRODUCT_NAME}" "VersionRevision"
-  ReadRegDWORD $R3 HKLM "Software\${PRODUCT_NAME}" "VersionBuild"
+  ReadRegDWORD $R0 HKCU "Software\${PRODUCT_NAME}" "VersionMajor"
+  ReadRegDWORD $R1 HKCU "Software\${PRODUCT_NAME}" "VersionMinor"
+  ReadRegDWORD $R2 HKCU "Software\${PRODUCT_NAME}" "VersionRevision"
+  ReadRegDWORD $R3 HKCU "Software\${PRODUCT_NAME}" "VersionBuild"
   StrCpy $R0 $R0.$R1.$R2.$R3
+
 
   ${VersionCompare} ${VER_CODE}.${VER_BUILD} $R0 $R0
   ${If} $R0 == 0
-    StrCpy $R1 "${PRODUCT_NAME} ${PRODUCT_VERSION} is already installed. Select the operation you want to perform and click Next to continue."
-    StrCpy $R2 "Add/Reinstall components"
-    StrCpy $R3 "Uninstall ${PRODUCT_NAME}"
+    StrCpy $R1 "${PRODUCT_NAME} ${PRODUCT_VERSION} is already installed Click Next to continue."
+    StrCpy $R2 "Uninstall ${PRODUCT_NAME}"
     !insertmacro MUI_HEADER_TEXT "Already Installed" "Choose the maintenance option to perform."
     StrCpy $R0 "2"
   ${ElseIf} $R0 == 1
-    StrCpy $R1 "An $R4 version of ${PRODUCT_NAME} is installed on your system. It's recommended that you uninstall the current version before installing. Select the operation you want to perform and click Next to continue."
+    StrCpy $R1 "An $R4 version of ${PRODUCT_NAME} is installed on your system. It's recommended that you uninstall the current version before installing. Click Next to continue."
     StrCpy $R2 "Uninstall before installing"
-    StrCpy $R3 "Upgrade/Repair"
     !insertmacro MUI_HEADER_TEXT "Already Installed" "Choose how you want to install ${PRODUCT_NAME}."
     StrCpy $R0 "1"
   ${ElseIf} $R0 == 2
-    StrCpy $R1 "A newer version of ${PRODUCT_NAME} is already installed! It is not recommended that you install an older version. If you really want to install this older version, it's better to uninstall the current version first. Select the operation you want to perform and click Next to continue."
+    StrCpy $R1 "A newer version of ${PRODUCT_NAME} is already installed! It is not recommended that you install an older version. Click Next to continue."
     StrCpy $R2 "Uninstall before installing"
-    StrCpy $R3 "Do not uninstall"
     !insertmacro MUI_HEADER_TEXT "Already Installed" "Choose how you want to install ${PRODUCT_NAME}."
     StrCpy $R0 "1"
   ${Else}
@@ -287,10 +347,6 @@ Function PageReinstall
   ${NSD_CreateRadioButton} 30u 50u -30u 8u $R2
   Pop $R2
   ${NSD_OnClick} $R2 PageReinstallUpdateSelection
-
-  ${NSD_CreateRadioButton} 30u 70u -30u 8u $R3
-  Pop $R3
-  ${NSD_OnClick} $R3 PageReinstallUpdateSelection
 
   ${If} $ReinstallPageCheck != 2
     SendMessage $R2 ${BM_SETCHECK} ${BST_CHECKED} 0
@@ -322,20 +378,40 @@ Function PageLeaveReinstall
 
   ${NSD_GetState} $R2 $R1
 
-  StrCmp $R0 "1" 0 +2 ; Existing install is not the same version?
-    StrCmp $R1 "1" reinst_uninstall reinst_done
-
-  StrCmp $R1 "1" reinst_done ; Same version, skip to add/reinstall components?
+; Disable check versions to skip reinstall same version
+;  StrCmp $R0 "1" 0 +2 ; Existing install is not the same version?
+;  StrCmp $R1 "1" reinst_uninstall reinst_done
+;
+;  StrCmp $R1 "1" reinst_done ; Same version, skip to add/reinstall components?
 
   reinst_uninstall:
-  ReadRegStr $R1 HKLM "${REG_KEY}" "UninstallString"
+	; NOTE that value in $R1 is _already_ quoted with double-quotes
+    ReadRegStr $R1 HKCU "${REG_KEY}" "UninstallString"
 
-  ;Run uninstaller
+    ;Run uninstaller
     HideWindow
 
     ClearErrors
-    ExecWait '$R1 _?=$INSTDIR' $0
+    ; https://stackoverflow.com/questions/24595887/waiting-for-nsis-uninstaller-to-finish-in-nsis-installer-either-fails-or-the-uni
+    ; suggests that the standard command to run the old uninstaller:
+    ;   ExecWait '$R1 _?=$INSTDIR' $0
+    ; will keep (old) uninstall.exe open and so prevent
+    ; it from deleting itself.  This is a problem since the install folder will
+    ; not be deleted, and the installer will refuse to proceed.
+    ; See also:
+    ;
+    ; Copy old uninstaller to a temporary folder and run from there
+	; https://stackoverflow.com/questions/26949675/nsis-copyfiles-directive-not-working-with-variables-as-parameters
+    ; CopyFiles fails silently if variable contains "" 
+	; Use CharStrip to remove the quotes 
+	;
+    ${CharStrip} "$\"" $R1 $R2
+    InitPluginsDir
+    CreateDirectory "$PLUGINSDIR\unold"
+    CopyFiles "$R2" "$PLUGINSDIR\unold"
+    ExecWait '$PLUGINSDIR\unold\uninstall.exe _?=$INSTDIR' $0
 
+    ; Make window visible again
     BringToFront
 
     ${IfThen} ${Errors} ${|} StrCpy $0 2 ${|} ; ExecWait failed, set fake exit code
@@ -387,18 +463,68 @@ Function DumpLog
 FunctionEnd
 !endif
 
-#Function .onMouseOverSection
-#    ; Find which section the mouse is over, and set the corresponding description.
-#    FindWindow $R0 "#32770" "" $HWNDPARENT
-#    GetDlgItem $R0 $R0 1043 ; description item (must be added to the UI)
-#
-#;    StrCmp $0 ${sec_py} 0 +2
-#;      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The Python interpreter. \
-#;            This is required for ${PRODUCT_NAME} to run."
-#
-#    StrCmp $0 ${sec_app} "" +2
-#      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The ${PRODUCT_NAME} by GEM."
-#
-#    StrCmp $0 ${sec_icon} "" +2
-#      SendMessage $R0 ${WM_SETTEXT} 0 "STR:The OpenQuake Engine desktop icon."
-#FunctionEnd
+
+Function DirectoryLeave
+
+ ${If} ${FileExists} "$InstDir\*.*"
+    MessageBox MB_OK|MB_ICONEXCLAMATION `"$INSTDIR" already exists $\r$\n Perhaps there are still processes running. $\r$\n $\r$\n Please reboot and delete the folder "$INSTDIR" and then run this installer again.`
+     Quit
+ ${EndIf}
+
+FunctionEnd
+
+Function CharStrip
+Exch $R0 #char
+Exch
+Exch $R1 #in string
+Push $R2
+Push $R3
+Push $R4
+ StrCpy $R2 -1
+ IntOp $R2 $R2 + 1
+ StrCpy $R3 $R1 1 $R2
+ StrCmp $R3 "" +8
+ StrCmp $R3 $R0 0 -3
+  StrCpy $R3 $R1 $R2
+  IntOp $R2 $R2 + 1
+  StrCpy $R4 $R1 "" $R2
+  StrCpy $R1 $R3$R4
+  IntOp $R2 $R2 - 2
+  Goto -9
+  StrCpy $R0 $R1
+Pop $R4
+Pop $R3
+Pop $R2
+Pop $R1
+Exch $R0
+FunctionEnd
+
+Function StrStrip
+Exch $R0 #string
+Exch
+Exch $R1 #in string
+Push $R2
+Push $R3
+Push $R4
+Push $R5
+ StrLen $R5 $R0
+ StrCpy $R2 -1
+ IntOp $R2 $R2 + 1
+ StrCpy $R3 $R1 $R5 $R2
+ StrCmp $R3 "" +9
+ StrCmp $R3 $R0 0 -3
+  StrCpy $R3 $R1 $R2
+  IntOp $R2 $R2 + $R5
+  StrCpy $R4 $R1 "" $R2
+  StrCpy $R1 $R3$R4
+  IntOp $R2 $R2 - $R5
+  IntOp $R2 $R2 - 1
+  Goto -10
+  StrCpy $R0 $R1
+Pop $R5
+Pop $R4
+Pop $R3
+Pop $R2
+Pop $R1
+Exch $R0
+FunctionEnd
