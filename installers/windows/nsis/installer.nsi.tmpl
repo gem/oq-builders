@@ -45,7 +45,7 @@ SetCompressor LZMA
 
 RequestExecutionLevel User
 
-# Add definition of custom macro 
+# Add definition of custom macro
 !macro CharStrip Char InStr OutVar
  Push '${InStr}'
  Push '${Char}'
@@ -140,18 +140,6 @@ Section "!Core Files" SecCore
   SetOutPath "$INSTDIR\python3"
   File /r "python-dist\python3\*.*"
 
-  ; Install MSVCRT if it's not already on the system
-  IfFileExists "$SYSDIR\ucrtbase.dll" skip_msvcrt
-  SetOutPath "$INSTDIR\python3"
-  File "dist\msvcrt\x64\*.dll"
-  skip_msvcrt:
-
-  ; Install MSVCP if it's not already on the system
-  IfFileExists "$SYSDIR\msvcp140.dll" skip_msvcp
-  SetOutPath "$INSTDIR\python3"
-  File "dist\msvcp\x64\msvcp140.dll"
-  skip_msvcp:
-
   SetOutPath "$PLUGINSDIR\oq-dist"
   File /r "oq-dist\*.*"
 SectionEnd
@@ -168,13 +156,15 @@ Section "!OpenQuake Engine" SecEngine
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
-Section "OpenQuake Tools" SecTools
+Section "!OpenQuake Tools" SecTools
+  SectionIn RO
   SetOutPath "$PLUGINSDIR\oq-dist\tools"
   DetailPrint "Installing the OpenQuake Tools..."
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
-Section "OpenQuake Engine demos and documentation" SecDocDemo
+Section "!OpenQuake Engine demos and documentation" SecDocDemo
+  SectionIn RO
   # Install manual and demos in 'Public\MyDocuments'
   # keep disabled for now. It may be dangerous.
   # SetOutPath "$DOCUMENTS\OpenQuake"
@@ -189,7 +179,8 @@ Section "OpenQuake Engine demos and documentation" SecDocDemo
   File /r /x ".gitignore" "demos\*.*"
 SectionEnd
 
-Section "OpenQuake Engine menu icons" SecMenu
+Section "!OpenQuake Engine menu icons" SecMenu
+  Section RO
   SetOutPath "$INSTDIR"
   CreateShortCut "$SMPROGRAMS\OpenQuake Engine (webui).lnk" "$INSTDIR\oq-server.bat" \
       "" "$INSTDIR\openquake.ico"
@@ -197,7 +188,8 @@ Section "OpenQuake Engine menu icons" SecMenu
       "" "$INSTDIR\openquake_black.ico"
 SectionEnd
 
-Section "OpenQuake Engine desktop icons" SecIcon
+Section "!OpenQuake Engine desktop icons" SecIcon
+  Section RO
   SetOutPath "$INSTDIR"
   CreateShortCut "$DESKTOP\OpenQuake Engine (console).lnk" "$INSTDIR\oq-console.bat" \
       "" "$INSTDIR\openquake_black.ico"
@@ -408,8 +400,8 @@ Function PageLeaveReinstall
     ;
     ; Copy old uninstaller to a temporary folder and run from there
 	; https://stackoverflow.com/questions/26949675/nsis-copyfiles-directive-not-working-with-variables-as-parameters
-    ; CopyFiles fails silently if variable contains "" 
-	; Use CharStrip to remove the quotes 
+    ; CopyFiles fails silently if variable contains ""
+	; Use CharStrip to remove the quotes
 	;
     ${CharStrip} "$\"" $R1 $R2
     InitPluginsDir
