@@ -180,7 +180,7 @@ Section "!OpenQuake Engine demos and documentation" SecDocDemo
 SectionEnd
 
 Section "!OpenQuake Engine menu icons" SecMenu
-  Section RO
+  SectionIn RO
   SetOutPath "$INSTDIR"
   CreateShortCut "$SMPROGRAMS\OpenQuake Engine (webui).lnk" "$INSTDIR\oq-server.bat" \
       "" "$INSTDIR\openquake.ico"
@@ -189,7 +189,7 @@ Section "!OpenQuake Engine menu icons" SecMenu
 SectionEnd
 
 Section "!OpenQuake Engine desktop icons" SecIcon
-  Section RO
+  SectionIn RO
   SetOutPath "$INSTDIR"
   CreateShortCut "$DESKTOP\OpenQuake Engine (console).lnk" "$INSTDIR\oq-console.bat" \
       "" "$INSTDIR\openquake_black.ico"
