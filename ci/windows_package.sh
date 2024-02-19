@@ -3,7 +3,7 @@ cd /home/runner/work/oq-builders/oq-builders/installers/windows/nsis
 # build the docker to use for installer
 docker build --build-arg uid=$(id -u) --rm=true -t wine -f docker/Dockerfile docker
 #
-docker run -e GEM_SET_DEBUG=1 -e GEM_SET_RELEASE -e GEM_SET_BRANCH -e GEM_SET_BRANCH_TOOLS -v $(pwd):/io --rm wine  /io/docker/build.sh
+docker run -e GEM_SET_DEBUG=1 -e GEM_SET_BUILD_SCIENCE -e GEM_SET_RELEASE -e GEM_SET_BRANCH -e GEM_SET_BRANCH_TOOLS -v $(pwd):/io --rm wine  /io/docker/build.sh
 ls -lrt *OpenQuake_Engine*
 #
 echo "move output to folder for upload artifacts"

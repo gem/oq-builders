@@ -20,7 +20,6 @@
 if [ "$GEM_SET_DEBUG" ]; then
     set -x
 fi
-set -x
 
 if [ "$GEM_SET_BRANCH" ]; then
     OQ_BRANCH=$GEM_SET_BRANCH
@@ -103,17 +102,28 @@ for app in oq-platform-standalone oq-platform-ipt oq-platform-taxtweb oq-platfor
     fi
 done
 
-echo "Downloading ScienceTools apps"
-for app in oq-mbtk; do
-    git clone -b $OQ_BRANCH --depth=1 https://github.com/GEMScienceTools/${app}.git
-    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/mbtk ./${app}
-done
-
 echo "Extracting python wheels"
 wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
+#
+echo "check value of GEM_SET_BUILD_SCIENCE: $GEM_SET_BUILD_SCIENCE "
+printf "%d\n" $GEM_SET_BUILD_SCIENCE # print it
+if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
+    echo "Downloading ScienceTools apps"
+    for app in oq-mbtk; do
+        git clone -b $OQ_BRANCH --depth=1 https://github.com/GEMScienceTools/${app}.git
+        wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/mbtk ./${app}
+    done
+    echo "Extracting python wheels for oq-mbtk"
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
+fi
 
-echo "Extracting python wheels for oq-mbtk"
-wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
+if [[ $GEM_SET_BUILD_SCIENCE -eq 1 ]]
+   then
+       echo "DOUBLE SQUARE"
+   else
+       echo "x and y are equal!"
+fi
+
 
 cd $DIR/oq-dist
 for d in *; do
