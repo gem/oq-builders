@@ -182,10 +182,10 @@ SectionEnd
 Section "!OpenQuake Engine menu icons" SecMenu
   SectionIn RO
   SetOutPath "$INSTDIR"
-  CreateDirectory "$SMPROGRAMS\$COMP_NAME"
-  CreateShortCut "$SMPROGRAMS\$COMP_NAME\OpenQuake Engine (webui).lnk" "$INSTDIR\oq-server.bat" \
+  CreateDirectory "$SMPROGRAMS\OpenQuake"
+  CreateShortCut "$SMPROGRAMS\OpenQuake\OpenQuake Engine (webui).lnk" "$INSTDIR\oq-server.bat" \
       "" "$INSTDIR\openquake.ico"
-  CreateShortCut "$SMPROGRAMS\$COMP_NAME\OpenQuake Engine (console).lnk" "$INSTDIR\oq-console.bat" \
+  CreateShortCut "$SMPROGRAMS\OpenQuake\OpenQuake Engine (console).lnk" "$INSTDIR\oq-console.bat" \
       "" "$INSTDIR\openquake_black.ico"
 SectionEnd
 
