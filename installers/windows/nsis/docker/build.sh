@@ -105,8 +105,6 @@ done
 echo "Extracting python wheels"
 wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
 #
-echo "check value of GEM_SET_BUILD_SCIENCE: $GEM_SET_BUILD_SCIENCE "
-printf "%d\n" $GEM_SET_BUILD_SCIENCE # print it
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Downloading ScienceTools apps"
     for app in oq-mbtk; do
@@ -116,14 +114,6 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Extracting python wheels for oq-mbtk"
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
 fi
-
-if [[ $GEM_SET_BUILD_SCIENCE -eq 1 ]]
-   then
-       echo "DOUBLE SQUARE"
-   else
-       echo "x and y are equal!"
-fi
-
 
 cd $DIR/oq-dist
 for d in *; do
@@ -161,7 +151,10 @@ fi
 
 if [[ $OQ_OUTPUT = *"exe"* ]]; then
     echo "Generating NSIS installer"
-    wine ${HOME}/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /V4 installer.nsi
+	export SCIENCE=$GEM_SET_BUILD_SCIENCE
+    printf "%d\n" $SCIENCE # print it
+	export SCIENCE=$GEM_SET_BUILD_SCIENCE wine echo %SCIENCE%
+    export SCIENCE=$GEM_SET_BUILD_SCIENCE wine ${HOME}/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /V4 installer.nsi
 fi
 
 if [[ $OQ_OUTPUT = *"zip"* ]]; then
