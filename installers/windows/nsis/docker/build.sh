@@ -152,9 +152,8 @@ fi
 if [[ $OQ_OUTPUT = *"exe"* ]]; then
     echo "Generating NSIS installer"
 	export SCIENCE=$GEM_SET_BUILD_SCIENCE
-    printf "%d\n" $SCIENCE # print it
-	export SCIENCE=$GEM_SET_BUILD_SCIENCE wine echo %SCIENCE%
-    export SCIENCE=$GEM_SET_BUILD_SCIENCE wine ${HOME}/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /V4 installer.nsi
+	SCIENCE=$GEM_SET_BUILD_SCIENCE wine cmd /c echo %SCIENCE%
+    SCIENCE=$GEM_SET_BUILD_SCIENCE wine ${HOME}/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /V4 installer.nsi
 fi
 
 if [[ $OQ_OUTPUT = *"zip"* ]]; then
