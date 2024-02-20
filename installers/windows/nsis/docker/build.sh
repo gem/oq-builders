@@ -138,7 +138,7 @@ fi
 
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Working in: $(pwd)"
-    sed  '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
+    sed -i '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
 fi
 # Get the demo and the README
 cp -r src/oq-engine/demos .
