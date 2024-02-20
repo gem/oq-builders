@@ -135,6 +135,15 @@ else
     sed -i "s/\${MYTIMESTAMP}/$git_time/g" installer.nsi
 fi
 
+if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
+    sed -i "s/\${MYTIMESTAMP}/$PKG_REL/g" installer.nsi
+	Section "OpenQuake Model Building Toolkit" SecMbtk
+       SectionIn RO
+       SetOutPath "$PLUGINSDIR\oq-dist\mbtk"
+       DetailPrint "Installing the OpenQuake Model Building Toolkit..."
+       nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
+    SectionEnd
+fi
 # Get the demo and the README
 cp -r src/oq-engine/demos .
 src/oq-engine/helpers/zipdemos.sh $(pwd)/demos
@@ -151,9 +160,7 @@ fi
 
 if [[ $OQ_OUTPUT = *"exe"* ]]; then
     echo "Generating NSIS installer"
-	export SCIENCE=$GEM_SET_BUILD_SCIENCE
-	SCIENCE=$GEM_SET_BUILD_SCIENCE wine cmd /c echo %SCIENCE%
-    SCIENCE=$GEM_SET_BUILD_SCIENCE wine ${HOME}/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /V4 installer.nsi
+    wine ${HOME}/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /V4 installer.nsi
 fi
 
 if [[ $OQ_OUTPUT = *"zip"* ]]; then
