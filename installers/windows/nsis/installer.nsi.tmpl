@@ -160,7 +160,8 @@ Section "OpenQuake Tools" SecTools
   DetailPrint "Installing the OpenQuake Tools..."
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
-#InsertScienceifNeed
+
+#GEM_SET_BUILD_SCIENCE
 
 Section "OpenQuake Engine demos and documentation" SecDocDemo
   SectionIn RO

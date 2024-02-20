@@ -58,6 +58,7 @@ PIP="get-pip.py"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 cd $DIR && echo "Working in: $(pwd)"
+ls -lrt
 
 # pre-cleanup
 rm -Rf *.zip *.exe
@@ -136,13 +137,8 @@ else
 fi
 
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
-    sed -i "s/\${MYTIMESTAMP}/$PKG_REL/g" installer.nsi
-	Section "OpenQuake Model Building Toolkit" SecMbtk
-       SectionIn RO
-       SetOutPath "$PLUGINSDIR\oq-dist\mbtk"
-       DetailPrint "Installing the OpenQuake Model Building Toolkit..."
-       nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
-    SectionEnd
+    echo "Working in: $(pwd)"
+    sed  '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
 fi
 # Get the demo and the README
 cp -r src/oq-engine/demos .
