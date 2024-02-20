@@ -20,7 +20,7 @@ on:
         required: false
       oq-science:
         description: Build oq-mbtk and vmtk
-        default: 1
+        default: 0
         required: true
   #  push:
   #    branches:
