@@ -161,16 +161,6 @@ Section "OpenQuake Tools" SecTools
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
-${If} "$%SCIENCE%" == "1"
-  Section "OpenQuake Model Building Toolkit" SecMbtk
-    SectionIn RO
-    SetOutPath "$PLUGINSDIR\oq-dist\mbtk"
-    DetailPrint "Installing the OpenQuake Model Building Toolkit..."
-    nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
-  SectionEnd
-${EndIf} 
-
-
 Section "OpenQuake Engine demos and documentation" SecDocDemo
   SectionIn RO
   # Install manual and demos in 'User\MyDocuments'
