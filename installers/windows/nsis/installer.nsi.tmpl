@@ -154,7 +154,7 @@ Section "!OpenQuake Engine" SecEngine
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
-Section "OpenQuake Tools" SecTools
+Section "!OpenQuake Tools" SecTools
   SectionIn RO
   SetOutPath "$PLUGINSDIR\oq-dist\tools"
   DetailPrint "Installing the OpenQuake Tools..."
@@ -163,7 +163,7 @@ SectionEnd
 
 #GEM_SET_BUILD_SCIENCE
 
-Section "OpenQuake Engine demos and documentation" SecDocDemo
+Section "!OpenQuake Engine demos and documentation" SecDocDemo
   SectionIn RO
   # Install manual and demos in 'User\MyDocuments'
   # keep disabled for now. It may be dangerous.
