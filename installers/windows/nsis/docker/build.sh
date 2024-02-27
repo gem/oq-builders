@@ -20,7 +20,6 @@
 if [ "$GEM_SET_DEBUG" ]; then
     set -x
 fi
-set -x
 
 if [ "$GEM_SET_BRANCH" ]; then
     OQ_BRANCH=$GEM_SET_BRANCH
@@ -59,6 +58,7 @@ PIP="get-pip.py"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 cd $DIR && echo "Working in: $(pwd)"
+ls -lrt
 
 # pre-cleanup
 rm -Rf *.zip *.exe
@@ -105,6 +105,16 @@ done
 
 echo "Extracting python wheels"
 wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
+#
+if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
+    echo "Downloading ScienceTools apps"
+    for app in oq-mbtk; do
+        git clone -b $OQ_BRANCH --depth=1 https://github.com/GEMScienceTools/${app}.git
+        wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/mbtk ./${app}
+    done
+    echo "Extracting python wheels for oq-mbtk"
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
+fi
 
 cd $DIR/oq-dist
 for d in *; do
@@ -126,6 +136,10 @@ else
     sed -i "s/\${MYTIMESTAMP}/$git_time/g" installer.nsi
 fi
 
+if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
+    echo "Working in: $(pwd)"
+    sed -i '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
+fi
 # Get the demo and the README
 cp -r src/oq-engine/demos .
 src/oq-engine/helpers/zipdemos.sh $(pwd)/demos

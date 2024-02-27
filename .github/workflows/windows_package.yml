@@ -18,6 +18,10 @@ on:
         description: Build Number of Openquake Engine
         default: 1
         required: false
+      oq-science:
+        description: Build oq-mbtk and vmtk
+        default: 0
+        required: true
   #  push:
   #    branches:
   #      -
@@ -30,6 +34,7 @@ jobs:
       GEM_SET_BRANCH: ${{ github.event.inputs.oq-ref }}
       GEM_SET_BRANCH_TOOLS: ${{ github.event.inputs.oq-ref }}
       GEM_SET_RELEASE: ${{ github.event.inputs.oq-rel }}
+      GEM_SET_BUILD_SCIENCE: ${{ github.event.inputs.oq-science }}
       GIT_BRANCH: ${{ github.ref }}
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
@@ -47,6 +52,7 @@ jobs:
           echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}"
           echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
           echo "GEM_SET_RELEASE: ${GEM_SET_RELEASE}"
+          echo "GEM_SET_BUILD_SCIENCE: ${GEM_SET_BUILD_SCIENCE}"
           sleep 2
           bash -x ci/windows_package.sh
           #

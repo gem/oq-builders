@@ -1,0 +1,7 @@
+Section "!OpenQuake Model Building Toolkit" SecMbtk                              
+   SectionIn RO                                                                  
+   SetOutPath "$PLUGINSDIR\oq-dist\mbtk"                                         
+   DetailPrint "Installing the OpenQuake Model Building Toolkit..."              
+   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
+SectionEnd
+
