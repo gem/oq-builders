@@ -114,6 +114,9 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     done
     echo "Extracting python wheels for oq-mbtk"
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
+    echo "Extracting python wheels for VMTK-Vulnerability-Modellers-ToolKit"
+    git clone -b ae_req_win --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r VMTK-Vulnerability-Modellers-ToolKit/requirements.txt
 fi
 
 cd $DIR/oq-dist
@@ -153,6 +156,7 @@ rm /tmp/README.$$.md
 if [ ! -f OpenQuake\ manual.pdf ]; then
     wget -O- https://docs.openquake.org/manuals/OpenQuake%20Manual%20%28master%29.pdf > OpenQuake\ manual.pdf
 fi
+
 
 if [[ $OQ_OUTPUT = *"exe"* ]]; then
     echo "Generating NSIS installer"
