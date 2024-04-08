@@ -143,8 +143,8 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Working in: $(pwd)"
     sed -i '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
     # Get a copy of VMTK master repo
-	mkdir $(pwd)/VMTK
-    git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/VMTK 
+	mkdir $(pwd)/vmtk
+    git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/vmtk
 fi
 # Get the demo and the README
 cp -r src/oq-engine/demos .

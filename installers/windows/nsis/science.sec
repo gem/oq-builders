@@ -1,7 +1,14 @@
-Section "!OpenQuake Model Building Toolkit" SecMbtk                              
-   SectionIn RO                                                                  
-   SetOutPath "$PLUGINSDIR\oq-dist\mbtk"                                         
-   DetailPrint "Installing the OpenQuake Model Building Toolkit..."              
+Section "!OpenQuake Model Building Toolkit" SecMbtk
+   SectionIn RO
+   SetOutPath "$PLUGINSDIR\oq-dist\mbtk"
+   DetailPrint "Installing the OpenQuake Model Building Toolkit..."
    nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
+SectionEnd
+
+Section "!OpenQuake VMTK" SecMbtk
+   SectionIn RO
+   SetOutPath "$INSTDIR\vmtk"
+   File /r /x ".gitignore" "vmtk\*.*"
+   DetailPrint "Download the OpenQuake Vulnerability-Modellers-ToolKit..."
 SectionEnd
 
