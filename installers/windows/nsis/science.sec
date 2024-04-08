@@ -5,7 +5,7 @@ Section "!OpenQuake Model Building Toolkit" SecMbtk
    nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
-Section "!OpenQuake VMTK" SecMbtk
+Section "!OpenQuake VMTK" SecVmtk
    SectionIn RO
    SetOutPath "$INSTDIR\vmtk"
    File /r /x ".gitignore" "vmtk\*.*"
