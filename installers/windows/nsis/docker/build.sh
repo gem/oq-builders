@@ -108,15 +108,13 @@ wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-chec
 #
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Downloading ScienceTools apps"
-    for app in oq-mbtk; do
-        git clone -b $OQ_BRANCH --depth=1 https://github.com/GEMScienceTools/${app}.git
-        wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/mbtk ./${app}
-    done
+    git clone -b $OQ_BRANCH --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
+    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/mbtk ./${app}
     echo "Extracting python wheels for oq-mbtk"
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
     echo "Extracting python wheels for VMTK-Vulnerability-Modellers-ToolKit"
-    git clone -b ae_req_win --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git
-    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r VMTK-Vulnerability-Modellers-ToolKit/requirements.txt
+    git clone -b $OQ_BRANCH --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-vmtk/requirements_win64.txt
 fi
 
 cd $DIR/oq-dist
