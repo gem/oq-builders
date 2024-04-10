@@ -7,8 +7,8 @@ SectionEnd
 
 Section "!OpenQuake VMTK" SecVmtk
    SectionIn RO
-   SetOutPath "$INSTDIR\vmtk"
-   File /r /x ".gitignore" "vmtk\*.*"
+   SetOutPath "$INSTDIR\oq-vmtk"
+   File /r /x ".gitignore" "oq-vmtk\*.*"
    DetailPrint "Download the OpenQuake Vulnerability-Modellers-ToolKit..."
 SectionEnd
 
