@@ -124,7 +124,11 @@ jobs:
         run: |
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
-          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine\oq-vmtk"
+          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine\"
+          cd "oq-vmtk\demonstration_files\"
+          dir
+          python.exe computation_scripts_example_lite.py
+          cd "outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
           dir
         if: github.event.inputs.oq-science == '1'
   Upload_Installer:
