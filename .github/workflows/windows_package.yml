@@ -130,8 +130,9 @@ jobs:
           retention-days: 5
       - name: Compare files of VMTK
         run: |
-          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
+          $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
+          $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          python.exe -V
           cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine\"
           cd "oq-vmtk\demonstration_files\"
           dir
