@@ -71,6 +71,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Installer
+      - name: Execute the Installer
+        run: |
+          $Install = Get-ChildItem -Filter *.exe
+          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          Write-Host ${env:PATH}
+          pwd
       - name: Clone Repository (Latest)
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref == ''
@@ -88,13 +95,6 @@ jobs:
           cd $env:GITHUB_WORKSPACE
           dir
         if: github.event.inputs.oq-science == '1'
-      - name: Execute the Installer
-        run: |
-          $Install = Get-ChildItem -Filter *.exe
-          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
-          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-          Write-Host ${env:PATH}
-          pwd
       - name: Run oq
         run: |
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
