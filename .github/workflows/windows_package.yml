@@ -132,9 +132,9 @@ jobs:
           dir
           $dirB = "$env:GITHUB_WORKSPACE\ci\to_compare"
           $dirA = "$env:LOCALAPPDATA\Programs\OpenQuake Engine\oq-vmtk\demonstration_files\outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
-          if ( Compare-Object (Get-Content $dirA\max_accels.csv) -DifferenceObject (Get-Content $dirB\max_accels.csv) -SyncWindow 0 ) {"files are different"} else {"Files are the same"}
-          if ( Compare-Object (Get-Content $dirA\imls.csv) -DifferenceObject (Get-Content $dirB\imls.csv) -SyncWindow 0 ) {"files are different"} else {"Files are the same"}
-          if ( Compare-Object (Get-Content $dirA\max_disps.csv) -DifferenceObject (Get-Content $dirB\max_disps.csv) -SyncWindow 0 ) {"files are different"} else {"Files are the same"}
+          if ( Compare-Object (Get-Content $dirA\max_accels.csv) -DifferenceObject (Get-Content $dirB\max_accels.csv) -SyncWindow 0 ) { exit 1} else {"Files are the same"}
+          if ( Compare-Object (Get-Content $dirA\imls.csv) -DifferenceObject (Get-Content $dirB\imls.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
+          if ( Compare-Object (Get-Content $dirA\max_disps.csv) -DifferenceObject (Get-Content $dirB\max_disps.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
         if: github.event.inputs.oq-science == '1'
   Upload_Installer:
     needs: Test_OQ
