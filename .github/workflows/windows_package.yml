@@ -132,7 +132,7 @@ jobs:
           dir
           $dirB = "$env:GITHUB_WORKSPACE\ci\to_compare"
           $dirA = "$env:LOCALAPPDATA\Programs\OpenQuake Engine\oq-vmtk\demonstration_files\outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
-          if(Compare-Object -ReferenceObject $(Get-Content $dirA) -DifferenceObject $(Get-Content $dirB))
+          if(Compare-Object -ReferenceObject $(Get-ChildItem $dirA) -DifferenceObject $(Get-ChildItem $dirB))
            {"files are different"}
            Else {"Files are the same"}
         if: github.event.inputs.oq-science == '1'
