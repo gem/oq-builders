@@ -86,15 +86,6 @@ jobs:
         if: github.event.inputs.git-ref != ''
         with:
           ref: ${{ github.event.inputs.git-ref }}
-      - name: Compare files of VMTK
-        run: |
-          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
-          cd $env:HOME
-          dir
-          cd $env:GITHUB_WORKSPACE
-          dir
-        if: github.event.inputs.oq-science == '1'
       - name: Run oq
         run: |
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
@@ -139,6 +130,11 @@ jobs:
           python.exe computation_scripts_example_lite.py
           cd "outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
           dir
+          $dirB = "$env:GITHUB_WORKSPACE\ci\to_compare"
+          $dirA = "$env:LOCALAPPDATA\Programs\OpenQuake Engine\oq-vmtk\demonstration_files\outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
+          if(Compare-Object -ReferenceObject $(Get-Content $dirA) -DifferenceObject $(Get-Content $dirB))
+           {"files are different"}
+           Else {"Files are the same"}
         if: github.event.inputs.oq-science == '1'
   Upload_Installer:
     needs: Test_OQ
