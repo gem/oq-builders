@@ -113,7 +113,7 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Extracting python wheels for oq-mbtk"
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
 	cd oq-mbtk
-    wine ../python-dist/python3/python.exe  -m build -x -w . -o ../../oq-dist/oq-mbtk
+    wine ../../python-dist/python3/python.exe  -m build -x -w . -o ../../oq-dist/oq-mbtk
 	cd ..
     echo "Extracting python wheels for VMTK-Vulnerability-Modellers-ToolKit"
     git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
