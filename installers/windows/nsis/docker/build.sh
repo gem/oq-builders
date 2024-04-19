@@ -109,7 +109,7 @@ wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-chec
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     wine ../python-dist/python3/python.exe -m pip install build
     echo "Downloading ScienceTools apps"
-    git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
+    git clone -b ae_addmodules --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
     echo "Extracting python wheels for oq-mbtk"
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
 	cd oq-mbtk
@@ -146,6 +146,7 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     # Get a copy of VMTK master repo
 	mkdir $(pwd)/oq-vmtk
     git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
+    git clone -b ae_addmodules --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
 fi
 # Get the demo and the README
 cp -r src/oq-engine/demos .
