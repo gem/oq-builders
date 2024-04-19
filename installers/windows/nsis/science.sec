@@ -3,8 +3,8 @@ Section "!OpenQuake Model Building Toolkit" SecMbtk
    SetOutPath "$PLUGINSDIR\oq-dist\oq-mbtk"
    DetailPrint "Installing the OpenQuake Model Building Toolkit..."
    nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
-   SetOutPath "$INSTDIR\oq-bmtk"
-   File /r /x ".gitignore" "oq-bmtk\*.*"
+   SetOutPath "$INSTDIR\oq-mbtk"
+   File /r /x ".gitignore" "oq-mbtk\*.*"
    DetailPrint "Download the OpenQuake Model Building Toolkit..."
 SectionEnd
 
