@@ -5,7 +5,8 @@ Section "!OpenQuake Model Building Toolkit" SecMbtk
    nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
    SetOutPath "$INSTDIR\oq-mbtk"
    File /r /x ".gitignore" "oq-mbtk\*.*"
-   DetailPrint "Download the OpenQuake Model Building Toolkit..."
+   File /r /x ".gitignore" "GMT\*.*"
+   DetailPrint "Download the OpenQuake Model Building Toolkit and dependencies"
 SectionEnd
 
 Section "!OpenQuake VMTK" SecVmtk
