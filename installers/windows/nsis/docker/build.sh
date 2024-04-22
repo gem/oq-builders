@@ -144,11 +144,15 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Working in: $(pwd)"
     sed -i '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
     # Get a copy of VMTK master repo
+    echo "Clone VMTK repos"
 	mkdir $(pwd)/oq-vmtk
     git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
+    echo "Clone MBTK repos"
     git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
+    echo "Add GMT "
 	wget https://github.com/GenericMappingTools/gmt/releases/download/6.5.0/gmt-6.5.0-win64.zip
-	unzip ./gmt-6.5.0-win64.zip -d GMT
+	cd $(pwd)
+	unzip ./gmt-6.5.0-win64.zip -d ./GMT
 fi
 # Get the demo and the README
 cp -r src/oq-engine/demos .
