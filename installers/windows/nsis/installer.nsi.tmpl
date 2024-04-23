@@ -244,6 +244,7 @@ SectionEnd
 Section "Uninstall"
   SetShellVarContext current
   Delete "$INSTDIR\${PRODUCT_ICON}"
+  RMDir /r "$INSTDIR\GMT"
   RMDir /r "$INSTDIR\oq-mbtk"
   RMDir /r "$INSTDIR\oq-vmtk"
   RMDir /r "$INSTDIR\python3"
