@@ -119,13 +119,22 @@ jobs:
           name: WebUI_log
           path: C:\\Users\\runneradmin\\AppData\\Local\\Temp\\webui.log
           retention-days: 5
+      - name: Test installation of oq-mbtk
+        run: |
+          $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
+          $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          python.exe -V
+          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
+          Remove-Item -Path .\oq-mbtk\openquake\mbt\__init__.py
+          python.exe -m pip install pytest
+          pytest -vsx .\oq-mbtk\openquake\cat
       - name: Compare files of VMTK
         run: |
           $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
           $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           python.exe -V
-          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine\"
-          cd "oq-vmtk\demonstration_files\"
+          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
+          cd "oq-vmtk\demonstration_files"
           dir
           python.exe computation_scripts_example_lite.py
           cd "outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
