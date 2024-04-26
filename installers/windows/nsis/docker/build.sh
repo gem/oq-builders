@@ -107,13 +107,17 @@ echo "Extracting python wheels"
 wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
 #
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
+    wine ../python-dist/python3/python.exe -m pip install build
     echo "Downloading ScienceTools apps"
-    for app in oq-mbtk; do
-        git clone -b $OQ_BRANCH --depth=1 https://github.com/GEMScienceTools/${app}.git
-        wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/mbtk ./${app}
-    done
+    git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
     echo "Extracting python wheels for oq-mbtk"
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
+	cd oq-mbtk
+    wine ../../python-dist/python3/python.exe  -m build -x -w . -o ../../oq-dist/oq-mbtk
+	cd ..
+    echo "Extracting python wheels for VMTK-Vulnerability-Modellers-ToolKit"
+    git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-vmtk/requirements_win64.txt
 fi
 
 cd $DIR/oq-dist
@@ -139,6 +143,16 @@ fi
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Working in: $(pwd)"
     sed -i '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
+    # Get a copy of VMTK master repo
+    echo "Clone VMTK repos"
+	mkdir $(pwd)/oq-vmtk
+    git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
+    echo "Clone MBTK repos"
+    git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
+    echo "Add GMT "
+	wget https://github.com/GenericMappingTools/gmt/releases/download/6.5.0/gmt-6.5.0-win64.zip
+	cd $(pwd)
+	unzip ./gmt-6.5.0-win64.zip -d ./GMT
 fi
 # Get the demo and the README
 cp -r src/oq-engine/demos .
@@ -153,6 +167,7 @@ rm /tmp/README.$$.md
 if [ ! -f OpenQuake\ manual.pdf ]; then
     wget -O- https://docs.openquake.org/manuals/OpenQuake%20Manual%20%28master%29.pdf > OpenQuake\ manual.pdf
 fi
+
 
 if [[ $OQ_OUTPUT = *"exe"* ]]; then
     echo "Generating NSIS installer"
