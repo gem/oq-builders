@@ -105,6 +105,7 @@ done
 
 echo "Extracting python wheels"
 wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
+wine ../python-dist/python3/python.exe -m pip install pyzmq==26.0.3
 #
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     wine ../python-dist/python3/python.exe -m pip install build
