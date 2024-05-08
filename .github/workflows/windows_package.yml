@@ -65,7 +65,7 @@ jobs:
 
   Test_OQ:
     needs: Build_Installer
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v4
@@ -91,6 +91,7 @@ jobs:
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
+          oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
           oq.exe engine --list-risk-calculations
       - name: Run oq webui console and curl for the standalone tools
         run: |
