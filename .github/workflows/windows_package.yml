@@ -66,6 +66,7 @@ jobs:
   Test_OQ:
     needs: Build_Installer
     runs-on: windows-2019
+    timeout-minutes: 45
     steps:
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v4
