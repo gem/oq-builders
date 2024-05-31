@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 cd /home/runner/work/oq-builders/oq-builders/installers/windows/nsis
+#
+if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
+    echo "Working in: $(pwd)"
+    echo "USE OQ Science Console"
+    mv oq-science-console.bat oq-console.bat
+else
+    echo "Working in: $(pwd)"
+    echo "USE OQ engine Console"
+    mv oq-science-console.bat oq-console.bat
+fi
 # build the docker to use for installer
 docker build --build-arg uid=$(id -u) --rm=true -t wine -f docker/Dockerfile docker
 #
