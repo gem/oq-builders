@@ -88,6 +88,7 @@ git config --global core.symlinks false
 echo "Downloading core apps"
 for app in oq-engine; do
     git clone -b $OQ_BRANCH --depth=1 https://github.com/gem/${app}.git
+    git -C ${app} status
     wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/engine ./${app}
 done
 
