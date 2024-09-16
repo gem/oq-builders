@@ -113,12 +113,12 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
     echo "Extracting python wheels for oq-mbtk"
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements_win64.txt
-	cd oq-mbtk
+    cd oq-mbtk
     wine ../../python-dist/python3/python.exe  -m build -x -w . -o ../../oq-dist/oq-mbtk
-	cd ..
-    echo "Extracting python wheels for VMTK-Vulnerability-Modellers-ToolKit"
-    git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
-    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-vmtk/requirements_win64.txt
+    cd ..
+    #echo "Extracting python wheels for VMTK-Vulnerability-Modellers-ToolKit"
+    #git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
+    #wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-vmtk/requirements_win64.txt
 fi
 
 cd $DIR/oq-dist
@@ -144,16 +144,16 @@ fi
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Working in: $(pwd)"
     sed -i '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
-    # Get a copy of VMTK master repo
-    echo "Clone VMTK repos"
-	mkdir $(pwd)/oq-vmtk
-    git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
+    ## Get a copy of VMTK master repo
+    #echo "Clone VMTK repos"
+    #    mkdir $(pwd)/oq-vmtk
+    #git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
     echo "Clone MBTK repos"
     git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
     echo "Add GMT "
-	wget https://github.com/GenericMappingTools/gmt/releases/download/6.5.0/gmt-6.5.0-win64.zip
-	cd $(pwd)
-	unzip ./gmt-6.5.0-win64.zip -d ./GMT
+    wget https://github.com/GenericMappingTools/gmt/releases/download/6.5.0/gmt-6.5.0-win64.zip
+    cd $(pwd)
+    unzip ./gmt-6.5.0-win64.zip -d ./GMT
 fi
 # Get the demo and the README
 cp -r src/oq-engine/demos .

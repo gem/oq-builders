@@ -10,10 +10,16 @@ Section "!OpenQuake Model Building Toolkit" SecMbtk
    DetailPrint "Download the OpenQuake Model Building Toolkit and dependencies"
 SectionEnd
 
+/*
+Comment
+
 Section "!OpenQuake VMTK" SecVmtk
    SectionIn RO
    SetOutPath "$INSTDIR\oq-vmtk"
    File /r /x ".gitignore" "oq-vmtk\*.*"
    DetailPrint "Download the OpenQuake Vulnerability-Modellers-ToolKit..."
 SectionEnd
+
+Comment
+*/
 
