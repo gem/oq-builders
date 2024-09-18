@@ -5,6 +5,7 @@ on:
   workflow_run:
     workflows:
       - "Package for Windows"
+      - "Package for Windows with Tools"
     types:
       - completed
 
