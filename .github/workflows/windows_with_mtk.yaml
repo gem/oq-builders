@@ -6,10 +6,6 @@ on:
         description: Branch of gem/oq-builders repository
         default: master
         required: true
-      path:
-        description: Path to upload packages
-        default: /oq-engine/
-        required: true
       oq-ref:
         description: Branch of Openquake Engine
         default: master
