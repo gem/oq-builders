@@ -36,7 +36,7 @@ ENV WINEDEBUG -all
 WORKDIR $HOME
 
 RUN wget --cache=off https://ftp.openquake.org/windows/thirdparties/nsis-3.09-setup.exe  && \
-	wget --cache=off https://ftp.openquake.org/windows/thirdparties/python-3.11.6-win64.zip  && \
+	wget --cache=off https://ftp.openquake.org/windows/thirdparties/python-3.11.9-win64.zip  && \
     wget --cache=off https://ftp.openquake.org/windows/thirdparties/get-pip.py
 #
 
