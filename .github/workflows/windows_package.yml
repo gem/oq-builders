@@ -26,7 +26,7 @@ on:
   #    branches:
   #      -
   schedule:
-    - cron: "00 18 * * *"
+    - cron: "30 21 * * *"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
