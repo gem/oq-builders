@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/oq-builders/actions,35,2
+/gem/oq-builders/actions/workflows/windows_package.yml,30,2
+/gem/oq-builders,19,5
+/gem/oq-builders/actions/workflows/windows_with_mtk.yaml,13,2
+/gem/oq-builders/actions/runs/10917368041,11,2
+/gem/oq-builders/actions/runs/10889099270,8,1
+/gem/oq-builders/actions/runs/10885644142,6,2
+/gem/oq-builders/tree/master/.github/workflows,6,2
+/gem/oq-builders/blob/master/.github/workflows/windows_with_mtk.yaml,6,1
+/gem/oq-builders/actions/runs/10889099270/job/30214991160,5,1
