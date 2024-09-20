@@ -8,13 +8,20 @@ on:
   workflow_dispatch: # Allow for running this manually.
 
 jobs:
-  j1:
+  collect_data_gem:
     name: github-repo-stats
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The repositories to generate reports for.
+        statsRepo: ['gem/oq-engine', 'gem/oq-irmt-qgis', 'gem/global_exposure_model', 'gem/earthquake-scenarios']
+      # Do not cancel&fail all remaining jobs upon first job failure.
+      fail-fast: false
+      max-parallel: 1
     steps:
-      - name: run-ghrs
+      - name: run_collection
         # Use latest release.
         uses: jgehrcke/github-repo-stats@RELEASE
         with:
-          repository: gem/oq-engine
+          repository:  ${{ matrix.statsRepo }}
           ghtoken: ${{ secrets.STATS_GITHUB_API_TOKEN }}
