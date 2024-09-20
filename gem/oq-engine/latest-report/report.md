@@ -1,5 +1,5 @@
 % Statistics for gem/oq-engine
-% Generated for [gem/oq-engine](https://github.com/gem/oq-engine) with [jgehrcke/github-repo-stats](https://github.com/jgehrcke/github-repo-stats) at 2024-09-20 08:57 UTC.
+% Generated for [gem/oq-engine](https://github.com/gem/oq-engine) with [jgehrcke/github-repo-stats](https://github.com/jgehrcke/github-repo-stats) at 2024-09-20 09:04 UTC.
 
 
 ## Views
@@ -79,7 +79,7 @@ respond slowly to change (narrow peaks are smoothed out).
 
 <div id="chart_referrers_top_n_alltime" class="full-width-chart"></div>
 
-Top 15 referrers: 01: `Google`, 02: `globalquakemodel.org`, 03: `github.com`, 04: `Bing`, 05: `docs.openquake.org`, 06: `groups.google.com`, 07: `training.openquake.org`, 08: `hazard.efehr.org`, 09: `statics.teams.cdn.office.net`, 10: `cn.bing.com`
+Top 15 referrers: 01: `Google`, 02: `globalquakemodel.org`, 03: `github.com`, 04: `Bing`, 05: `docs.openquake.org`, 06: `groups.google.com`, 07: `training.openquake.org`, 08: `hazard.efehr.org`, 09: `cn.bing.com`, 10: `statics.teams.cdn.office.net`
 
 
 
