@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,52,39
+/gem/earthquake-scenarios/tree/main/Europe/Italy,37,7
+/gem/earthquake-scenarios/tree/main/Europe,35,12
+/gem/earthquake-scenarios/tree/main/East_Asia/Japan,35,6
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20120000_Sequence_EmiliaRomagna,32,4
+/gem/earthquake-scenarios/tree/main/East_Asia/Japan/19950117_M6.9_Kobe/Impact,27,3
+/gem/earthquake-scenarios/blob/main/East_Asia/Japan/20180906_M6.6_HokkaidoEasternIburi/Impact/Impact_Buildings_ID_1.csv,26,3
+/gem/earthquake-scenarios/tree/main/East_Asia/Japan/20180906_M6.6_HokkaidoEasternIburi/Impact,25,3
+/gem/earthquake-scenarios/blob/main/East_Asia/Japan/19950117_M6.9_Kobe/Impact/Impact_Buildings_ID_1.csv,22,4
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20120000_Sequence_EmiliaRomagna/20120529_M5.6_EmiliaRomagna,20,3
