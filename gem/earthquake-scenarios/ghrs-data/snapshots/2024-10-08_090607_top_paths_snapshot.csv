@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,79,45
+/gem/earthquake-scenarios/tree/main/Europe,39,20
+/gem/earthquake-scenarios/tree/main,30,20
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20090000_Sequence_Laquila,28,10
+/gem/earthquake-scenarios/tree/main/Europe/Italy,27,10
+/gem/earthquake-scenarios/tree/main/Europe/Turkey,21,9
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20090000_Sequence_Laquila/20090406_M6.18_Laquila,16,7
+/gem/earthquake-scenarios/tree/main/World,11,6
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20090000_Sequence_Laquila/20090406_M6.18_Laquila/OpenQuake_gmfs,10,6
+/gem/earthquake-scenarios/tree/main/Europe/Turkey/20230206_M7.8_KahramanmarasGaziantep,10,5
