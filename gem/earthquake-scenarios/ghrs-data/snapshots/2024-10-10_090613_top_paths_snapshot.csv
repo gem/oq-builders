@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,72,43
+/gem/earthquake-scenarios/tree/main,28,17
+/gem/earthquake-scenarios/tree/main/Europe,26,17
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20090000_Sequence_Laquila,25,10
+/gem/earthquake-scenarios/tree/main/Europe/Turkey,19,8
+/gem/earthquake-scenarios/tree/main/Europe/Italy,19,7
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20090000_Sequence_Laquila/20090406_M6.18_Laquila,13,7
+/gem/earthquake-scenarios/tree/main/World,11,6
+/gem/earthquake-scenarios/tree/main/East_Asia/Japan,10,5
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20090000_Sequence_Laquila/20090406_M6.18_Laquila/OpenQuake_gmfs,9,5
