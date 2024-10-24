@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
-FROM fedora:39
-MAINTAINER GEM Foundation <devops@openquake.org>
+FROM fedora:40
+LABEL maintainer="GEM Foundation <devops@openquake.org>"
 
 RUN dnf -y install wget python3-markdown git zip unzip && \
     dnf -y install 'dnf-command(config-manager)' && \
