@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,31,25
+/gem/earthquake-scenarios/tree/main/Europe,18,11
+/gem/earthquake-scenarios/tree/main/Europe/Turkey,13,6
+/gem/earthquake-scenarios/tree/main,13,5
+/gem/earthquake-scenarios/tree/main/Europe/Turkey/20230206_M7.8_KahramanmarasGaziantep,13,5
+/gem/earthquake-scenarios/tree/main/East_Asia/Japan,11,8
+/gem/earthquake-scenarios/tree/main/Caribbean_Central_America,11,4
+/gem/earthquake-scenarios/tree/main/Caribbean_Central_America/El_Salvador,9,4
+/gem/earthquake-scenarios/tree/main/North_America/Mexico/20170919_M7.1_Puebla/OpenQuake_gmfs/Sensitivity,7,1
+/gem/earthquake-scenarios/tree/main/South_Asia/India/20110918_M6.9_Sikkim/Recording_Stations,7,1
