@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,42,27
+/gem/earthquake-scenarios/tree/main,23,8
+/gem/earthquake-scenarios/tree/main/South_America/Chile,21,4
+/gem/earthquake-scenarios/tree/main/South_America/Chile/20100227_M8.8_Maule,21,4
+/gem/earthquake-scenarios/tree/main/South_America,18,5
+/gem/earthquake-scenarios/tree/main/Europe,16,10
+/gem/earthquake-scenarios/tree/main/South_America/Chile/20100227_M8.8_Maule/OpenQuake_gmfs,16,2
+/gem/earthquake-scenarios/tree/main/Europe/Turkey/20230206_M7.8_KahramanmarasGaziantep,13,5
+/gem/earthquake-scenarios/tree/main/src,13,3
+/gem/earthquake-scenarios/tree/main/Europe/Turkey,12,6
