@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,47,28
+/gem/earthquake-scenarios/tree/main,23,9
+/gem/earthquake-scenarios/tree/main/South_America/Chile,21,4
+/gem/earthquake-scenarios/tree/main/South_America/Chile/20100227_M8.8_Maule,21,4
+/gem/earthquake-scenarios/tree/main/South_America,17,4
+/gem/earthquake-scenarios/tree/main/South_America/Chile/20100227_M8.8_Maule/OpenQuake_gmfs,16,2
+/gem/earthquake-scenarios/tree/main/src,15,5
+/gem/earthquake-scenarios/tree/main/Europe,12,8
+/gem/earthquake-scenarios/blob/main/South_America/Chile/20100227_M8.8_Maule/OpenQuake_gmfs/median_gmf_stations_seismic.png,12,2
+/gem/earthquake-scenarios/blob/main/src/oq_parse_gmfs.py,11,2
