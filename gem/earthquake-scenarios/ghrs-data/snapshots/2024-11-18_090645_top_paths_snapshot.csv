@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,63,41
+/gem/earthquake-scenarios/tree/main,38,12
+/gem/earthquake-scenarios/tree/main/Europe,21,7
+/gem/earthquake-scenarios/tree/main/South_America,16,4
+/gem/earthquake-scenarios/tree/main/World,15,9
+/gem/earthquake-scenarios/tree/main/src,15,6
+/gem/earthquake-scenarios/tree/main/South_America/Chile,13,2
+/gem/earthquake-scenarios/tree/main/South_America/Chile/20100227_M8.8_Maule,13,2
+/gem/earthquake-scenarios/tree/main/Europe/Italy,12,4
+/gem/earthquake-scenarios/blob/main/src/oq_parse_gmfs.py,11,2
