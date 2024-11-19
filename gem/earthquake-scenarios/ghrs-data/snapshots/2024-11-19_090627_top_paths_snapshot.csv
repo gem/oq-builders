@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,58,39
+/gem/earthquake-scenarios/tree/main,32,11
+/gem/earthquake-scenarios/tree/main/Europe,21,7
+/gem/earthquake-scenarios/tree/main/src,15,6
+/gem/earthquake-scenarios/tree/main/World,12,7
+/gem/earthquake-scenarios/tree/main/Europe/Italy,12,4
+/gem/earthquake-scenarios/tree/main/East_Asia/Japan,11,6
+/gem/earthquake-scenarios/tree/main/South_America,11,4
+/gem/earthquake-scenarios/tree/main/South_Asia,10,8
+/gem/earthquake-scenarios/blob/main/src/oq_parse_gmfs.py,10,2
