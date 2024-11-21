@@ -164,10 +164,11 @@ sed "s@](\([^:]\+)\)@](https://github.com/gem/oq-engine/blob/${OQ_BRANCH}/\1@g;s
 python3 -m markdown /tmp/README.$$.md > README.html
 rm /tmp/README.$$.md
 
-# Get a copy of the OQ manual if not yet available
-if [ ! -f OpenQuake\ manual.pdf ]; then
-    wget -O- https://docs.openquake.org/manuals/OpenQuake%20Manual%20%28master%29.pdf > OpenQuake\ manual.pdf
-fi
+# AE remove on 11/21/24
+## Get a copy of the OQ manual if not yet available
+#if [ ! -f OpenQuake\ manual.pdf ]; then
+#    wget -O- https://docs.openquake.org/manuals/OpenQuake%20Manual%20%28master%29.pdf > OpenQuake\ manual.pdf
+#fi
 
 
 if [[ $OQ_OUTPUT = *"exe"* ]]; then
@@ -187,5 +188,6 @@ if [[ $OQ_OUTPUT = *"zip"* ]]; then
     cd $DIR/python-dist
     zip -qr $DIR/${ZIP} python3
     cd $DIR
-    zip -qr $DIR/${ZIP} *.bat *.pdf demos README.html LICENSE.txt
+    #zip -qr $DIR/${ZIP} *.bat *.pdf demos README.html LICENSE.txt
+    zip -qr $DIR/${ZIP} *.bat demos README.html LICENSE.txt
 fi
