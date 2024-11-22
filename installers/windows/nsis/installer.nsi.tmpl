@@ -163,18 +163,18 @@ SectionEnd
 
 #GEM_SET_BUILD_SCIENCE
 
-Section "!OpenQuake Engine demos and documentation" SecDocDemo
+Section "!OpenQuake Engine demos" SecDocDemo
   SectionIn RO
   # Install manual and demos in 'User\MyDocuments'
   # keep disabled for now. It may be dangerous.
-  #SetOutPath "$DOCUMENTS\OpenQuake"
-  #File "OpenQuake manual.pdf"
-  #SetOutPath "$DOCUMENTS\OpenQuake\demos"
-  #File /r /x ".gitignore" "demos\*.*"
+  # SetOutPath "$DOCUMENTS\OpenQuake"
+  # SetOutPath "$DOCUMENTS\OpenQuake\demos"
+  # File "OpenQuake manual.pdf"
+  # File /r /x ".gitignore" "demos\*.*"
 
   # Keep a copy in the installation folder
+  # File "OpenQuake manual.pdf"
   SetOutPath "$INSTDIR"
-  File "OpenQuake manual.pdf"
   SetOutPath "$INSTDIR\demos"
   File /r /x ".gitignore" "demos\*.*"
 SectionEnd
@@ -251,7 +251,6 @@ Section "Uninstall"
   ; Uninstall files
     Delete "$INSTDIR\README.html"
     Delete "$INSTDIR\LICENSE.txt"
-    Delete "$INSTDIR\OpenQuake manual.pdf"
     Delete "$INSTDIR\openquake_black.ico"
     Delete "$INSTDIR\openquake.ico"
     Delete "$INSTDIR\oq-server.bat"
