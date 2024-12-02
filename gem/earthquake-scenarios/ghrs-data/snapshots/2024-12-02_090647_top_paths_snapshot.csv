@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,42,31
+/gem/earthquake-scenarios/tree/main/Europe,14,9
+/gem/earthquake-scenarios/tree/main,11,7
+/gem/earthquake-scenarios/tree/main/Southeast_Asia/Indonesia,10,5
+/gem/earthquake-scenarios/tree/main/Southeast_Asia/Indonesia/20090930_M7.6_Padang,10,3
+/gem/earthquake-scenarios/tree/main/Africa,8,6
+/gem/earthquake-scenarios/blob/main/Europe/Italy/20090000_Sequence_Laquila/20090406_M6.18_Laquila/Rupture/earthquake_rupture_model_USGS.xml,8,4
+/gem/earthquake-scenarios/tree/main/Europe/Italy,7,6
+/gem/earthquake-scenarios/blob/main/East_Asia/Japan/19950117_M6.9_Kobe/OpenQuake_gmfs/median_gmf_stations_seismic.png,7,1
+/gem/earthquake-scenarios/tree/main/World,6,4
