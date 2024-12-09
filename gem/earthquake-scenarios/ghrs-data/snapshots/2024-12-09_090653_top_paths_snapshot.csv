@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,56,39
+/gem/earthquake-scenarios/tree/main,15,6
+/gem/earthquake-scenarios/tree/main/Europe,11,9
+/gem/earthquake-scenarios/tree/main/Europe/Italy,10,6
+/gem/earthquake-scenarios/tree/main/South_America/Ecuador/20160416_M7.8_Pedernales,10,1
+/gem/earthquake-scenarios/blob/main/East_Asia/Japan/20160416_M7.0_Kumamoto/OpenQuake_gmfs/stationlist_all.csv,9,1
+/gem/earthquake-scenarios/tree/main/Africa,8,7
+/gem/earthquake-scenarios/tree/main/World,8,7
+/gem/earthquake-scenarios/tree/main/South_America,8,6
+/gem/earthquake-scenarios/blob/main/Europe/Italy/20090000_Sequence_Laquila/20090406_M6.18_Laquila/Rupture/earthquake_rupture_model_USGS.xml,8,4
