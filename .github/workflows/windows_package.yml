@@ -170,7 +170,6 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 35
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
-        shell: bash
         env:
           DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
           folder: ${{ github.event.inputs.path }}
