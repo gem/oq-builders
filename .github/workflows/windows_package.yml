@@ -2,6 +2,11 @@ name:  Package for Windows
 on:
   workflow_dispatch:
     inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled '
+        required: false
+        default: false
       git-ref:
         description: Branch of gem/oq-builders repository
         default: master
@@ -17,6 +22,9 @@ on:
       oq-rel:
         description: Build Number of Openquake Engine
         default: 1
+        required: false
+      oq-tag:
+        description: Tag of OQ Release (if defined, also upload assets to Releases)
         required: false
       oq-science:
         description: Build oq-mbtk and vmtk
@@ -157,11 +165,22 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Installer
+      - name: Setup debugging session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 35
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        env:
+          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
+          folder: ${{ github.event.inputs.path }}
+          vtag: ${{ github.event.inputs.oq-tag }}
+          GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
       - name: rsync to downloads.openquake.org
         shell: bash
         env:
           DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
           folder: ${{ github.event.inputs.path }}
+          vtag: ${{ github.event.inputs.oq-tag }}
+          GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
@@ -176,5 +195,9 @@ jobs:
           else
                 echo "\$folder is NOT empty"
           fi
-          #rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/oq-engine/nightly/
           rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/${folder}
+          # check if we have a tag and need to upload to release
+          if [[ -n "${vtag}" ]]; then
+                echo "vtag is defined, so we need to upload files to OQ release"
+                gh release upload ${vtag} -R gem/oq-engine OpenQuake_Engine*
+          fi
