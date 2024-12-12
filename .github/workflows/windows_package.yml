@@ -25,7 +25,6 @@ on:
         required: false
       oq-tag:
         description: Tag of Openquake Engine Release
-        default: v0
         required: false
       oq-science:
         description: Build oq-mbtk and vmtk
@@ -198,10 +197,7 @@ jobs:
           fi
           rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/${folder}
           # check if we have a tag and need to upload to release
-          if [[ ${vtag} == "v0" ]]; then
-                echo "vtag has default value of v0"
-          else
-                echo "vtag is defined"
-                echo "Need to upload files to OQ release"
+          if [[ -n "${vtag}" ]]; then
+                echo "vtag is defined, so we need to upload files to OQ release"
                 gh release upload ${vtag} -R gem/oq-engine OpenQuake_Engine*
           fi
