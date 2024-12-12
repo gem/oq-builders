@@ -24,7 +24,7 @@ on:
         default: 1
         required: false
       oq-tag:
-        description: Tag of Openquake Engine Release
+        description: Tag of OQ Release (if defined, also upload assets to Releases)
         required: false
       oq-science:
         description: Build oq-mbtk and vmtk
