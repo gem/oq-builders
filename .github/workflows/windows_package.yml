@@ -54,6 +54,9 @@ jobs:
         if: github.event.inputs.git-ref != ''
         with:
           ref: ${{ github.event.inputs.git-ref }}
+      - run: |
+          echo ${{ github.workspace }}
+          echo $GITHUB_WORKSPACE
       - name: Docker build of the container and create installer
         run: |
           echo "Check variable for build packages"
