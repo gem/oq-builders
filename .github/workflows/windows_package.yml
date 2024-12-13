@@ -90,20 +90,7 @@ jobs:
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-      - name: Sign files with Trusted Signing
-        uses: azure/trusted-signing-action@v0.5.0
-        with:
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          endpoint: ${{ secrets.AZURE_ENDPOINT }}
-          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
-          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
-          files-folder: ${{ github.workspace }}
-          files-folder-filter: exe
-          file-digest: SHA256
-          timestamp-rfc3161: http://timestamp.acs.microsoft.com
-          timestamp-digest: SHA256
+
       - name: Clone Repository (Latest)
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref == ''
@@ -182,6 +169,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: OpenQuake
+      - name: Sign files with Trusted Signing
+        uses: azure/trusted-signing-action@v0.5.0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: ${{ secrets.AZURE_ENDPOINT }}
+          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
+          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
+          files-folder: ${{ github.workspace }}
+          files-folder-filter: exe
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
       - name: Setup debugging session
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 35
