@@ -181,7 +181,7 @@ jobs:
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v4
         with:
-          name: Installer
+          name: OpenQuake
       - name: Setup debugging session
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 35
