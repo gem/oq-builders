@@ -70,7 +70,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Installer
+          name: OpenQuake
           path: /home/runner/work/oq-builders/oq-builders/out
           retention-days: 5
 
