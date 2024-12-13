@@ -82,14 +82,28 @@ jobs:
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v4
         with:
-          name: Installer
+          name: OpenQuake
       - name: Execute the Installer
         run: |
+          pwd
+          Get-ChildItem -Path ${{ github.workspace }}
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-          Write-Host ${env:PATH}
-          pwd
+      - name: Sign files with Trusted Signing
+        uses: azure/trusted-signing-action@v0.5.0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: https://weu.codesigning.azure.net/
+          trusted-signing-account-name: oqsigning
+          certificate-profile-name: oq-engine
+          files-folder: ${{ github.workspace }}
+          files-folder-filter: exe
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
       - name: Clone Repository (Latest)
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref == ''
@@ -159,20 +173,6 @@ jobs:
           if ( Compare-Object (Get-Content $dirA\imls.csv) -DifferenceObject (Get-Content $dirB\imls.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
           if ( Compare-Object (Get-Content $dirA\max_disps.csv) -DifferenceObject (Get-Content $dirB\max_disps.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
         if: github.event.inputs.oq-science == '1'
-      - name: Sign files with Trusted Signing
-        uses: azure/trusted-signing-action@v0.5.0
-        with:
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          endpoint: https://weu.codesigning.azure.net/
-          trusted-signing-account-name: oqsigning
-          certificate-profile-name: oq-engine
-          files-folder: D:\a\oq-builders\oq-builders
-          files-folder-filter: exe
-          file-digest: SHA256
-          timestamp-rfc3161: http://timestamp.acs.microsoft.com
-          timestamp-digest: SHA256
   Upload_Installer:
     needs: Test_OQ
     runs-on: ubuntu-latest
