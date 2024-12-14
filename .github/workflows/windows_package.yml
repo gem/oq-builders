@@ -90,15 +90,6 @@ jobs:
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-
-      - name: Clone Repository (Latest)
-        uses: actions/checkout@v4
-        if: github.event.inputs.git-ref == ''
-      - name: Clone Repository (Custom Ref)
-        uses: actions/checkout@v4
-        if: github.event.inputs.git-ref != ''
-        with:
-          ref: ${{ github.event.inputs.git-ref }}
       - name: Run oq
         run: |
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
@@ -184,11 +175,13 @@ jobs:
           file-digest: SHA256
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256
+      - run: |
+          Get-ChildItem -Path ${{ github.workspace }}          
       - name: Upload Signed Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Signed
-          path: ${{ github.workspace }}/Signed
+          path: ${{ github.workspace }}
           retention-days: 5
   Upload_Installer:
     needs: Test_OQ
@@ -239,3 +232,5 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Signed
+          path: path: ${{ github.workspace }}/Signed
+          
