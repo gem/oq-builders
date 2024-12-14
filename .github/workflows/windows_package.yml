@@ -160,12 +160,16 @@ jobs:
           if ( Compare-Object (Get-Content $dirA\imls.csv) -DifferenceObject (Get-Content $dirB\imls.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
           if ( Compare-Object (Get-Content $dirA\max_disps.csv) -DifferenceObject (Get-Content $dirB\max_disps.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
         if: github.event.inputs.oq-science == '1'
+      - run: |
+          Get-ChildItem -Path ${{ github.workspace }}
       - name: Upload Artifacts not Signed
         uses: actions/upload-artifact@v4
         with:
           name: NotSigned
           path: ${{ github.workspace }}/
           retention-days: 5
+      - run: |
+          Get-ChildItem -Path ${{ github.workspace }}          
       - name: Sign files with Trusted Signing
         uses: azure/trusted-signing-action@v0.5.0
         with:
