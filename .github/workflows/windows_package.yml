@@ -73,7 +73,6 @@ jobs:
           name: OpenQuake
           path: /home/runner/work/oq-builders/oq-builders/out
           retention-days: 5
-
   Test_OQ:
     needs: Build_Installer
     runs-on: windows-2019
@@ -232,5 +231,4 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Signed
-          path: path: ${{ github.workspace }}/Signed
-          
+          path: ${{ github.workspace }}/Signed 
