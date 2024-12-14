@@ -160,15 +160,12 @@ jobs:
           if ( Compare-Object (Get-Content $dirA\imls.csv) -DifferenceObject (Get-Content $dirB\imls.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
           if ( Compare-Object (Get-Content $dirA\max_disps.csv) -DifferenceObject (Get-Content $dirB\max_disps.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
         if: github.event.inputs.oq-science == '1'
-  Upload_Installer:
-    needs: Test_OQ
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download Windows Installer from build job
-        uses: actions/download-artifact@v4
+      - name: Upload Artifacts not Signed
+        uses: actions/upload-artifact@v4
         with:
-          name: OpenQuake
+          name: NotSigned
+          path: ${{ github.workspace }}/
+          retention-days: 5
       - name: Sign files with Trusted Signing
         uses: azure/trusted-signing-action@v0.5.0
         with:
@@ -183,6 +180,21 @@ jobs:
           file-digest: SHA256
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256
+      - name: Upload Signed Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Signed
+          path: ${{ github.workspace }}/Signed
+          retention-days: 5
+  Upload_Installer:
+    needs: Test_OQ
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Not Signed Windows Installer from test job
+        uses: actions/download-artifact@v4
+        with:
+          name: NotSigned
       - name: Setup debugging session
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 35
@@ -219,3 +231,7 @@ jobs:
                 echo "vtag is defined, so we need to upload files to OQ release"
                 gh release upload ${vtag} -R gem/oq-engine OpenQuake_Engine*
           fi
+      - name: Download Signed  Windows Installer from test job
+        uses: actions/download-artifact@v4
+        with:
+          name: Signed
