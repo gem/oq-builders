@@ -70,7 +70,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: OpenQuake
+          name: NotSigned
           path: /home/runner/work/oq-builders/oq-builders/out
           retention-days: 5
   Test_OQ:
@@ -81,7 +81,7 @@ jobs:
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v4
         with:
-          name: OpenQuake
+          name: NotSigned
       - name: Execute the Installer
         run: |
           pwd
@@ -152,14 +152,6 @@ jobs:
         if: github.event.inputs.oq-science == '1'
       - run: |
           Get-ChildItem -Path ${{ github.workspace }}
-      - name: Upload Artifacts not Signed
-        uses: actions/upload-artifact@v4
-        with:
-          name: NotSigned
-          path: ${{ github.workspace }}/
-          retention-days: 5
-      - run: |
-          Get-ChildItem -Path ${{ github.workspace }}          
       - name: Sign files with Trusted Signing
         uses: azure/trusted-signing-action@v0.5.0
         with:
@@ -175,7 +167,7 @@ jobs:
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256
       - run: |
-          Get-ChildItem -Path ${{ github.workspace }}          
+          Get-ChildItem -Path ${{ github.workspace }}
       - name: Upload Signed Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -231,4 +223,4 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Signed
-          path: ${{ github.workspace }}/Signed 
+          path: ${{ github.workspace }}/Signed
