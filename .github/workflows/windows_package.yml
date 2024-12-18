@@ -36,20 +36,6 @@ on:
   schedule:
     - cron: "30 21 * * *"
 jobs:
-  Test_OQ_Conn:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup debugging session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 35
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
-        env:
-          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
-          folder: ${{ github.event.inputs.path }}
-          vtag: ${{ github.event.inputs.oq-tag }}
-          GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
-          GEM_REPO_SSH: ${{ secrets.GEM_PASS_to_WIN }}
   Build_Installer:
     needs: Test_OQ_Conn
     runs-on: ubuntu-latest
