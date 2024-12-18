@@ -189,10 +189,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Signed
-      - name: Setup debugging session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 35
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
       - name: rsync to downloads.openquake.org
         shell: bash
         run: |
@@ -229,6 +225,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: NotSigned
+      - name: Setup debugging session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 35
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}    
       - name: rsync to GEM
         shell: bash
         run: |
