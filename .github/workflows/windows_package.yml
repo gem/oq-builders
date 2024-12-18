@@ -189,31 +189,27 @@ jobs:
           name: Signed
           path: ${{ github.workspace }}
           retention-days: 5
-  Upload_Installer:
+  Upload_Installer_Signed:
     needs: Test_OQ
     runs-on: ubuntu-latest
+    env:
+      DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
+      folder: ${{ github.event.inputs.path }}
+      vtag: ${{ github.event.inputs.oq-tag }}
+      GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
     steps:
       - uses: actions/checkout@v4
-      - name: Download Not Signed Windows Installer from test job
+      - name: Download Signed Windows Installer from test job
         uses: actions/download-artifact@v4
         with:
-          name: NotSigned
+          name: Signed
       - name: Setup debugging session
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 35
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
-        env:
-          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
-          folder: ${{ github.event.inputs.path }}
-          vtag: ${{ github.event.inputs.oq-tag }}
-          GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
       - name: rsync to downloads.openquake.org
         shell: bash
         env:
-          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
-          folder: ${{ github.event.inputs.path }}
-          vtag: ${{ github.event.inputs.oq-tag }}
-          GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
@@ -234,8 +230,24 @@ jobs:
                 echo "vtag is defined, so we need to upload files to OQ release"
                 gh release upload ${vtag} -R gem/oq-engine OpenQuake_Engine*
           fi
-      - name: Download Signed  Windows Installer from test job
+  Upload_Installer_NotSigned:
+    needs: Test_OQ
+    runs-on: ubuntu-latest
+    env:
+      DOWNLOAD_SSH: ${{ secrets.GEM_PASS_TO_WIN }}
+      IP_TOUP: ${{ secrets.GEM_IP_STORE }}
+      PORT_TOUP: ${{ secrets.GEM_PORT_STORE }}
+      USER_TOUP: ${{ secrets.GEM_USER_STORE }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Not Signed Windows Installer from test job
         uses: actions/download-artifact@v4
         with:
-          name: Signed
-          path: ${{ github.workspace }}/Signed
+          name: NotSigned
+      - name: rsync to GEM
+        shell: bash
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_package.enc
+          chmod 600 ./.deploy_rsa
+          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p ${PORT_TOUP}' -ax OpenQuake_Engine* ${USER_TOUP}@${IP_TOUP}:/mnt/windows_pkg/
