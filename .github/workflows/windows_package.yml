@@ -40,10 +40,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download Not Signed Windows Installer from test job
-        uses: actions/download-artifact@v4
-        with:
-          name: NotSigned
       - name: Setup debugging session
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 35
