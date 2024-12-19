@@ -228,11 +228,11 @@ jobs:
       - name: Setup debugging session
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 35
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}    
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
       - name: rsync to GEM
         shell: bash
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_package.enc
           chmod 600 ./.deploy_rsa
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
-          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p ${PORT_TOUP}' -ax OpenQuake_Engine* ${USER_TOUP}@${IP_TOUP}:/mnt/windows_pkg/
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p  '${PORT_TOUP}' ' -ax OpenQuake_Engine* ${USER_TOUP}@${IP_TOUP}:/mnt/windows_pkg/
