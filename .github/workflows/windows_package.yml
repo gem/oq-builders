@@ -37,7 +37,6 @@ on:
     - cron: "30 21 * * *"
 jobs:
   Build_Installer:
-    needs: Test_OQ_Conn
     runs-on: ubuntu-latest
     env:
       GEM_SET_BRANCH: ${{ github.event.inputs.oq-ref }}
