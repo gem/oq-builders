@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,34,28
+/gem/earthquake-scenarios/tree/main,12,7
+/gem/earthquake-scenarios/tree/main/Europe,11,7
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20120000_Sequence_EmiliaRomagna/20120520_M5.8_EmiliaRomagna,11,2
+/gem/earthquake-scenarios/forks,11,1
+/gem/earthquake-scenarios/tree/main/Europe/Italy,8,4
+/gem/earthquake-scenarios/tree/main/Middle_East/Iran/20171112_M7.3_SarpoleZahab,7,2
+/gem/earthquake-scenarios/tree/main/South_America,6,5
+/gem/earthquake-scenarios/tree/main/Africa/Morocco/20230908_M6.9_MarrakeshSafi/OpenQuake_gmfs/Sensitivity,6,2
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20120000_Sequence_EmiliaRomagna/20120520_M5.8_EmiliaRomagna/OpenQuake_gmfs,6,2
