@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/oq-engine,868,339
+/gem/oq-engine/pulls,357,20
+/gem/oq-engine/tree/master/openquake,144,63
+/gem/oq-engine/tree/master/openquake/hazardlib,87,35
+/gem/oq-engine/tree/master/openquake/hazardlib/gsim,64,28
+/gem/oq-engine/issues,60,23
+/gem/oq-engine/tree/master,58,38
+/gem/oq-engine/pull/10195,48,3
+/gem/oq-engine/actions/workflows/webui_rh_test.yml,40,3
+/gem/oq-engine/actions,34,8
