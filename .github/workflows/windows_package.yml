@@ -234,4 +234,5 @@ jobs:
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_package.enc
           chmod 600 ./.deploy_rsa
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
+          sudo apt install -y rsync
           rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p  '${PORT_TOUP}' ' -ax OpenQuake_Engine* ${USER_TOUP}@${IP_TOUP}:/mnt/windows_pkg/
