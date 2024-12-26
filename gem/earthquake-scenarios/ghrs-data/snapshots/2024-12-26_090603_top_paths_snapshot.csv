@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,25,22
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20120000_Sequence_EmiliaRomagna/20120520_M5.8_EmiliaRomagna,12,2
+/gem/earthquake-scenarios/tree/main/Europe,11,7
+/gem/earthquake-scenarios/tree/main/East_Asia/Japan,11,4
+/gem/earthquake-scenarios/tree/main,10,6
+/gem/earthquake-scenarios/tree/main/Europe/Italy,10,5
+/gem/earthquake-scenarios/tree/main/South_America,8,6
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20120000_Sequence_EmiliaRomagna,7,2
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20120000_Sequence_EmiliaRomagna/20120520_M5.8_EmiliaRomagna/Recording_Stations,7,1
+/gem/earthquake-scenarios/tree/main/Europe/Italy/20120000_Sequence_EmiliaRomagna/20120520_M5.8_EmiliaRomagna/OpenQuake_gmfs,6,2
