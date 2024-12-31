@@ -35,6 +35,7 @@ on:
   #      -
   schedule:
     - cron: "30 21 * * *"
+  pull_request:
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
