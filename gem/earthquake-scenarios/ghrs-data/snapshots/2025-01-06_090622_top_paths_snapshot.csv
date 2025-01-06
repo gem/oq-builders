@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/earthquake-scenarios,26,20
+/gem/earthquake-scenarios/tree/main/Europe,9,6
+/gem/earthquake-scenarios/tree/main,8,7
+/gem/earthquake-scenarios/tree/main/World,7,6
+/gem/earthquake-scenarios/tree/main/Europe/Turkey/20230206_M7.8_KahramanmarasGaziantep,7,5
+/gem/earthquake-scenarios/tree/main/Europe/Turkey,6,4
+/gem/earthquake-scenarios/tree/main/Middle_East/Iran,6,2
+/gem/earthquake-scenarios/blob/main/Europe/Turkey/20230206_M7.8_KahramanmarasGaziantep/Rupture/earthquake_rupture_model_AFAD.xml,5,3
+/gem/earthquake-scenarios/tree/main/East_Asia/Japan,5,3
+/gem/earthquake-scenarios/blob/main/World/world_impact_ID_0.csv,5,2
