@@ -35,6 +35,7 @@ on:
   #      -
   schedule:
     - cron: "30 21 * * *"
+  pull_request:
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
@@ -54,6 +55,9 @@ jobs:
         if: github.event.inputs.git-ref != ''
         with:
           ref: ${{ github.event.inputs.git-ref }}
+      - run: |
+          echo ${{ github.workspace }}
+          echo $GITHUB_WORKSPACE
       - name: Docker build of the container and create installer
         run: |
           echo "Check variable for build packages"
@@ -67,10 +71,9 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Installer
+          name: NotSigned
           path: /home/runner/work/oq-builders/oq-builders/out
           retention-days: 5
-
   Test_OQ:
     needs: Build_Installer
     runs-on: windows-2019
@@ -79,22 +82,14 @@ jobs:
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v4
         with:
-          name: Installer
+          name: NotSigned
       - name: Execute the Installer
         run: |
+          pwd
+          Get-ChildItem -Path ${{ github.workspace }}
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-          Write-Host ${env:PATH}
-          pwd
-      - name: Clone Repository (Latest)
-        uses: actions/checkout@v4
-        if: github.event.inputs.git-ref == ''
-      - name: Clone Repository (Custom Ref)
-        uses: actions/checkout@v4
-        if: github.event.inputs.git-ref != ''
-        with:
-          ref: ${{ github.event.inputs.git-ref }}
       - name: Run oq
         run: |
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
@@ -156,31 +151,46 @@ jobs:
           if ( Compare-Object (Get-Content $dirA\imls.csv) -DifferenceObject (Get-Content $dirB\imls.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
           if ( Compare-Object (Get-Content $dirA\max_disps.csv) -DifferenceObject (Get-Content $dirB\max_disps.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
         if: github.event.inputs.oq-science == '1'
-  Upload_Installer:
+      - run: |
+          Get-ChildItem -Path ${{ github.workspace }}
+      - name: Sign files with Trusted Signing
+        uses: azure/trusted-signing-action@v0.5.0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: ${{ secrets.AZURE_ENDPOINT }}
+          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
+          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
+          files-folder: ${{ github.workspace }}
+          files-folder-filter: exe
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+      - run: |
+          Get-ChildItem -Path ${{ github.workspace }}
+      - name: Upload Signed Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Signed
+          path: ${{ github.workspace }}
+          retention-days: 5
+  Upload_Installer_Signed:
     needs: Test_OQ
     runs-on: ubuntu-latest
+    env:
+      DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
+      folder: ${{ github.event.inputs.path }}
+      vtag: ${{ github.event.inputs.oq-tag }}
+      GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
     steps:
       - uses: actions/checkout@v4
-      - name: Download Windows Installer from build job
+      - name: Download Signed Windows Installer from test job
         uses: actions/download-artifact@v4
         with:
-          name: Installer
-      - name: Setup debugging session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 35
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
-        env:
-          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
-          folder: ${{ github.event.inputs.path }}
-          vtag: ${{ github.event.inputs.oq-tag }}
-          GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
+          name: Signed
       - name: rsync to downloads.openquake.org
         shell: bash
-        env:
-          DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
-          folder: ${{ github.event.inputs.path }}
-          vtag: ${{ github.event.inputs.oq-tag }}
-          GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
@@ -201,3 +211,28 @@ jobs:
                 echo "vtag is defined, so we need to upload files to OQ release"
                 gh release upload ${vtag} -R gem/oq-engine OpenQuake_Engine*
           fi
+  Upload_Installer_NotSigned:
+    needs: Test_OQ
+    runs-on: ubuntu-latest
+    env:
+      DOWNLOAD_SSH: ${{ secrets.GEM_PASS_TO_WIN }}
+      IP_TOUP: ${{ secrets.GEM_IP_STORE }}
+      PORT_TOUP: ${{ secrets.GEM_PORT_STORE }}
+      USER_TOUP: ${{ secrets.GEM_USER_STORE }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Not Signed Windows Installer from test job
+        uses: actions/download-artifact@v4
+        with:
+          name: NotSigned
+      - name: Setup debugging session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 35
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+      - name: rsync to GEM
+        shell: bash
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_package.enc
+          chmod 600 ./.deploy_rsa
+          eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
+          rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p  '${PORT_TOUP}' ' -ax OpenQuake_Engine* ${USER_TOUP}@${IP_TOUP}:/mnt/windows_pkg/
