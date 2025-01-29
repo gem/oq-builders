@@ -6,8 +6,6 @@ Powered by
 <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Docker_%28container_engine%29_logo.png" width="100px">
 
 * Windows NSIS builder
-* Linxu/macOS (env) standalone builder
-* Linux (opt) standalone installer
 
 ### Internals
 
@@ -15,13 +13,6 @@ Powered by
 * wheel builders
 
 
-## Testing on Travis
+## Testing on GitHub
 
-All the builders and installers are tested via Travis + Docker with the following logic:
-
-- master branch: all the tests are run. Build may take a while
-- other branches: no tests are run unless one of these tags are added to the commit message
-   - `[WHEELS]`: run wheels builder
-   - `[UNIX]`: build unix installers (env/opt)
-   - `[WIN]`: build NSIS Windows installer
-
+The builder of Windows are tested with GitHub actions.
