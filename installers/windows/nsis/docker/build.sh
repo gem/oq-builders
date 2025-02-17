@@ -144,6 +144,7 @@ fi
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Working in: $(pwd)"
     sed -i '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
+    sed -i 's/\-no\-toolkit/\-with\-toolkit/g' installer.nsi
     # Get a copy of VMTK master repo
     echo "Clone VMTK repos"
 	mkdir $(pwd)/oq-vmtk
