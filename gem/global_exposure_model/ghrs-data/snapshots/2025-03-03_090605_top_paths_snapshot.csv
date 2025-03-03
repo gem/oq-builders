@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/global_exposure_model,64,50
+/gem/global_exposure_model/tree/main,20,12
+/gem/global_exposure_model/tree/main/North_America/Mexico,19,2
+/gem/global_exposure_model/tree/main/Europe,15,11
+/gem/global_exposure_model/tree/main/Southeast_Asia/Philippines,14,5
+/gem/global_exposure_model/tree/main/Africa,9,6
+/gem/global_exposure_model/tree/main/Europe/Germany,9,3
+/gem/global_exposure_model/blob/main/North_America/Mexico/Exposure_Res_Mexico_Adm1.csv,9,1
+/gem/global_exposure_model/tree/main/World,7,6
+/gem/global_exposure_model/tree/main/North_America/United_States,7,5
