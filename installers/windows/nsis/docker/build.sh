@@ -116,9 +116,10 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
 	cd oq-mbtk
     wine ../../python-dist/python3/python.exe  -m build -x -w . -o ../../oq-dist/oq-mbtk
 	cd ..
-    echo "Extracting python wheels for VMTK-Vulnerability-Modellers-ToolKit"
-    git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
-    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-vmtk/requirements_win64.txt
+	# FOR NOW remove VMTK that is the old repos
+    #echo "Extracting python wheels for VMTK-Vulnerability-Modellers-ToolKit"
+    #git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
+    #wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-vmtk/requirements_win64.txt
 fi
 
 cd $DIR/oq-dist
@@ -145,10 +146,11 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Working in: $(pwd)"
     sed -i '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
     sed -i 's/\-no\-toolkit/\-with\-toolkit/g' installer.nsi
+	# FOR NOW remove VMTK that is the old repos
     # Get a copy of VMTK master repo
-    echo "Clone VMTK repos"
-	mkdir $(pwd)/oq-vmtk
-    git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
+    #echo "Clone VMTK repos"
+	#mkdir $(pwd)/oq-vmtk
+    #git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
     echo "Clone MBTK repos"
     git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
     echo "Add GMT "
