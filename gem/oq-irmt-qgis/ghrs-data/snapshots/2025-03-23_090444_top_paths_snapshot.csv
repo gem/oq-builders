@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/oq-irmt-qgis,8,8
+/gem/oq-irmt-qgis/issues,5,2
+/gem/oq-irmt-qgis/tree/master/svir,2,2
+/gem/oq-irmt-qgis/actions/runs/13890748235,2,1
+/gem/oq-irmt-qgis/actions/runs/13914572052,2,1
+/gem/oq-irmt-qgis/actions/runs/13493928225,1,1
+/gem/oq-irmt-qgis/actions/runs/13890748235/job/38862214766,1,1
+/gem/oq-irmt-qgis/actions/runs/13914572052/job/38935193160,1,1
+/gem/oq-irmt-qgis/blob/master/svir/dialogs/load_gmf_data_as_layer_dialog.py,1,1
+/gem/oq-irmt-qgis/blob/master/svir/dialogs/load_output_as_layer_dialog.py,1,1
