@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/oq-engine,796,371
+/gem/oq-engine/pulls,283,25
+/gem/oq-engine/tree/master/openquake,225,82
+/gem/oq-engine/tree/master/openquake/hazardlib,144,37
+/gem/oq-engine/tree/master/openquake/hazardlib/gsim,82,26
+/gem/oq-engine/issues,81,26
+/gem/oq-engine/tree/master,65,42
+/gem/oq-engine/actions/workflows/cluster_ansible.yml,39,2
+/gem/oq-engine/tree/master/demos,37,22
+/gem/oq-engine/tree/master/openquake/calculators,37,5
