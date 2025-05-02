@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/oq-engine,970,451
+/gem/oq-engine/tree/master/openquake,220,86
+/gem/oq-engine/pulls,131,15
+/gem/oq-engine/tree/master/openquake/hazardlib,101,44
+/gem/oq-engine/tree/master/demos/hazard,77,37
+/gem/oq-engine/tree/master/openquake/hazardlib/gsim,73,39
+/gem/oq-engine/tree/master/demos,56,36
+/gem/oq-engine/tree/master,55,34
+/gem/oq-engine/tree/v3.23.2,46,19
+/gem/oq-engine/tree/master/openquake/calculators,38,16
