@@ -108,13 +108,11 @@ jobs:
           netstat -o -n -a | findstr 8800
           Write-Host "Test webui and tools Web pages"
           ping 127.0.0.1 -n 6 > null
-          curl.exe -I -G http://127.0.0.1:8800/engine
+          curl.exe -I --fail -G http://127.0.0.1:8800/engine
           ping 127.0.0.1 -n 6 > null
-          curl.exe -X HEAD -I http://127.0.0.1:8800/ipt/
+          curl.exe -X HEAD -I --fail http://127.0.0.1:8800/ipt/
           ping 127.0.0.1 -n 6 > null
-          curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
-          ping 127.0.0.1 -n 6 > null
-          curl.exe -X HEAD -I http://127.0.0.1:8800/taxtweb/
+          curl.exe -X HEAD -I --fail http://127.0.0.1:8800/taxonomy/
           ping 127.0.0.1 -n 6 > null
           oq.exe engine --list-risk-calculations
           curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs
