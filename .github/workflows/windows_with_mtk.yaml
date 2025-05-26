@@ -58,7 +58,7 @@ jobs:
   Test_OQ:
     needs: Build_Installer
     runs-on: windows-2019
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v4
@@ -87,14 +87,16 @@ jobs:
           oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
           oq.exe engine --list-risk-calculations
       - name: Run oq webui console and curl for the standalone tools
+        timeout-minutes: 10
         run: |
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
           cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           Start-Job -ScriptBlock{& oq.exe webui start 127.0.0.1:8800 -s 2>&1 > "$env:LOCALAPPDATA\Temp\webui.log" }
-          ping 127.0.0.1 -n 6 > null
-          Get-Job
-          netstat -o -n -a | findstr 8800
+          do {
+             Write-Host "waiting..."
+             sleep 2
+          } until(Test-NetConnection 127.0.0.1 -Port 8800 | ? { $_.TcpTestSucceeded } )
           Write-Host "Test webui and tools Web pages"
           ping 127.0.0.1 -n 6 > null
           curl.exe -I -G http://127.0.0.1:8800/engine

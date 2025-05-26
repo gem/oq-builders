@@ -95,16 +95,11 @@ done
 
 ## Standalone apps
 echo "Downloading standalone apps"
-for app in oq-platform-standalone oq-platform-ipt oq-platform-taxtweb oq-platform-taxonomy; do
+for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy; do
     git clone -b $TOOLS_BRANCH --depth=1 https://github.com/gem/${app}.git
     git -C ${app} status
     git -C ${app} log -1
     wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/tools ./${app}
-    if [ "$app" = "oq-platform-taxtweb" ]; then
-        export PYBUILD_NAME="oq-taxonomy"
-        wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/tools ./${app}
-        unset PYBUILD_NAME
-    fi
 done
 
 echo "Extracting python wheels"
