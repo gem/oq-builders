@@ -103,7 +103,10 @@ jobs:
           Write-Host ${env:PATH}
           cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           Start-Job -ScriptBlock{& oq.exe webui start 127.0.0.1:8800 -s 2>&1 > "$env:LOCALAPPDATA\Temp\webui.log" }
-          ping 127.0.0.1 -n 6 > null
+          do {
+             Write-Host "waiting..."
+             sleep 2
+          } until(Test-NetConnection 127.0.0.1 -Port 8800 | ? { $_.TcpTestSucceeded } )
           Get-Job
           netstat -o -n -a | findstr 8800
           Write-Host "Test webui and tools Web pages"
