@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/global_exposure_model,140,71
+/gem/global_exposure_model/tree/main/Europe,43,24
+/gem/global_exposure_model/tree/main,31,20
+/gem/global_exposure_model/tree/main/World,29,11
+/gem/global_exposure_model/tree/main/Middle_East,22,11
+/gem/global_exposure_model/blob/main/Europe/Italy/Exposure_Res_Italy_Adm1.csv,21,3
+/gem/global_exposure_model/tree/main/Africa,19,14
+/gem/global_exposure_model/blob/main/Europe/Italy/Exposure_Summary_Taxonomy.csv,19,3
+/gem/global_exposure_model/blob/main/Europe/Italy/Exposure_Ind_Italy_Adm1.csv,19,2
+/gem/global_exposure_model/blob/main/Europe/Italy/Exposure_Summary_Adm1.csv,17,5
