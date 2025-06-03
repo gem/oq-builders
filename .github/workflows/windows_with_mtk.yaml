@@ -57,7 +57,7 @@ jobs:
 
   Test_OQ:
     needs: Build_Installer
-    runs-on: windows-2019
+    runs-on: windows-2022
     timeout-minutes: 60
     steps:
       - name: Download Windows Installer from build job
