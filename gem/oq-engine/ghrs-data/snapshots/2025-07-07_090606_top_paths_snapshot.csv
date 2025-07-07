@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/oq-engine,741,338
+/gem/oq-engine/pulls,195,11
+/gem/oq-engine/tree/master/openquake,167,74
+/gem/oq-engine/tree/master/openquake/hazardlib,99,43
+/gem/oq-engine/tree/master,56,34
+/gem/oq-engine/issues,53,15
+/gem/oq-engine/tree/master/demos,47,23
+/gem/oq-engine/tree/master/openquake/hazardlib/gsim,41,23
+/gem/oq-engine/tree/master/demos/hazard,41,22
+/gem/oq-engine/blob/master/openquake/hazardlib/mfd/truncated_gr.py,33,25
