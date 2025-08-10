@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/oq-engine,620,336
+/gem/oq-engine/tree/master/openquake,113,66
+/gem/oq-engine/tree/master/openquake/hazardlib,62,29
+/gem/oq-engine/tree/master/openquake/hazardlib/gsim,59,30
+/gem/oq-engine/pulls,49,11
+/gem/oq-engine/releases/tag/v3.23.2,41,17
+/gem/oq-engine/issues,31,17
+/gem/oq-engine/tree/master,29,23
+/gem/oq-engine/blob/engine-3.16/doc/installing/windows.md,21,7
+/gem/oq-engine/tree/engine-3.22,21,1
