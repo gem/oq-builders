@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/oq-irmt-qgis,8,5
+/gem/oq-irmt-qgis/tree/qgis3-socketserver,3,1
+/gem/oq-irmt-qgis/tree/qgis3-socketserver/svir,2,1
+/gem/oq-irmt-qgis/blob/qgis3-socketserver/svir/websocket/taxtweb_app.py,1,1
+/gem/oq-irmt-qgis/blob/qgis3-socketserver/svir/websocket/web_app.py,1,1
+/gem/oq-irmt-qgis/issues/784,1,1
+/gem/oq-irmt-qgis/tree/9e813658c70b47686ea87c38b0f3a05bb88adc47,1,1
+/gem/oq-irmt-qgis/tree/qgis3-socketserver/bridge_example,1,1
+/gem/oq-irmt-qgis/tree/qgis3-socketserver/docker,1,1
+/gem/oq-irmt-qgis/tree/qgis3-socketserver/scripts,1,1
