@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/gem/global_exposure_model,16,11
+/gem/global_exposure_model/tree/main,8,6
+/gem/global_exposure_model/tree/main/Southeast_Asia/Indonesia,8,3
+/gem/global_exposure_model/tree/main/Southeast_Asia,6,4
+/gem/global_exposure_model/tree/main/Africa/Ghana,4,2
+/gem/global_exposure_model/blob/main/Africa/Ghana/Exposure_Ind_Ghana_Adm1.csv,4,1
+/gem/global_exposure_model/blob/main/North_Asia/Russia/Exposure_Res_Russia_Adm1.csv,3,2
+/gem/global_exposure_model/blob/main/North_Asia/Russia/Exposure_Summary_Adm1.csv,3,2
+/gem/global_exposure_model/tree/main/Africa,3,2
+/gem/global_exposure_model/tree/main/North_Asia/Russia,2,2
