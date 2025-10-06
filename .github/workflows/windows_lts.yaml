@@ -34,8 +34,8 @@ on:
   #    branches:
   #      -
   schedule:
-    - cron: "30 14 * * *"
-    - cron: "32 14 * * *"
+    - cron: "35 14 * * *"
+    - cron: "37 14 * * *"
   pull_request:
 jobs:
   Build_Installer:
@@ -49,15 +49,19 @@ jobs:
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
       - name: Run for schedule A
-        if: github.event.schedule == '30 14 * * *'
+        if: github.event.schedule == '35 14 * * *'
         env:
           GEM_SET_BRANCH: master
           GEM_SET_BRANCH_TOOLS: master
+        run: |
+          echo "Run for schedule A"
       - name: Run for schedule B
-        if: github.event.schedule == '32 14 * * *'
+        if: github.event.schedule == '37 14 * * *'
         env:
           GEM_SET_BRANCH: engine-3.23
           GEM_SET_BRANCH_TOOLS: engine-3.23
+        run: |
+          echo "Run for schedule B"
       - name: Current Variable values
         run: |
           echo "Check variable for build packages"
