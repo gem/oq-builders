@@ -48,20 +48,20 @@ jobs:
       GIT_BRANCH: ${{ github.ref }}
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
+      - name: Default values for GEM_SET_BRANCH and GEM_SET_BRANCH_TOOLS
+        run: |
+          echo 'GEM_SET_BRANCH="${{ github.event.inputs.oq-ref }}"' >> $GITHUB_ENV
+          echo 'GEM_SET_BRANCH_TOOLS="${{ github.event.inputs.oq-ref }}"' >> $GITHUB_ENV
       - name: Run for schedule A
-        if: github.event.schedule == '35 14 * * *'
-        env:
-          GEM_SET_BRANCH: master
-          GEM_SET_BRANCH_TOOLS: master
+        if: github.event.schedule == '10 15 * * *'
         run: |
-          echo "Run for schedule A"
+          echo 'GEM_SET_BRANCH="master"' >> $GITHUB_ENV
+          echo 'GEM_SET_BRANCH_TOOLS="master"' >> $GITHUB_ENV
       - name: Run for schedule B
-        if: github.event.schedule == '37 14 * * *'
-        env:
-          GEM_SET_BRANCH: engine-3.23
-          GEM_SET_BRANCH_TOOLS: engine-3.23
+        if: github.event.schedule == '13 15 * * *'
         run: |
-          echo "Run for schedule B"
+          echo 'GEM_SET_BRANCH="engine-3.23"' >> $GITHUB_ENV
+          echo 'GEM_SET_BRANCH_TOOLS="engine-3.23"' >> $GITHUB_ENV
       - name: Current Variable values
         run: |
           echo "Check variable for build packages"
