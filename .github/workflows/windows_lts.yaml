@@ -34,7 +34,8 @@ on:
   #    branches:
   #      -
   schedule:
-    - cron: "30 19 * * *"
+    - cron: "30 14 * * *"
+    - cron: "32 14 * * *"
   pull_request:
 jobs:
   Build_Installer:
@@ -47,6 +48,24 @@ jobs:
       GIT_BRANCH: ${{ github.ref }}
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
+      - name: Run for schedule A
+        if: github.event.schedule == '30 14 * * *'
+        env:
+          GEM_SET_BRANCH: master
+          GEM_SET_BRANCH_TOOLS: master
+      - name: Run for schedule B
+        if: github.event.schedule == '32 14 * * *'
+        env:
+          GEM_SET_BRANCH: engine-3.23
+          GEM_SET_BRANCH_TOOLS: engine-3.23
+      - name: Current Variable values
+        run:
+          echo "Check variable for build packages"
+          echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}"
+          echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
+          echo "GEM_SET_RELEASE: ${GEM_SET_RELEASE}"
+          echo "GEM_SET_BUILD_SCIENCE: ${GEM_SET_BUILD_SCIENCE}"
+          exit 1
       - name: Clone Repository (Latest)
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref == ''
@@ -60,11 +79,6 @@ jobs:
           echo $GITHUB_WORKSPACE
       - name: Docker build of the container and create installer
         run: |
-          echo "Check variable for build packages"
-          echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}"
-          echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
-          echo "GEM_SET_RELEASE: ${GEM_SET_RELEASE}"
-          echo "GEM_SET_BUILD_SCIENCE: ${GEM_SET_BUILD_SCIENCE}"
           sleep 2
           bash -x ci/windows_package.sh
           #
