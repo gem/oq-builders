@@ -59,7 +59,7 @@ jobs:
           GEM_SET_BRANCH: engine-3.23
           GEM_SET_BRANCH_TOOLS: engine-3.23
       - name: Current Variable values
-        run:
+        run: |
           echo "Check variable for build packages"
           echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}"
           echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
