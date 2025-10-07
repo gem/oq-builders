@@ -34,8 +34,8 @@ on:
   #    branches:
   #      -
   schedule:
-    - cron: "22 15 * * *"
-    - cron: "25 15 * * *"
+    - cron: "57 7 * * *"
+    - cron: "59 7 * * *"
   pull_request:
 jobs:
   Build_Installer:
@@ -53,15 +53,15 @@ jobs:
           echo "GEM_SET_BRANCH='${{ github.event.inputs.oq-ref }}'" >> $GITHUB_ENV
           echo "GEM_SET_BRANCH_TOOLS='${{ github.event.inputs.oq-ref }}'" >> $GITHUB_ENV
       - name: Run for schedule A
-        if: github.event.schedule == '22 15 * * *'
+        if: github.event.schedule == '57 7 * * *'
         run: |
           echo "GEM_SET_BRANCH='master'" >> $GITHUB_ENV
           echo "GEM_SET_BRANCH_TOOLS='master'" >> $GITHUB_ENV
       - name: Run for schedule B
-        if: github.event.schedule == '25 15 * * *'
+        if: github.event.schedule == '59 7 * * *'
         run: |
-          echo 'GEM_SET_BRANCH="engine-3.23"' >> $GITHUB_ENV
-          echo 'GEM_SET_BRANCH_TOOLS="engine-3.23"' >> $GITHUB_ENV
+          echo 'GEM_SET_BRANCH="engine-3.43"' >> $GITHUB_ENV
+          echo 'GEM_SET_BRANCH_TOOLS="engine-3.43"' >> $GITHUB_ENV
       - name: Current Variable values
         run: |
           echo "Check variable for build packages"
