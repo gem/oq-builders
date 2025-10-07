@@ -6,7 +6,7 @@ on:
     inputs:
       rel_default:
         description: Test for global var
-        default: ${OQ_REL_DEFAULT}
+        default: ${{env.OQ_REL_DEFAULT}}
         required: true
       debug_enabled:
         type: boolean
