@@ -1,7 +1,13 @@
 name:  Package LTS for Windows
+env:
+  OQ_REL_DEFAULT: my_info
 on:
   workflow_dispatch:
     inputs:
+      rel_default:
+        description: Test for global var
+        default: ${OQ_REL_DEFAULT}
+        required: true
       debug_enabled:
         type: boolean
         description: 'Run the build with tmate debugging enabled '
@@ -65,6 +71,7 @@ jobs:
       - name: Current Variable values
         run: |
           echo "Check variable for build packages"
+          echo "OQ_REL_DEFAULT: ${OQ_REL_DEFAULT}"
           echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}"
           echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
           echo "GEM_SET_RELEASE: ${GEM_SET_RELEASE}"
