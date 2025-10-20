@@ -36,9 +36,9 @@ on:
         description: Build oq-mbtk and vmtk
         default: 0
         required: true
-  #  push:
-  #    branches:
-  #      -
+  # push:
+  #   branches:
+  #     -
   schedule:
     - cron: "57 7 * * *"
     - cron: "59 7 * * *"
