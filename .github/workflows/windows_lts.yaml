@@ -1,13 +1,15 @@
 name:  Package LTS for Windows
-env:
-  OQ_REL_DEFAULT: my_info
 on:
   workflow_dispatch:
     inputs:
       rel_default:
-        description: Test for global var
-        default: ${{env.OQ_REL_DEFAULT}}
+        type: choice
         required: true
+        description: Environment to set global var
+        options:
+          - LTS
+          - latest
+        default: LTS
       debug_enabled:
         type: boolean
         description: 'Run the build with tmate debugging enabled '
