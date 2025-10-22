@@ -14,8 +14,8 @@ on:
           - engine-3.23
           - master
   schedule:
-    - cron: "40 9 * * *"
-    - cron: "50 9 * * *"
+    - cron: "10 9 * * *"
+    - cron: "20 9 * * *"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
@@ -25,12 +25,12 @@ jobs:
       GEM_SET_BUILD_SCIENCE: 1
     steps:
       - name: Run for schedule A
-        if: github.event.schedule == '40 9 * * *'
+        if: github.event.schedule == '10 9 * * *'
         run: |
           echo "GEM_SET_BRANCH=master" >> $GITHUB_ENV
           echo "GEM_SET_BRANCH_TOOLS=master" >> $GITHUB_ENV
       - name: Run for schedule B
-        if: github.event.schedule == '50 9 * * *'
+        if: github.event.schedule == '20 9 * * *'
         run: |
           echo "GEM_SET_BRANCH=engine-3.23" >> $GITHUB_ENV
           echo "GEM_SET_BRANCH_TOOLS="engine-3.23" >> $GITHUB_ENV
