@@ -7,29 +7,40 @@ on:
         default: master
         required: true
       oq-ref:
-        description: Branch of Openquake Engine
-        default: master
+        type: choice
         required: true
-      oq-rel:
-        description: Build Number of Openquake Engine
-        default: 1
-        required: false
-  #  push:
-  #    branches:
-  #      -
+        description: Branch of Openquake Engine
+        options:
+          - engine-3.23
+          - master
   schedule:
-    - cron: "15 12 * * *"
+    - cron: "40 9 * * *"
+    - cron: "50 9 * * *"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
     env:
       GEM_SET_BRANCH: ${{ github.event.inputs.oq-ref }}
       GEM_SET_BRANCH_TOOLS: ${{ github.event.inputs.oq-ref }}
-      GEM_SET_RELEASE: ${{ github.event.inputs.oq-rel }}
       GEM_SET_BUILD_SCIENCE: 1
-      GIT_BRANCH: ${{ github.ref }}
-      GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
+      - name: Run for schedule A
+        if: github.event.schedule == '40 9 * * *'
+        run: |
+          echo "GEM_SET_BRANCH=master" >> $GITHUB_ENV
+          echo "GEM_SET_BRANCH_TOOLS=master" >> $GITHUB_ENV
+      - name: Run for schedule B
+        if: github.event.schedule == '50 9 * * *'
+        run: |
+          echo "GEM_SET_BRANCH=engine-3.23" >> $GITHUB_ENV
+          echo "GEM_SET_BRANCH_TOOLS="engine-3.23" >> $GITHUB_ENV
+      - name: Current Variable values
+        run: |
+          echo "Check variable for build packages"
+          echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}"
+          echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
+          echo "GEM_SET_BUILD_SCIENCE: ${GEM_SET_BUILD_SCIENCE}"
+          exit 1
       - name: Clone Repository (Latest)
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref == ''
