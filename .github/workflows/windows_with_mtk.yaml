@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref == ''
         with:
-          ref: ${{GEM_SET_BRANCH}}
+          ref: $GEM_SET_BRANCH
       - name: Clone Repository (Custom Ref)
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref != ''
