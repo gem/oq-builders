@@ -14,8 +14,8 @@ on:
           - engine-3.23
           - master
   schedule:
-    - cron: "10 9 * * *"
-    - cron: "20 9 * * *"
+    - cron: "45 9 * * *"
+    - cron: "00 10 * * *"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
@@ -33,14 +33,13 @@ jobs:
         if: github.event.schedule == '20 9 * * *'
         run: |
           echo "GEM_SET_BRANCH=engine-3.23" >> $GITHUB_ENV
-          echo "GEM_SET_BRANCH_TOOLS="engine-3.23" >> $GITHUB_ENV
+          echo "GEM_SET_BRANCH_TOOLS=engine-3.23" >> $GITHUB_ENV
       - name: Current Variable values
         run: |
           echo "Check variable for build packages"
           echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}"
           echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
           echo "GEM_SET_BUILD_SCIENCE: ${GEM_SET_BUILD_SCIENCE}"
-          exit 1
       - name: Clone Repository (Latest)
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref == ''
