@@ -117,8 +117,8 @@ jobs:
           cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
           Remove-Item -Path .\oq-mbtk\openquake\cat\__init__.py
           python.exe -m pip install pytest
-          pytest -vsx .\oq-mbtk\openquake\cat
-        if: github.event.inputs.oq-science == '1'
+          cd .\oq-mbtk\openquake\
+          pytest -vsx --color=yes --durations=10 cat ghm man mbt sub wkf smt
       #- name: Compare files of VMTK
       #  run: |
       #    $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
