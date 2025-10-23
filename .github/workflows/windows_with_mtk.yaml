@@ -14,7 +14,7 @@ on:
           - engine-3.23
           - master
   schedule:
-    - cron: "00 12 * * *"
+    - cron: "40 14 * * *"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
