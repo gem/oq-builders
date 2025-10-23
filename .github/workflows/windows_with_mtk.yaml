@@ -1,4 +1,5 @@
 name:  Package for Windows with Tools
+run-name: Package for Windows with Tools ${{ github.event_name }} by @${{ github.actor }}
 on:
   workflow_dispatch:
     inputs:
