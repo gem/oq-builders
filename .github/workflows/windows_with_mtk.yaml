@@ -1,5 +1,4 @@
 name:  Package for Windows with Tools
-run-name: Package for Windows with Tools ${{ github.event_name }} by @${{ github.actor }}
 on:
   workflow_dispatch:
     inputs:
@@ -15,37 +14,21 @@ on:
           - engine-3.23
           - master
   schedule:
-    - cron: "00 11 * * *"
-    - cron: "30 11 * * *"
+    - cron: "00 12 * * *"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
     env:
       GEM_SET_BRANCH: ${{ github.event.inputs.oq-ref }}
       GEM_SET_BRANCH_TOOLS: ${{ github.event.inputs.oq-ref }}
+      GEM_SET_RELEASE: ${{ github.event.inputs.oq-rel }}
       GEM_SET_BUILD_SCIENCE: 1
+      GIT_BRANCH: ${{ github.ref }}
+      GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
-      - name: Run for schedule A
-        if: github.event.schedule == '00 11 * * *'
-        run: |
-          echo "GEM_SET_BRANCH=master" >> $GITHUB_ENV
-          echo "GEM_SET_BRANCH_TOOLS=master" >> $GITHUB_ENV
-      - name: Run for schedule B
-        if: github.event.schedule == '30 11 * * *'
-        run: |
-          echo "GEM_SET_BRANCH=engine-3.23" >> $GITHUB_ENV
-          echo "GEM_SET_BRANCH_TOOLS=engine-3.23" >> $GITHUB_ENV
-      - name: Current Variable values
-        run: |
-          echo "Check variable for build packages"
-          echo "GEM_SET_BRANCH: ${GEM_SET_BRANCH}"
-          echo "GEM_SET_BRANCH_TOOLS: ${GEM_SET_BRANCH_TOOLS}"
-          echo "GEM_SET_BUILD_SCIENCE: ${GEM_SET_BUILD_SCIENCE}"
       - name: Clone Repository (Latest)
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref == ''
-        with:
-          ref: $GEM_SET_BRANCH
       - name: Clone Repository (Custom Ref)
         uses: actions/checkout@v4
         if: github.event.inputs.git-ref != ''
