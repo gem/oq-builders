@@ -119,7 +119,6 @@ jobs:
           Remove-Item -Path .\oq-mbtk\openquake\mbt\__init__.py
           Remove-Item -Path .\oq-mbtk\openquake\smt\__init__.py
           python.exe -m pip install pytest
-          cd .\oq-mbtk\openquake\
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\cat
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\mbt
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\smt
