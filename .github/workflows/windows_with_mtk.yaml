@@ -14,7 +14,7 @@ on:
           - engine-3.23
           - master
   schedule:
-    - cron: "40 14 * * *"
+    - cron: "05 08 * * *"
 jobs:
   Build_Installer:
     runs-on: ubuntu-latest
@@ -116,9 +116,13 @@ jobs:
           python.exe -V
           cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
           Remove-Item -Path .\oq-mbtk\openquake\cat\__init__.py
+          Remove-Item -Path .\oq-mbtk\openquake\mbt\__init__.py
+          Remove-Item -Path .\oq-mbtk\openquake\smt\__init__.py
           python.exe -m pip install pytest
           cd .\oq-mbtk\openquake\
-          pytest -vsx --color=yes --durations=10 cat ghm man mbt sub wkf smt
+          pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\cat
+          pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\mbt
+          pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\smt
       #- name: Compare files of VMTK
       #  run: |
       #    $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
