@@ -92,6 +92,7 @@ jobs:
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
       - name: Run oq
         run: |
+          $ErrorActionPreference = 'Stop'
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe --version
           oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
