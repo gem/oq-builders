@@ -95,6 +95,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe --version
+          oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
           oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
           oq.exe engine --list-risk-calculations
       - name: Run oq webui console and curl for the standalone tools
