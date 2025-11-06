@@ -97,13 +97,16 @@ jobs:
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe --version
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
-          oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
+          echo %ERRORLEVEL%
+          echo $LASTEXITCODE
       - name: Run oq calc 2
         run: |
           $ErrorActionPreference = 'Stop'
           $PSNativeCommandUseErrorActionPreference = $true
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
+          echo %ERRORLEVEL%
+          echo $LASTEXITCODE
       - name: Display calcs
         run: |
           oq.exe engine --list-risk-calculations
