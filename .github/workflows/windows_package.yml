@@ -90,7 +90,7 @@ jobs:
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-      - name: Run oq calc 1
+      - name: Run oq calc
         run: |
           $ErrorActionPreference = 'Stop'
           $PSNativeCommandUseErrorActionPreference = $true
@@ -99,16 +99,12 @@ jobs:
           oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
           echo %ERRORLEVEL%
           echo $LASTEXITCODE
-      - name: Run oq calc 2
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true
-          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          Write-Host "Exit code $LastExitCode"
           oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
-          echo %ERRORLEVEL%
-          echo $LASTEXITCODE
+          Write-Host "Exit code $LastExitCode"
       - name: Display calcs
         run: |
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe engine --list-risk-calculations
       - name: Run oq webui console and curl for the standalone tools
         timeout-minutes: 10
