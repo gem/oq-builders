@@ -81,8 +81,13 @@ jobs:
           $PSNativeCommandUseErrorActionPreference = $true
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe --version
-          oq.exe engine --run "https://downloads.openquake.org/pkgs/test_event_based_risk_inputs_bc.zip"
+          oq.exe engine --run "https://downloads.openquake.org/jobs/eb_risk_demo.zip"
+          Write-Host "Exit code $LastExitCode"
           oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
+          Write-Host "Exit code $LastExitCode"
+      - name: Display calcs
+        run: |
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe engine --list-risk-calculations
       - name: Run oq webui console and curl for the standalone tools
         timeout-minutes: 10
