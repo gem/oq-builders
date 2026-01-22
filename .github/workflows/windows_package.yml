@@ -88,14 +88,14 @@ jobs:
           pwd
           Get-ChildItem -Path ${{ github.workspace }}
           $Install = Get-ChildItem -Filter *.exe
-          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait  -RedirectStandardOutput "C:\TEMP\output.log"
+          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait -RedirectStandardOutput "C:\TEMP\output.log"
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           Get-ChildItem -Path "$env:LOCALAPPDATA\Programs\OpenQuake Engine\"
       - name: Upload Installation log on Windows
         uses: actions/upload-artifact@v4
         with:
           name: Install_log
-          path: "C:\\TEMP\output.log"
+          path: "C:\\TEMP\\output.log"
           retention-days: 5
       - name: Run oq webui console and curl for the standalone tools
         timeout-minutes: 10
