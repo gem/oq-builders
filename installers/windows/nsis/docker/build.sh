@@ -90,20 +90,18 @@ for app in oq-engine; do
     git clone -b $OQ_BRANCH --depth=1 https://github.com/gem/${app}.git
     git -C ${app} status
     git -C ${app} log -1
-    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/engine ./${app}
+    echo "Extracting python wheels"
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
+    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check -w ../oq-dist/engine ./${app}
 done
-
 ## Standalone apps
 echo "Downloading standalone apps"
 for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy django-gem-taxonomy; do
     git clone -b $TOOLS_BRANCH --depth=1 https://github.com/gem/${app}.git
     git -C ${app} status
     git -C ${app} log -1
-    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/tools ./${app}
+    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check  -w ../oq-dist/tools ./${app}
 done
-
-echo "Extracting python wheels"
-wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
 #
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     wine ../python-dist/python3/python.exe -m pip install build
