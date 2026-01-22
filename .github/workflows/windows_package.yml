@@ -90,6 +90,12 @@ jobs:
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+      - name: Upload Installation log on Windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: Install_log
+          path: C:\\Users\\runneradmin\\AppData\\Local\\Programs\OpenQuake Engine\install.log
+          retention-days: 5
       - name: Run oq webui console and curl for the standalone tools
         timeout-minutes: 10
         run: |
@@ -122,6 +128,7 @@ jobs:
           curl.exe -v -G http://127.0.0.1:8800/engine/1/outputs
           curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs
       - name: Upload Artifact WebUI log
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: WebUI_log
