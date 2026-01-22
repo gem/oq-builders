@@ -144,7 +144,7 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     echo "Working in: $(pwd)"
     sed -i '/^#GEM_SET_BUILD_SCIENCE/r science.sec' installer.nsi
     sed -i 's/\-no\-toolkit/\-with\-toolkit/g' installer.nsi
-	# FOR NOW remove VMTK that is the old repos
+    # FOR NOW remove VMTK that is the old repos
     # Get a copy of VMTK master repo
     #echo "Clone VMTK repos"
 	#mkdir $(pwd)/oq-vmtk
@@ -171,6 +171,9 @@ rm /tmp/README.$$.md
 #    wget -O- https://docs.openquake.org/manuals/OpenQuake%20Manual%20%28master%29.pdf > OpenQuake\ manual.pdf
 #fi
 
+#22/01/25
+# Get a copy of install.py
+curl -L -O https://github.com/gem/oq-engine/raw/${OQ_BRANCH}/install.py
 
 if [[ $OQ_OUTPUT = *"exe"* ]]; then
     echo "Generating NSIS installer"
