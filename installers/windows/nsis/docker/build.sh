@@ -95,7 +95,7 @@ done
 
 ## Standalone apps
 echo "Downloading standalone apps"
-for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy; do
+for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy django-gem-taxonomy; do
     git clone -b $TOOLS_BRANCH --depth=1 https://github.com/gem/${app}.git
     git -C ${app} status
     git -C ${app} log -1

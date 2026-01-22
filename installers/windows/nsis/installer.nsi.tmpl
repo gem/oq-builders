@@ -161,6 +161,14 @@ Section "!OpenQuake Tools" SecTools
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
 SectionEnd
 
+Section "!OpenQuake install.py" SecInstall
+  SectionIn RO
+  SetOutPath "$PLUGINSDIR\oq-dist\engine"
+  DetailPrint "Run install.py after installation of all required packages"
+  # python3.11 install.py devel --venv $HOME/venv-engine-b3.23-pre5_test1 --version=b3.23-pre5
+  nsExec::ExecToLog '$INSTDIR\python3\python.exe install.py user --keepvenv'
+SectionEnd
+
 #GEM_SET_BUILD_SCIENCE
 
 Section "!OpenQuake Engine demos" SecDocDemo
