@@ -95,7 +95,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Install_log
-          path: "C:\\TEMP\output.log"
+          path: "C:\\TEMP\\output.log"
           retention-days: 5
       - name: Run oq webui console and curl for the standalone tools
         timeout-minutes: 10
