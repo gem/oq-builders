@@ -74,11 +74,11 @@ jobs:
           name: NotSigned
           path: /home/runner/work/oq-builders/oq-builders/out
           retention-days: 5
-  ##  Test_OQ:
-  ##    needs: Build_Installer
-  ##    runs-on: windows-2022
-  ##    timeout-minutes: 60
-  ##    steps:
+  Test_OQ:
+    needs: Build_Installer
+    runs-on: windows-2022
+    timeout-minutes: 60
+    steps:
   ##      - name: Download Windows Installer from build job
   ##        uses: actions/download-artifact@v4
   ##        with:
@@ -179,30 +179,30 @@ jobs:
   ##      #  if: github.event.inputs.oq-science == '1'
   ##      - run: |
   ##          Get-ChildItem -Path ${{ github.workspace }}
-  ##      - name: Sign files with Trusted Signing
-  ##        uses: azure/trusted-signing-action@v0.5.0
-  ##        with:
-  ##          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-  ##          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-  ##          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-  ##          endpoint: ${{ secrets.AZURE_ENDPOINT }}
-  ##          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
-  ##          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
-  ##          files-folder: ${{ github.workspace }}
-  ##          files-folder-filter: exe
-  ##          file-digest: SHA256
-  ##          timestamp-rfc3161: http://timestamp.acs.microsoft.com
-  ##          timestamp-digest: SHA256
-  ##      - run: |
-  ##          Get-ChildItem -Path ${{ github.workspace }}
-  ##      - name: Upload Signed Artifacts
-  ##        uses: actions/upload-artifact@v4
-  ##        with:
-  ##          name: Signed
-  ##          path: ${{ github.workspace }}
-  ##          retention-days: 5
+      - name: Sign files with Trusted Signing
+        uses: azure/trusted-signing-action@v0.5.0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: ${{ secrets.AZURE_ENDPOINT }}
+          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
+          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
+          files-folder: ${{ github.workspace }}
+          files-folder-filter: exe
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+      - run: |
+          Get-ChildItem -Path ${{ github.workspace }}
+      - name: Upload Signed Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Signed
+          path: ${{ github.workspace }}
+          retention-days: 5
   Upload_Installer_Signed:
-    needs: Build_Installer
+    needs: Test_OQ
     runs-on: ubuntu-latest
     env:
       DOWNLOAD_SSH: ${{ secrets.DOWNLOAD_ARTIFACTS }}
@@ -238,7 +238,7 @@ jobs:
                 gh release upload ${vtag} -R gem/oq-engine OpenQuake_Engine*
           fi
   Upload_Installer_NotSigned:
-    needs: Build_Installer
+    needs: Test_OQ
     runs-on: ubuntu-latest
     env:
       DOWNLOAD_SSH: ${{ secrets.GEM_PASS_TO_WIN }}
