@@ -79,106 +79,106 @@ jobs:
     runs-on: windows-2022
     timeout-minutes: 60
     steps:
-  ##      - name: Download Windows Installer from build job
-  ##        uses: actions/download-artifact@v4
-  ##        with:
-  ##          name: NotSigned
-  ##      - name: Execute the Installer
-  ##        run: |
-  ##          pwd
-  ##          Get-ChildItem -Path ${{ github.workspace }}
-  ##          $Install = Get-ChildItem -Filter *.exe
-  ##          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait -RedirectStandardOutput "C:\TEMP\output.log"
-  ##          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-  ##          Get-ChildItem -Path "$env:LOCALAPPDATA\Programs\OpenQuake Engine\"
-  ##      - name: Upload Installation log on Windows
-  ##        uses: actions/upload-artifact@v4
-  ##        with:
-  ##          name: Install_log
-  ##          path: "C:\\TEMP\\output.log"
-  ##          retention-days: 5
-  ##      - name: Run oq calc
-  ##        run: |
-  ##          $ErrorActionPreference = 'Stop'
-  ##          $PSNativeCommandUseErrorActionPreference = $true
-  ##          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-  ##          oq.exe --version
-  ##          oq.exe engine --run "https://downloads.openquake.org/jobs/eb_risk_demo.zip"
-  ##          Write-Host "Exit code $LastExitCode"
-  ##          oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
-  ##          Write-Host "Exit code $LastExitCode"
-  ##      - name: Display calcs
-  ##        run: |
-  ##          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-  ##          oq.exe engine --list-risk-calculations
-  ##      - name: Run oq webui console and curl for the standalone tools
-  ##        timeout-minutes: 10
-  ##        run: |
-  ##          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-  ##          Write-Host ${env:PATH}
-  ##          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-  ##          Start-Job -ScriptBlock{& oq.exe webui start 127.0.0.1:8800 -s 2>&1 > "$env:LOCALAPPDATA\Temp\webui.log" }
-  ##          do {
-  ##             Write-Host "waiting..."
-  ##             sleep 2
-  ##          } until(Test-NetConnection 127.0.0.1 -Port 8800 | ? { $_.TcpTestSucceeded } )
-  ##          Get-Job
-  ##          netstat -o -n -a | findstr 8800
-  ##          Write-Host "Test webui and tools Web pages"
-  ##          ping 127.0.0.1 -n 6 > null
-  ##          Write-Host "curl.exe -I --fail -G http://127.0.0.1:8800/engine"
-  ##          curl.exe -I -G http://127.0.0.1:8800/engine
-  ##          curl.exe -I --fail -G http://127.0.0.1:8800/engine
-  ##          ping 127.0.0.1 -n 6 > null
-  ##          Write-Host "curl.exe -X HEAD -I --fail http://127.0.0.1:8800/ipt/"
-  ##          curl.exe -X HEAD -I http://127.0.0.1:8800/ipt/
-  ##          curl.exe -X HEAD -I --fail http://127.0.0.1:8800/ipt/
-  ##          ping 127.0.0.1 -n 6 > null
-  ##          Write-Host "curl.exe -X HEAD -I --fail http://127.0.0.1:8800/taxonomy/"
-  ##          curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
-  ##          curl.exe -X HEAD -I --fail http://127.0.0.1:8800/taxonomy/
-  ##          ping 127.0.0.1 -n 6 > null
-  ##          oq.exe engine --list-risk-calculations
-  ##          Write-Host "curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs"
-  ##          curl.exe -v -G http://127.0.0.1:8800/engine/1/outputs
-  ##          curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs
-  ##      - name: Upload Artifact WebUI log
-  ##        if: always()
-  ##        uses: actions/upload-artifact@v4
-  ##        with:
-  ##          name: WebUI_log
-  ##          path: C:\\Users\\runneradmin\\AppData\\Local\\Temp\\webui.log
-  ##          retention-days: 5
-  ##      - name: Test installation of oq-mbtk
-  ##        run: |
-  ##          $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
-  ##          $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-  ##          python.exe -V
-  ##          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
-  ##          Remove-Item -Path .\oq-mbtk\openquake\cat\__init__.py
-  ##          python.exe -m pip install pytest
-  ##          pytest -vsx .\oq-mbtk\openquake\cat
-  ##        if: github.event.inputs.oq-science == '1'
-  ##      # Removed VMTK
-  ##      #- name: Compare files of VMTK
-  ##      #  run: |
-  ##      #    $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
-  ##      #    $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-  ##      #    python.exe -V
-  ##      #    cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
-  ##      #    cd "oq-vmtk\demonstration_files"
-  ##      #    dir
-  ##      #    python.exe computation_scripts_example_lite.py
-  ##      #    cd "outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
-  ##      #    dir
-  ##      #    $dirB = "$env:GITHUB_WORKSPACE\ci\to_compare"
-  ##      #    $dirA = "$env:LOCALAPPDATA\Programs\OpenQuake Engine\oq-vmtk\demonstration_files\outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
-  ##      #    if ( Compare-Object (Get-Content $dirA\max_accels.csv) -DifferenceObject (Get-Content $dirB\max_accels.csv) -SyncWindow 0 ) { exit 1} else {"Files are the same"}
-  ##      #    if ( Compare-Object (Get-Content $dirA\imls.csv) -DifferenceObject (Get-Content $dirB\imls.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
-  ##      #    if ( Compare-Object (Get-Content $dirA\max_disps.csv) -DifferenceObject (Get-Content $dirB\max_disps.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
-  ##      #  if: github.event.inputs.oq-science == '1'
-  ##      - run: |
-  ##          Get-ChildItem -Path ${{ github.workspace }}
+      - name: Download Windows Installer from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: NotSigned
+      - name: Execute the Installer
+        run: |
+          pwd
+          Get-ChildItem -Path ${{ github.workspace }}
+          $Install = Get-ChildItem -Filter *.exe
+          Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait -RedirectStandardOutput "C:\TEMP\output.log"
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          Get-ChildItem -Path "$env:LOCALAPPDATA\Programs\OpenQuake Engine\"
+      - name: Upload Installation log on Windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: Install_log
+          path: "C:\\TEMP\\output.log"
+          retention-days: 5
+      - name: Run oq calc
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $true
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          oq.exe --version
+          oq.exe engine --run "https://downloads.openquake.org/jobs/eb_risk_demo.zip"
+          Write-Host "Exit code $LastExitCode"
+          oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
+          Write-Host "Exit code $LastExitCode"
+      - name: Display calcs
+        run: |
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          oq.exe engine --list-risk-calculations
+      - name: Run oq webui console and curl for the standalone tools
+        timeout-minutes: 10
+        run: |
+          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          Write-Host ${env:PATH}
+          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          Start-Job -ScriptBlock{& oq.exe webui start 127.0.0.1:8800 -s 2>&1 > "$env:LOCALAPPDATA\Temp\webui.log" }
+          do {
+             Write-Host "waiting..."
+             sleep 2
+          } until(Test-NetConnection 127.0.0.1 -Port 8800 | ? { $_.TcpTestSucceeded } )
+          Get-Job
+          netstat -o -n -a | findstr 8800
+          Write-Host "Test webui and tools Web pages"
+          ping 127.0.0.1 -n 6 > null
+          Write-Host "curl.exe -I --fail -G http://127.0.0.1:8800/engine"
+          curl.exe -I -G http://127.0.0.1:8800/engine
+          curl.exe -I --fail -G http://127.0.0.1:8800/engine
+          ping 127.0.0.1 -n 6 > null
+          Write-Host "curl.exe -X HEAD -I --fail http://127.0.0.1:8800/ipt/"
+          curl.exe -X HEAD -I http://127.0.0.1:8800/ipt/
+          curl.exe -X HEAD -I --fail http://127.0.0.1:8800/ipt/
+          ping 127.0.0.1 -n 6 > null
+          Write-Host "curl.exe -X HEAD -I --fail http://127.0.0.1:8800/taxonomy/"
+          curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
+          curl.exe -X HEAD -I --fail http://127.0.0.1:8800/taxonomy/
+          ping 127.0.0.1 -n 6 > null
+          oq.exe engine --list-risk-calculations
+          Write-Host "curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs"
+          curl.exe -v -G http://127.0.0.1:8800/engine/1/outputs
+          curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs
+      - name: Upload Artifact WebUI log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WebUI_log
+          path: C:\\Users\\runneradmin\\AppData\\Local\\Temp\\webui.log
+          retention-days: 5
+      - name: Test installation of oq-mbtk
+        run: |
+          $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
+          $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          python.exe -V
+          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
+          Remove-Item -Path .\oq-mbtk\openquake\cat\__init__.py
+          python.exe -m pip install pytest
+          pytest -vsx .\oq-mbtk\openquake\cat
+        if: github.event.inputs.oq-science == '1'
+      # Removed VMTK
+      #- name: Compare files of VMTK
+      #  run: |
+      #    $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
+      #    $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+      #    python.exe -V
+      #    cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
+      #    cd "oq-vmtk\demonstration_files"
+      #    dir
+      #    python.exe computation_scripts_example_lite.py
+      #    cd "outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
+      #    dir
+      #    $dirB = "$env:GITHUB_WORKSPACE\ci\to_compare"
+      #    $dirA = "$env:LOCALAPPDATA\Programs\OpenQuake Engine\oq-vmtk\demonstration_files\outputs\out_dynamic_an_edps_imls\CR_LFINF-CDN_H1"
+      #    if ( Compare-Object (Get-Content $dirA\max_accels.csv) -DifferenceObject (Get-Content $dirB\max_accels.csv) -SyncWindow 0 ) { exit 1} else {"Files are the same"}
+      #    if ( Compare-Object (Get-Content $dirA\imls.csv) -DifferenceObject (Get-Content $dirB\imls.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
+      #    if ( Compare-Object (Get-Content $dirA\max_disps.csv) -DifferenceObject (Get-Content $dirB\max_disps.csv) -SyncWindow 0 ) {exit 1} else {"Files are the same"}
+      #  if: github.event.inputs.oq-science == '1'
+      - run: |
+          Get-ChildItem -Path ${{ github.workspace }}
       - name: Sign files with Trusted Signing
         uses: azure/trusted-signing-action@v0.5.0
         with:
