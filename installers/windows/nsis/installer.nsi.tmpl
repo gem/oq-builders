@@ -167,7 +167,7 @@ Section "!OpenQuake install.py" SecInstall
   File "install.py"
   DetailPrint "Run install.py after installation of all required packages"
   # python3.11 install.py devel --venv $HOME/venv-engine-b3.23-pre5_test1 --version=b3.23-pre5
-  nsExec::ExecToLog '$INSTDIR\python3\python.exe install.py user --novenv'
+  nsExec::ExecToLog '$INSTDIR\python3\python.exe install.py user --novenv --noupgrade'
 SectionEnd
 
 #GEM_SET_BUILD_SCIENCE
