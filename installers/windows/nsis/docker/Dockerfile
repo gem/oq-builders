@@ -37,7 +37,7 @@ WORKDIR $HOME
 
 RUN wget --cache=off https://ftp.openquake.org/windows/thirdparties/nsis-3.09-setup.exe  && \
 	wget --cache=off https://ftp.openquake.org/windows/thirdparties/python-3.13.7-win64.zip  && \
-    wget --cache=off https://ftp.openquake.org/windows/thirdparties/get-pip.py
+    wget --cache=off https://bootstrap.pypa.io/get-pip.py
 #
 
 RUN wine nsis-3.09-setup.exe /S && sleep 10
