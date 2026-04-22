@@ -103,14 +103,14 @@ for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy; do
 done
 
 echo "Extracting python wheels"
-wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py311-win64.txt
+wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py313-win64.txt
 #
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     wine ../python-dist/python3/python.exe -m pip install build
     echo "Downloading ScienceTools apps"
     git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
     echo "Extracting python wheels for oq-mbtk"
-    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements-py311-win64.txt
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements-py313-win64.txt
 	cd oq-mbtk
     wine ../../python-dist/python3/python.exe  -m build -x -w . -o ../../oq-dist/oq-mbtk
 	cd ..
