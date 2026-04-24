@@ -48,10 +48,10 @@ jobs:
       GIT_COMMIT_SHA: ${{ github.sha }}
     steps:
       - name: Clone Repository (Latest)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         if: github.event.inputs.git-ref == ''
       - name: Clone Repository (Custom Ref)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         if: github.event.inputs.git-ref != ''
         with:
           ref: ${{ github.event.inputs.git-ref }}
@@ -202,7 +202,7 @@ jobs:
       vtag: ${{ github.event.inputs.oq-tag }}
       GITHUB_TOKEN: ${{ secrets.OQ_RELEASE_PAT }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download Signed Windows Installer from test job
         uses: actions/download-artifact@v4
         with:
@@ -238,7 +238,7 @@ jobs:
       PORT_TOUP: ${{ secrets.GEM_PORT_STORE }}
       USER_TOUP: ${{ secrets.GEM_USER_STORE }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download Not Signed Windows Installer from test job
         uses: actions/download-artifact@v4
         with:
