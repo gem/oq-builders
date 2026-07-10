@@ -19,7 +19,7 @@
 
 # NOTE: To enable new pyproject only dependencies management
 # set to something different than empty NO_REQUIREMENTS variable
-NO_REQUIREMENTS=
+NO_REQUIREMENTS=True
 
 WHEELHOUSE_URL=https://wheelhouse.openquake.org/unified
 
