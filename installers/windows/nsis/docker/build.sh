@@ -17,6 +17,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
+# NOTE: To enable new pyproject only dependencies management
+# set to something different than empty NO_REQUIREMENTS variable
+NO_REQUIREMENTS=
+
+WHEELHOUSE_URL=https://wheelhouse.openquake.org/unified
+
+# echo "SLEEP HERE"
+# sleep 800000000
 if [ "$GEM_SET_DEBUG" ]; then
     set -x
 fi
@@ -90,20 +98,61 @@ for app in oq-engine; do
     git clone -b $OQ_BRANCH --depth=1 https://github.com/gem/${app}.git
     git -C ${app} status
     git -C ${app} log -1
-    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/engine ./${app}
+    #
+    # NOTE:
+    #
+    #     WITH THIS APPROACH WE INSTALL MUCH MORE NATURALLY THE PACKAGE AND ALL IT'S
+    #     DEPS IN ONE SHOT EXCLUSIVELY FROM OUR 'unified' wheelhouse repo
+    #
+    if [ "$NO_REQUIREMENTS" ]; then
+        wine ../../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location  --no-index --no-cache-dir -f "$WHEELHOUSE_URL" .
+        wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check -w ../oq-dist/engine ./${app}
+    else
+        #
+        #     INSTEAD THIS IS THE OLD METHOD
+        wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/engine ./${app}
+    fi
 done
 
 ## Standalone apps
 echo "Downloading standalone apps"
-for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy; do
+for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy django-gem-taxonomy; do
+    for branch in "$TOOLS_BRANCH" "master" "main"; do
+        TOOLS_BRANCH="$branch"
+        # do not fail on exit code 2 if the branch
+        # does not exist in the app repository
+        set +e
+        git ls-remote --exit-code --heads https://github.com/gem/${app}.git $TOOLS_BRANCH >/dev/null 2>&1
+        EXIT_CODE=$?
+        # set again to fail on exit code not 0
+        set -e
+        if [[ $EXIT_CODE -eq 0 ]]; then
+            echo "Git branch '$BRANCH' exists in the remote repository"
+            break
+        fi
+    done
+    if [[ $EXIT_CODE -ne 0 ]]; then
+        break
+    fi
+    echo "We need to use the branch $TOOLS_BRANCH for the standalone app ${app}."
+
+    rm -rf ${app}
     git clone -b $TOOLS_BRANCH --depth=1 https://github.com/gem/${app}.git
     git -C ${app} status
     git -C ${app} log -1
     wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/tools ./${app}
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location  --no-index --no-cache-dir -f "$WHEELHOUSE_URL" ./${app}
 done
+if [ $EXIT_CODE -ne 0 ]; then
+    echo "No '$branch', nor 'master' or 'main' branch found for '$app' django app; failed"
+    exit 1
+fi
 
-echo "Extracting python wheels"
-wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py313-win64.txt
+if [ -z "$NO_REQUIREMENTS" ]; then
+    echo "Extracting python wheels"
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location --force-reinstall --ignore-installed --upgrade --no-deps --no-index -r oq-engine/requirements-py313-win64.txt
+fi
+
 #
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     wine ../python-dist/python3/python.exe -m pip install build
