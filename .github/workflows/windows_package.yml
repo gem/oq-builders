@@ -105,7 +105,7 @@ jobs:
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe engine --list-risk-calculations
       - name: Run oq webui console and curl for the standalone tools
-        timeout-minutes: 10
+        timeout-minutes: 2
         run: |
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
@@ -114,6 +114,7 @@ jobs:
           do {
              Write-Host "waiting..."
              sleep 2
+             cat "$env:LOCALAPPDATA\Temp\webui.log"
           } until(Test-NetConnection 127.0.0.1 -Port 8800 | ? { $_.TcpTestSucceeded } )
           Get-Job
           netstat -o -n -a | findstr 8800
