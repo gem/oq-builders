@@ -134,6 +134,10 @@ jobs:
           curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
           curl.exe -X HEAD -I --fail http://127.0.0.1:8800/taxonomy/
           ping 127.0.0.1 -n 6 > null
+          Write-Host "curl.exe -X HEAD -I --fail http://127.0.0.1:8800/glossary/"
+          curl.exe -X HEAD -I http://127.0.0.1:8800/glossary/
+          curl.exe -X HEAD -I --fail http://127.0.0.1:8800/glossary/
+          ping 127.0.0.1 -n 6 > null
           oq.exe engine --list-risk-calculations
           Write-Host "curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs"
           curl.exe -v -G http://127.0.0.1:8800/engine/1/outputs
