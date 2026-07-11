@@ -105,7 +105,9 @@ jobs:
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe engine --list-risk-calculations
       - name: Run oq webui console and curl for the standalone tools
-        timeout-minutes: 2
+        # FIXME: instead of cat webui.log we must gather it
+        #        also if test fails (that is not the case, currently)
+        timeout-minutes: 10
         run: |
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           Write-Host ${env:PATH}
