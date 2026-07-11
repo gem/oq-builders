@@ -18,8 +18,8 @@
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
 # NOTE: To enable new pyproject only dependencies management
-# set to something different than empty NO_REQUIREMENTS variable
-NO_REQUIREMENTS=True
+# set NO_REQUIREMENTS to something different than empty string to enabe new workflow
+NO_REQUIREMENTS=
 
 WHEELHOUSE_URL=https://wheelhouse.openquake.org/unified
 
