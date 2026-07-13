@@ -198,6 +198,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Signed
+          archive: false
           path: ${{ github.workspace }}
           retention-days: 5
   Upload_Installer_Signed:
