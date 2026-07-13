@@ -220,7 +220,6 @@ jobs:
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
-          # print value of folder
           echo "Folder to upload packages: ${folder}"
           if test -z "$folder"
           then
@@ -230,6 +229,20 @@ jobs:
           else
                 echo "\$folder is NOT empty"
           fi
+	  #list files of the folder
+	  echo "list of files before to calc sha256"
+	  ls -la "$folder"
+          for file in "$folder"*.exe; do
+                if [ -f "$file" ]; then
+                    echo "Find OQ exe files: $(basename "$file")"
+                    echo "Calcolo SHA256..."
+                    sha256sum "$file"
+                    sha256sum "$file" > "$file.sha256"
+                fi
+          done
+	  #list files of the folder
+	  echo "list of files after to calc sha256"
+	  ls -la "$folder"
           rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/${folder}
           # check if we have a tag and need to upload to release
           if [[ -n "${vtag}" ]]; then
