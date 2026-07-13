@@ -105,6 +105,8 @@ jobs:
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe engine --list-risk-calculations
       - name: Run oq webui console and curl for the standalone tools
+        # FIXME: instead of cat webui.log we must gather it
+        #        also if test fails (that is not the case, currently)
         timeout-minutes: 10
         run: |
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
@@ -114,6 +116,7 @@ jobs:
           do {
              Write-Host "waiting..."
              sleep 2
+             cat "$env:LOCALAPPDATA\Temp\webui.log"
           } until(Test-NetConnection 127.0.0.1 -Port 8800 | ? { $_.TcpTestSucceeded } )
           Get-Job
           netstat -o -n -a | findstr 8800
@@ -130,6 +133,10 @@ jobs:
           Write-Host "curl.exe -X HEAD -I --fail http://127.0.0.1:8800/taxonomy/"
           curl.exe -X HEAD -I http://127.0.0.1:8800/taxonomy/
           curl.exe -X HEAD -I --fail http://127.0.0.1:8800/taxonomy/
+          ping 127.0.0.1 -n 6 > null
+          Write-Host "curl.exe -X HEAD -I --fail http://127.0.0.1:8800/glossary/"
+          curl.exe -X HEAD -I http://127.0.0.1:8800/glossary/
+          curl.exe -X HEAD -I --fail http://127.0.0.1:8800/glossary/
           ping 127.0.0.1 -n 6 > null
           oq.exe engine --list-risk-calculations
           Write-Host "curl.exe -v --fail -G http://127.0.0.1:8800/engine/1/outputs"

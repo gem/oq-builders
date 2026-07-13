@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
+# for development:
+#  cd installers/windows/nsis
+# else
 cd /home/runner/work/oq-builders/oq-builders/installers/windows/nsis
-#
-if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
+
+if [ "$GEM_SET_BUILD_SCIENCE" == "1" ]; then
     echo "Working in: $(pwd)"
     echo "USE OQ Science Console"
     mv oq-science-console.bat oq-console.bat

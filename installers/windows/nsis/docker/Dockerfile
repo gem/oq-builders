@@ -30,9 +30,9 @@ ARG uid=998
 RUN useradd -u $uid builder
 
 USER builder
-ENV HOME /home/builder
+ENV HOME=/home/builder
 #ENV PATH /opt/wine-stable/bin:$PATH
-ENV WINEDEBUG -all
+ENV WINEDEBUG=-all
 WORKDIR $HOME
 
 RUN wget --cache=off https://ftp.openquake.org/windows/thirdparties/nsis-3.09-setup.exe  && \
@@ -42,4 +42,4 @@ RUN wget --cache=off https://ftp.openquake.org/windows/thirdparties/nsis-3.09-se
 
 RUN wine nsis-3.09-setup.exe /S && sleep 10
 
-CMD /bin/bash /io/docker/build.sh
+CMD ["/bin/bash", "/io/docker/build.sh"]
