@@ -220,24 +220,16 @@ jobs:
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
-          echo "Folder to upload packages: ${folder}"
+          #SHA-256 of Signed Package
+          pkg=$(ls *.exe | grep OpenQuake_Engine)
+          echo "name of package: $pkg"
+          sha256sum $pkg > $pkg.sha256
+          cat "$pkg.sha256"
           if test -z "$folder"
           then
                 echo "\$folder is empty"
                 folder=oq-engine/nightly/
                 echo $folder
-                ls -la "$folder"
-                echo "list of files before to calc sha256"
-                for file in "$folder"*.exe; do
-                      if [ -f "$file" ]; then
-                          echo "Find OQ exe files: $(basename "$file")"
-                          echo "Calcolo SHA256..."
-                          sha256sum "$file"
-                          sha256sum "$file" > "$file.sha256"
-                      fi
-                done
-                echo "list of files after to calc sha256"
-                ls -la "$folder"
           else
                 echo "\$folder is NOT empty"
           fi
