@@ -159,9 +159,11 @@ Section "!OpenQuake Tools" SecTools
   SetOutPath "$PLUGINSDIR\oq-dist\tools"
   DetailPrint "Installing the OpenQuake Tools..."
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m pip -q install --no-deps --no-index --no-warn-script-location -r "index.txt"'
-  System::Call 'kernel32::SetEnvironmentVariable(t "DJANGO_SETTINGS_MODULE" , t "openquake.server.settings")i .r0'
-  MessageBox MB_OK "DJANGO_SETTINGS_MODULE = $%DJANGO_SETTINGS_MODULE%"
-  nsExec::ExecToLog '$INSTDIR\python3\Scripts\django-admin.exe openquake_engine_postinstall django_gem_taxonomy'
+
+  System::Call 'kernel32::SetEnvironmentVariable(t "DJANGO_SETTINGS_MODULE", t "openquake.server.settings")'
+  # System::Call 'kernel32::SetEnvironmentVariable(t "DJANGO_SETTINGS_MODULE" , t "openquake.server.settings")i .r0'
+
+  ExecWait nsExec::ExecToLog '"$INSTDIR\python3\Scripts\django-admin.exe" openquake_engine_postinstall django_gem_taxonomy'
 SectionEnd
 
 #GEM_SET_BUILD_SCIENCE
