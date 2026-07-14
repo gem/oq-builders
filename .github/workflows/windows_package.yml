@@ -226,21 +226,15 @@ jobs:
                 echo "\$folder is empty"
                 folder=oq-engine/nightly/
                 echo $folder
-                ls -la "$folder"
-                echo "list of files before to calc sha256"
-                for file in "$folder"*.exe; do
-                      if [ -f "$file" ]; then
-                          echo "Find OQ exe files: $(basename "$file")"
-                          echo "Calcolo SHA256..."
-                          sha256sum "$file"
-                          sha256sum "$file" > "$file.sha256"
-                      fi
-                done
-                echo "list of files after to calc sha256"
-                ls -la "$folder"
           else
                 echo "\$folder is NOT empty"
           fi
+          if test -z "$folder"
+          #SHA-256 of Signed Package
+          pkg=$(ls *.exe | grep OpenQuake_Engine)
+          echo "name of package: $pkg"
+          sha256sum $pkg > $pkg.sha256
+          cat "$pkg.sha256"
           rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 332' -ax OpenQuake_Engine* ftp@downloads.openquake.org:/mnt/box/openquake/downloads/pkgs/windows/${folder}
           # check if we have a tag and need to upload to release
           if [[ -n "${vtag}" ]]; then
