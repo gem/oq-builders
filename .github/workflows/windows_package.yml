@@ -100,6 +100,7 @@ jobs:
           call oq-ci.bat
           set
           oq.exe --version
+          oq.exe engine --upgrade-db
           oq.exe engine --run "https://downloads.openquake.org/jobs/eb_risk_demo.zip"
           oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
           oq.exe engine --list-risk-calculations
