@@ -78,12 +78,6 @@ jobs:
     needs: Build_Installer
     runs-on: windows-2022
     timeout-minutes: 60
-    env:
-      NUMBA_CACHE_DIR: ${{ runner.temp }}\openquake
-      NUMEXPR_MAX_THREADS: 8
-      GMT_LIBRARY_PATH: ${{ github.workspace }}\GMT\bin
-      GMT_SHARED: ${{ github.workspace }}\GMT\share
-      DJANGO_SETTINGS_MODULE: openquake.server.settings
     steps:
       - name: Download Windows Installer from build job
         uses: actions/download-artifact@v4
@@ -102,6 +96,7 @@ jobs:
           cd "%LOCALAPPDATA%\Programs\OpenQuake Engine"
           findstr /v /i /c:"cmd /k" /c:"setlocal" /c:"endlocal" oq-console.bat > oq-ci.bat 
           call oq-ci.bat
+          set
           oq.exe --version
           oq.exe engine --run "https://downloads.openquake.org/jobs/eb_risk_demo.zip"
           oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
