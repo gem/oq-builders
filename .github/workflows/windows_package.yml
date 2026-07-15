@@ -90,19 +90,19 @@ jobs:
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
-      - name: Run oq calc
+      - name: Run oq calc and Display calcs
+        shell: cmd
         run: |
-          $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true
-          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          C:
+          cd "%LOCALAPPDATA%\Programs\OpenQuake Engine"
+          dir
+          findstr /v /i /c:"cmd /k" /c:"setlocal" /c:"endlocal" .\oq-console.bat > oq-ci.bat
+          call oq-ci.bat
+          set
           oq.exe --version
+          oq.exe engine --upgrade-db
           oq.exe engine --run "https://downloads.openquake.org/jobs/eb_risk_demo.zip"
-          Write-Host "Exit code $LastExitCode"
           oq.exe engine --run "https://downloads.openquake.org/jobs/M4_Exercise.zip"
-          Write-Host "Exit code $LastExitCode"
-      - name: Display calcs
-        run: |
-          $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           oq.exe engine --list-risk-calculations
       - name: Run oq webui console and curl for the standalone tools
         # FIXME: instead of cat webui.log we must gather it
@@ -220,8 +220,11 @@ jobs:
           gpg --quiet --batch --yes --decrypt --passphrase="$DOWNLOAD_SSH" --output ./.deploy_rsa ./.oq_builders.enc
           chmod 600 ./.deploy_rsa
           eval $(ssh-agent -s) && ssh-add ./.deploy_rsa
-          # print value of folder
-          echo "Folder to upload packages: ${folder}"
+          #SHA-256 of Signed Package
+          pkg=$(ls *.exe | grep OpenQuake_Engine)
+          echo "name of package: $pkg"
+          sha256sum $pkg > $pkg.sha256
+          cat "$pkg.sha256"
           if test -z "$folder"
           then
                 echo "\$folder is empty"

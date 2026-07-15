@@ -148,6 +148,7 @@ Section "!OpenQuake Engine" SecEngine
   SetOutPath "$INSTDIR"
   File "openquake.ico"
   File "oq-server.bat"
+  File "oq-django.bat"
   File "README.html"
   SetOutPath "$PLUGINSDIR\oq-dist\engine"
   DetailPrint "Installing the OpenQuake Engine..."
@@ -207,6 +208,8 @@ Section -post
   nsExec::ExecToLog '$INSTDIR\python3\python.exe -m compileall -qq "$INSTDIR"'
   FileOpen $0 "$INSTDIR\python3\pycached" w
   FileClose $0
+  nsExec::ExecToLog '$INSTDIR\oq-django.bat'
+
 
   WriteUninstaller $INSTDIR\uninstall.exe
 
@@ -254,6 +257,7 @@ Section "Uninstall"
     Delete "$INSTDIR\openquake_black.ico"
     Delete "$INSTDIR\openquake.ico"
     Delete "$INSTDIR\oq-server.bat"
+    Delete "$INSTDIR\oq-django.bat"
     Delete "$INSTDIR\oq-console.bat"
 	Delete "$INSTDIR\install.log"
   ; Uninstall directories

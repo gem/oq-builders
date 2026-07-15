@@ -25,5 +25,7 @@ mv *OpenQuake_Engine* /home/runner/work/oq-builders/oq-builders/out
 #Generate SHA-256 Hashes for Files
 cd /home/runner/work/oq-builders/oq-builders/out
 for pkg in *; do
-	sha256sum $pkg > $pkg.sha256
+	echo "name of package: $pkg"
+        sha256sum "$pkg" > "$pkg.sha256"
+        cat "$pkg.sha256"
 done
