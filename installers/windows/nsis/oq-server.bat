@@ -8,12 +8,19 @@ set GMT_LIBRARY_PATH="%mypath%GMT\bin"
 set GMT_SHARED="%mypath%GMT\share"
 set OQ_HOST=localhost
 set OQ_PORT=8800
+set DJANGO_SETTINGS_MODULE=openquake.server.settings
 
 if not exist python3\pycached (
    echo Building python cache. This may take a while.
    echo Please wait ...
    python.exe -m compileall -qq .
    copy /y nul python3\pycached >nul
+)
+
+if not exist python3\django_gem (
+   echo Please wait while the system initializes.
+   python3\Scripts\django-admin.exe openquake_engine_postinstall django_gem_taxonomy
+   echo Runned django-admin  >> python3>django_gem
 )
 
 echo Starting OpenQuake Engine server
@@ -24,3 +31,9 @@ oq webui start %OQ_HOST%:%OQ_PORT%
 
 endlocal
 exit /b 0
+
+
+
+
+
+

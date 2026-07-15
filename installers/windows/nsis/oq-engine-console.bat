@@ -15,8 +15,12 @@ if not exist python3\pycached (
    copy /y nul python3\pycached >nul
 )
 
-echo Please wait while the system initializes.
-python3\Scripts\django-admin.exe openquake_engine_postinstall django_gem_taxonomy
+if not exist python3\django_gem (
+   echo Please wait while the system initializes.
+   python3\Scripts\django-admin.exe openquake_engine_postinstall django_gem_taxonomy
+   echo Runned django-admin  >> python3>django_gem
+)
+
 echo OpenQuake environment loaded
 echo To run OpenQuake use 'oq' and 'oq engine'
 cmd /k
