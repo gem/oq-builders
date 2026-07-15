@@ -96,7 +96,7 @@ jobs:
           C:
           cd "%LOCALAPPDATA%\Programs\OpenQuake Engine"
           dir
-          findstr /v /i /c:"cmd /k" /c:"setlocal" /c:"endlocal" .\oq-engine-console.bat > oq-ci.bat
+          findstr /v /i /c:"cmd /k" /c:"setlocal" /c:"endlocal" .\oq-console.bat > oq-ci.bat
           call oq-ci.bat
           set
           oq.exe --version
