@@ -99,7 +99,7 @@ jobs:
       - name: Run oq calc and Display calcs
         shell: cmd
         run: |
-          cd "%LOCALAPPDATA%\openquake"
+          cd "%LOCALAPPDATA%\Programs\OpenQuake Engine"
           findstr /v /i /c:"cmd /k" /c:"setlocal" /c:"endlocal" oq-console.bat > oq-ci.bat 
           call oq-ci.bat
           oq.exe --version
