@@ -208,8 +208,8 @@ Section -post
   FileOpen $0 "$INSTDIR\python3\pycached" w
   FileClose $0
 
-  System::Call 'kernel32::SetEnvironmentVariable(t "DJANGO_SETTINGS_MODULE" , t "openquake.server.settings")i .r0'
-  nsExec::ExecToLog '$INSTDIR\python3\Scripts\django-admin.exe openquake_engine_postinstall django_gem_taxonomy'
+  ;System::Call 'kernel32::SetEnvironmentVariable(t "DJANGO_SETTINGS_MODULE" , t "openquake.server.settings")i .r0'
+  ;nsExec::ExecToLog '$INSTDIR\python3\Scripts\django-admin.exe openquake_engine_postinstall django_gem_taxonomy'
 
 
   WriteUninstaller $INSTDIR\uninstall.exe
