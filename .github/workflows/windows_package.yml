@@ -90,6 +90,11 @@ jobs:
           $Install = Get-ChildItem -Filter *.exe
           Start-Process -FilePath $Install.Fullname -ArgumentList "/S" -Wait
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+      - name: Display Install Log Details
+        shell: powershell
+        run: |
+          Write-Host "Installation log file:"
+          Get-ChildItem "$env:LOCALAPPDATA/Programs/Openquake Engine/install.log"
       - name: Run oq calc and Display calcs
         shell: cmd
         run: |
@@ -151,6 +156,13 @@ jobs:
           name: WebUI_log
           path: C:\\Users\\runneradmin\\AppData\\Local\\Temp\\webui.log
           retention-days: 5
+      - name: Upload Artifacts Install Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: Install_log
+          path: 'C:/Users/runneradmin/AppData/Local/Programs/Openquake Engine/install.log'
+          retention-days: 5
+
       - name: Test installation of oq-mbtk
         run: |
           $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
