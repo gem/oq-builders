@@ -86,9 +86,15 @@ jobs:
       - name: Execute the Installer
         run: |
           pwd
-          Get-ChildItem -Path ${{ github.workspace }}
           $Install = Get-ChildItem -Filter *.exe
-          Start-Process -FilePath $Install.FullName -ArgumentList "/S /SD IDOK" -WorkingDirectory $Install.DirectoryName -Wait
+          $LogFile = Join-Path -Path "$env:LOCALAPPDATA\Programs\OpenQuake Engine" -ChildPath "install.log"
+          Start-Process -FilePath $Install.FullName `
+              -ArgumentList "/S" `
+              -WorkingDirectory $Install.DirectoryName `
+              -RedirectStandardOutput $LogFile `
+              -Verb RunAs `
+              -Wait
+          Get-ChildItem -Path ${{ github.workspace }}
           $env:PATH += ";$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
       - name: Display Install Log Details
         shell: powershell
