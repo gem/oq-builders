@@ -94,7 +94,7 @@ jobs:
         shell: powershell
         run: |
           Write-Host "Installation log file:"
-          Get-ChildItem "$env:LOCALAPPDATA/Programs/Openquake Engine/install.log"
+          Get-ChildItem "$env:LOCALAPPDATA/Programs/Openquake Engine/"
       - name: Run oq calc and Display calcs
         shell: cmd
         run: |
