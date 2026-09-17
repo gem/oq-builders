@@ -158,6 +158,8 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     wine ../python-dist/python3/python.exe -m pip install build
     echo "Downloading ScienceTools apps"
     git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
+    git -C oq-mbtk status
+    git -C oq-mbtk log -1
     echo "Extracting python wheels for oq-mbtk"
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location -r oq-mbtk/requirements-win64.txt
 	cd oq-mbtk
