@@ -113,35 +113,13 @@ for app in oq-engine; do
         wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/engine ./${app}
     fi
 done
-
+STANDALONE_URL=$((cat oq-engine/install.py | grep '^URL_STANDALONE = ' | sed 's/^ *//g' ; echo "print(URL_STANDALONE)") | python3)
 ## Standalone apps
 echo "Downloading standalone apps"
 for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy django-gem-taxonomy; do
-    for branch in "$TOOLS_BRANCH" "master" "main"; do
-        TOOLS_BRANCH="$branch"
-        # do not fail on exit code 2 if the branch
-        # does not exist in the app repository
-        set +e
-        git ls-remote --exit-code --heads https://github.com/gem/${app}.git $TOOLS_BRANCH >/dev/null 2>&1
-        EXIT_CODE=$?
-        # set again to fail on exit code not 0
-        set -e
-        if [[ $EXIT_CODE -eq 0 ]]; then
-            echo "Git branch '$BRANCH' exists in the remote repository"
-            break
-        fi
-    done
-    if [[ $EXIT_CODE -ne 0 ]]; then
-        break
-    fi
-    echo "We need to use the branch $TOOLS_BRANCH for the standalone app ${app}."
+    app_ver=$((cat oq-engine/install.py | sed -n '/.*STANDALONE_APP_INFO = /,/^ *]/p' | sed 's/^    //g'  ; echo "print({x['pkg']: x for x in STANDALONE_APP_INFO}['$app']['ver'])") | python3 )
 
-    rm -rf ${app}
-    git clone -b $TOOLS_BRANCH --depth=1 https://github.com/gem/${app}.git
-    git -C ${app} status
-    git -C ${app} log -1
-    wine ../python-dist/python3/python.exe -m pip wheel --disable-pip-version-check --no-deps -w ../oq-dist/tools ./${app}
-    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location  --no-index --no-cache-dir -f "$WHEELHOUSE_URL" ./${app}
+    wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location  --no-index --no-cache-dir --find-links "$WHEELHOUSE_URL" --find-links "$STANDALONE_URL" ${app}${app_ver}
 done
 if [ $EXIT_CODE -ne 0 ]; then
     echo "No '$branch', nor 'master' or 'main' branch found for '$app' django app; failed"
