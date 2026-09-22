@@ -121,10 +121,6 @@ for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy django-ge
 
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location  --no-index --no-cache-dir --find-links "$WHEELHOUSE_URL" --find-links "$STANDALONE_URL" ${app}${app_ver}
 done
-if [ $EXIT_CODE -ne 0 ]; then
-    echo "No '$branch', nor 'master' or 'main' branch found for '$app' django app; failed"
-    exit 1
-fi
 
 if [ -z "$NO_REQUIREMENTS" ]; then
     echo "Extracting python wheels"
