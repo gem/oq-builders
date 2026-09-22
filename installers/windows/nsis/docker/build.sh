@@ -117,7 +117,7 @@ STANDALONE_URL=$((cat oq-engine/install.py | grep '^URL_STANDALONE = ' | sed 's/
 ## Standalone apps
 echo "Downloading standalone apps"
 for app in oq-platform-standalone oq-platform-ipt oq-platform-taxonomy django-gem-taxonomy; do
-    app_ver=$((cat oq-engine/install.py | sed -n '/.*STANDALONE_APP_INFO = /,/^ *]/p' | sed 's/^    //g'  ; echo "print({x['pkg']: x for x in STANDALONE_APP_INFO}['$app']['ver']) | python3 )
+    app_ver=$((cat oq-engine/install.py | sed -n '/.*STANDALONE_APP_INFO = /,/^ *]/p' | sed 's/^    //g'  ; echo "print({x['pkg']: x for x in STANDALONE_APP_INFO}['$app']['ver']") | python3 )
 
     wine ../python-dist/python3/python.exe -m pip install --disable-pip-version-check --no-warn-script-location  --no-index --no-cache-dir --find-links "$WHEELHOUSE_URL" --find-links "$STANDALONE_URL" ${app}${app_ver}
 done
