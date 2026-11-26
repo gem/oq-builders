@@ -126,9 +126,6 @@ jobs:
           $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
           python.exe -V
           cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
-          Remove-Item -Path .\oq-mbtk\openquake\cat\__init__.py
-          Remove-Item -Path .\oq-mbtk\openquake\mbt\__init__.py
-          Remove-Item -Path .\oq-mbtk\openquake\smt\__init__.py
           python.exe -m pip install pytest
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\cat
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\mbt
