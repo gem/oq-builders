@@ -131,7 +131,7 @@ fi
 if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
     wine ../python-dist/python3/python.exe -m pip install build
     echo "Downloading ScienceTools apps"
-    git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
+    git clone -b fix-windows-wkf-cli --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
     git -C oq-mbtk status
     git -C oq-mbtk log -1
     echo "Extracting python wheels for oq-mbtk"
@@ -175,7 +175,7 @@ if [ $GEM_SET_BUILD_SCIENCE == 1 ]; then
 	#mkdir $(pwd)/oq-vmtk
     #git clone -b master --depth=1 https://github.com/GEMScienceTools/VMTK-Vulnerability-Modellers-ToolKit.git $(pwd)/oq-vmtk
     echo "Clone MBTK repos"
-    git clone -b master --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
+    git clone -b fix-windows-wkf-cli --depth=1 https://github.com/GEMScienceTools/oq-mbtk.git
     echo "Add GMT "
 	wget https://github.com/GenericMappingTools/gmt/releases/download/6.5.0/gmt-6.5.0-win64.zip
 	cd $(pwd)
