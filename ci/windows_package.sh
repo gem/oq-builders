@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # for development:
 #  cd installers/windows/nsis
 # else
