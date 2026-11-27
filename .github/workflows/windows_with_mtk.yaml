@@ -133,6 +133,7 @@ jobs:
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\mbt
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\smt
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\wkf
+          pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\sub
       #- name: Compare files of VMTK
       #  run: |
       #    $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
