@@ -153,11 +153,12 @@ jobs:
           retention-days: 5
       - name: Test installation of oq-mbtk
         run: |
-          $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
-          $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          $installRoot = "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
+          $env:GMT_LIBRARY_PATH = Join-Path $installRoot 'GMT\bin'
+          $env:PATH = "$installRoot\python3;$installRoot\python3\Scripts"
+          $env:PATH += ";$env:GMT_LIBRARY_PATH"
           python.exe -V
-          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
-          Remove-Item -Path .\oq-mbtk\openquake\cat\__init__.py
+          Set-Location $installRoot
           python.exe -m pip install pytest
           pytest -vsx .\oq-mbtk\openquake\cat
         if: github.event.inputs.oq-science == '1'

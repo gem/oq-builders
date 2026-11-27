@@ -122,19 +122,18 @@ jobs:
           retention-days: 5
       - name: Test installation of oq-mbtk
         run: |
-          $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
-          $env:PATH="$env:PATH;$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3\Scripts"
+          $installRoot = "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
+          $env:GMT_LIBRARY_PATH = Join-Path $installRoot 'GMT\bin'
+          $env:PATH = "$installRoot\python3;$installRoot\python3\Scripts"
+          $env:PATH += ";$env:GMT_LIBRARY_PATH"
           python.exe -V
-          cd "$env:LOCALAPPDATA\Programs\OpenQuake Engine"
-          Remove-Item -Path .\oq-mbtk\openquake\cat\__init__.py
-          Remove-Item -Path .\oq-mbtk\openquake\mbt\__init__.py
-          Remove-Item -Path .\oq-mbtk\openquake\smt\__init__.py
-          Remove-Item -Path .\oq-mbtk\openquake\wkf\__init__.py
+          Set-Location $installRoot
           python.exe -m pip install pytest
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\cat
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\mbt
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\smt
           pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\wkf
+          pytest -vsx --color=yes --durations=10 .\oq-mbtk\openquake\sub
       #- name: Compare files of VMTK
       #  run: |
       #    $env:PATH="$env:LOCALAPPDATA\Programs\OpenQuake Engine\python3"
